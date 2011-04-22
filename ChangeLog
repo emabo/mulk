@@ -1,0 +1,236 @@
+ChangeLog about Mulk: open source non-interactive multi-connection network
+downloader with image filtering and Metalink support (version 0.5.2, beta)
+
+
+2011/04/22 Emanuele <pocoyo@users.sourceforge.net>
+	* specific Mulk return codes have been added to the library functions
+	* new --with-libmetalink option in configure in order to specify different path for libmetalink library.
+
+2010/11/19 Emanuele <pocoyo@users.sourceforge.net>
+	* MSVC solution has been revisited and rationalised
+
+2010/09/29 Emanuele <pocoyo@users.sourceforge.net>
+	* a short notice about license has been added. It is visible with version option
+
+2010/09/27 Emanuele <pocoyo@users.sourceforge.net>
+	* unique DEBUG compilation flag has been created 
+	* check in configure.ac for malloc, calloc, free and vsnprintf has been added
+
+2010/09/24 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
+	* bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
+
+2010/09/23 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fixed, before the total number of downloaded files was wrong if an error occurred
+	* bug fixed, during Metalink download when the filesize was missing and the URLs were wrong, Mulk tried anyway to control the checksum
+	* bug fixed, during Metalink download FTP protocol was used erroneously to find the missing filesize
+
+2010/09/22 Emanuele <pocoyo@users.sourceforge.net>
+	* a "(null)" string was printed to reports when a not HTTP protocol was used
+
+2010/09/17 Emanuele <pocoyo@users.sourceforge.net>
+	* m_malloc.c has been totally rewritten for license compatibility
+	* translations has been updated
+	* gettext.h has been updated 
+
+2010/09/12 Emanuele <pocoyo@users.sourceforge.net>
+	* static and dynamic libraries creation has been added to MSVC's solution
+
+2010/09/10 Emanuele <pocoyo@users.sourceforge.net>
+	* gcc's visibility option has been managed in "include/mulk/mulk.h"
+	* Mulk license has been changed to LGPL, in order to lead to wider use of libmulk 
+
+2010/09/03 Emanuele <pocoyo@users.sourceforge.net>
+	* static and dynamic libraries creation has been added to configure 
+
+2010/08/24 Emanuele <pocoyo@users.sourceforge.net>
+	* new arguments (--with-libcurl and --with-uriparser) in configure in order to specify different paths for libcurl and uriparser libraries.
+	* bug fixed in configure, where tidy.h and openssl/sha.h were requested even if they were disabled
+
+2010/08/10 Emanuele <pocoyo@users.sourceforge.net>
+	* new option to save the report files progressively. It's possible to specify the number of lines (downloads)
+		to be saved each time.
+
+2010/05/28 Emanuele <pocoyo@users.sourceforge.net>
+	* new parameters have been added to report files (error code, http code, local filename and mime-type filename)
+
+2010/05/27 Emanuele <pocoyo@users.sourceforge.net>
+	* new option to set HTTP proxy and port to use
+
+2010/05/26 Emanuele <pocoyo@users.sourceforge.net>
+	* new option to avoid downloading of html dependencies (images, CSS, etc.)
+	* depth option with value 0 now means infinite recursion
+
+2010/04/12 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fixed, some URL strings were not released in case of error
+
+2010/04/10 Emanuele <pocoyo@users.sourceforge.net>
+	* bug when creating a directory in Windows using an absolute path
+	* new functions to rationalise the process of inserting options
+
+2009/11/19 Emanuele <pocoyo@users.sourceforge.net>
+	* Italian translation has been added
+
+2009/11/14 Emanuele <pocoyo@users.sourceforge.net>
+	* i18n gettext internationalisation has been added
+
+2009/11/13 Emanuele <pocoyo@users.sourceforge.net>
+	* options initialisation revisited
+
+2009/11/12 Emanuele <pocoyo@users.sourceforge.net>
+	* code to debug dynamic memory allocation and find memory leaks
+
+2009/11/11 Emanuele <pocoyo@users.sourceforge.net>
+	* new options to specify username and password for the connections
+	* new options to follow FTP links in HTML documents
+	* new option to change temporary directory
+
+2009/11/10 Emanuele <pocoyo@users.sourceforge.net>
+	* new options to go to foreign hosts, accept and reject specific domains
+	* configuration flag to disable recursion in HTML documents
+
+2009/11/03 Emanuele <pocoyo@users.sourceforge.net>
+	* new output directory to save downloaded files
+
+2009/11/02 Emanuele <pocoyo@users.sourceforge.net>
+	* new declarations to include code as static library
+
+2009/10/25 Emanuele <pocoyo@users.sourceforge.net>
+	* main process simplified and functions moved to a new file
+
+2009/09/30 Emanuele <pocoyo@users.sourceforge.net>
+	* Windows compatibility has been added
+	* new macro for debugging purposes
+
+2009/09/17 Emanuele <pocoyo@users.sourceforge.net>
+	* each file has an extension assigned when saved to the output directory
+	* bug fix, when an url doesn't have a filename in the path, a name is automatically added in order to save the file locally
+	* check for a recent curl version to avoid a bug when performing intensive downloads
+
+2009/09/15 Emanuele <pocoyo@users.sourceforge.net>
+	* off_t data type used for file size
+
+2009/09/03 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink option added to resume download of a file
+
+2009/07/30 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink support for FTP added
+	* all strings are now dynamically allocated
+
+2009/07/28 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink max number of connections per file parameter supported
+	* new option to follow Metalink in HTML documents
+	* new HTML tags are parsed in order to download whole site. The new tags are FRAME, IFRAME, AREA, MAP, LINK, and SCRIPT.
+	* created new macros for printing messages
+
+2009/07/27 Emanuele <pocoyo@users.sourceforge.net>
+	* option to change default user agent identity
+	* better parsing of mime types present in HTTP header
+
+2009/07/26 Emanuele <pocoyo@users.sourceforge.net>
+	* save URLs with specified mime-type to output directory
+	* output data and temporary directories are now separated
+
+2009/07/23 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink continent option added. It's possible to choose the continent of origin of the Metalink files to download
+
+2009/07/21 Emanuele <pocoyo@users.sourceforge.net>
+	* chunk checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512)
+	* bug fix, when a checksum type isn't recognised, the checksum isn't computed correctly
+
+2009/06/04 Emanuele <pocoyo@users.sourceforge.net>
+	* fixed a bug when downloading a Metalink file composed by a single chunk
+
+2009/06/03 Emanuele <pocoyo@users.sourceforge.net>
+	* mulk now supports all protocols supported by libcurl 
+		(HTTP, HTTPS, FTP, FTPS, TFTP, TELNET, DICT and FILE)
+	* Metalink language option added
+	* Metalink download supports also HTTPS
+
+2009/05/30 Emanuele <pocoyo@users.sourceforge.net>
+	* GNU getopt and getopt_long used for parsing options. Now the program is more flexible to read options.
+	* new functions to alloc and free strings
+
+2009/05/29 Emanuele <pocoyo@users.sourceforge.net>
+	* renamed string functions
+
+2009/05/28 Emanuele <pocoyo@users.sourceforge.net>
+	* OpenSSL exemption added, because of an incompatibility between GPL and OpenSSL license
+
+2009/05/26 Emanuele <pocoyo@users.sourceforge.net>
+	* checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512)
+
+2009/05/24 Emanuele <pocoyo@users.sourceforge.net>
+	* liburi replaced by liburiparser (http://uriparser.sourceforge.net/) which is more active and packetised
+	* libmetalink is now dynamically loaded and external to the project in order to ease the packetisation process
+	* more code cleaning
+
+2009/05/20 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink location option added
+	* Metalink OS option added
+	* Metalink preference parameter supported
+	* Metalink max number of connections per resource parameter supported
+	* code cleaned in order to follow GNU coding standards
+
+2009/05/07 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fix to compile without libmetalink installed (the include directory
+		in Makefiles was wrong)
+
+2009/04/26 Emanuele <pocoyo@users.sourceforge.net>
+	* fixed a bug, under particular conditions some URLs in download
+	  queue were skipped
+
+2009/04/24 Emanuele <pocoyo@users.sourceforge.net>
+	* fixed a compilation problem when tidy header isn't <tidy/tidy.h>
+
+2009/04/23 Emanuele <pocoyo@users.sourceforge.net>
+	* ability to read a list of options from a text file
+
+2009/04/19 Emanuele <pocoyo@users.sourceforge.net>
+	* Metalink library added to the source code
+	* Metalink feature added to the project
+
+2009/04/16 Emanuele <pocoyo@users.sourceforge.net>
+	* quiet option to avoid printing messages
+
+2009/04/15 Emanuele <pocoyo@users.sourceforge.net>
+	* option to write to a text file a brief report 
+	* option to write to a csv file a brief report 
+
+2009/04/12 Emanuele <pocoyo@users.sourceforge.net>
+	* DEBUG compilation flag inserted
+
+2009/04/10 Emanuele <pocoyo@users.sourceforge.net>
+	* option to read URLs to download from a text file
+
+2009/04/08 Emanuele <pocoyo@users.sourceforge.net>
+	* option to list more than one URL to download on the command line
+
+2009/03/30 Emanuele <pocoyo@users.sourceforge.net>
+	* file to create RPM package added to the source code
+
+2009/03/25 Emanuele <pocoyo@users.sourceforge.net>
+	* uri static library added to the project
+
+2009/02/06 Emanuele <pocoyo@users.sourceforge.net>
+	* saving and filtering of GIF and PNG images by width and height
+	* JPEG library removed, no more needed
+
+2009/01/21 Emanuele <pocoyo@users.sourceforge.net>
+	* liburi added to the source code
+
+2008/12/16 Emanuele <pocoyo@users.sourceforge.net>
+	* user manual added to the software installation
+
+2008/11/24 Emanuele <pocoyo@users.sourceforge.net>
+	* don't download more than once each url 
+
+2008/11/22 Emanuele <pocoyo@users.sourceforge.net>
+	* limited number of connections per host
+	* better recognition of file types based on mime types
+
+2008/10/11 Emanuele <pocoyo@users.sourceforge.net>
+	* multiple downloads using multi-interface feature of libcurl
+	* recursive download using libtidy parsing
+	* filtering of JPEG images by width and height
+

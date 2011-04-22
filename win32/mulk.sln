@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmulk", "libmulk\libmulk.vcproj", "{BA4E6306-3353-490C-8227-F6E615361810}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mulk", "mulk\mulk.vcproj", "{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BA4E6306-3353-490C-8227-F6E615361810} = {BA4E6306-3353-490C-8227-F6E615361810}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		DLL-Debug|Win32 = DLL-Debug|Win32
+		DLL-Release|Win32 = DLL-Release|Win32
+		LIB-Debug|Win32 = LIB-Debug|Win32
+		LIB-Release|Win32 = LIB-Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA4E6306-3353-490C-8227-F6E615361810}.DLL-Debug|Win32.ActiveCfg = DLL-Debug|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.DLL-Debug|Win32.Build.0 = DLL-Debug|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.DLL-Release|Win32.ActiveCfg = DLL-Release|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.DLL-Release|Win32.Build.0 = DLL-Release|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.LIB-Debug|Win32.ActiveCfg = LIB-Debug|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.LIB-Debug|Win32.Build.0 = LIB-Debug|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.LIB-Release|Win32.ActiveCfg = LIB-Release|Win32
+		{BA4E6306-3353-490C-8227-F6E615361810}.LIB-Release|Win32.Build.0 = LIB-Release|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.DLL-Debug|Win32.ActiveCfg = use DLL-Debug|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.DLL-Debug|Win32.Build.0 = use DLL-Debug|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.DLL-Release|Win32.ActiveCfg = use DLL-Release|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.DLL-Release|Win32.Build.0 = use DLL-Release|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.LIB-Debug|Win32.ActiveCfg = use LIB-Debug|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.LIB-Debug|Win32.Build.0 = use LIB-Debug|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.LIB-Release|Win32.ActiveCfg = use LIB-Release|Win32
+		{14E95FC2-8F95-4315-9AEC-F9344BFCC02E}.LIB-Release|Win32.Build.0 = use LIB-Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

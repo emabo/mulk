@@ -1,0 +1,75 @@
+Mulk: open source non-interactive multi-connection network downloader
+  with image filtering and Metalink support (version 0.5.2, beta)
+
+Current web home: http://sourceforge.net/projects/mulk
+
+
+Features:
+
+-up to 50 simultaneous connections, up to 5 per host.
+-protocols supported: HTTP, HTTPS, FTP, FTPS, TFTP, TELNET, DICT and FILE.
+-recursive download of HTML pages until a specified depth.
+-options to go to foreign hosts, accept and reject specific domains.
+-multiple URLs in command line.
+-Metalink retrieving with segmented download.
+-Metalink support for FTP, HTTP(S).
+-checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
+-chunk checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
+-several Metalink options (location, OS, language, preference, max connections per resource, max connections per file, continent of origin).
+-resume Metalink download.
+-option to follow Metalink urls in HTML pages.
+-option to follow FTP links in HTML documents.
+-options to specify username and password for the connections.
+-option to specify a proxy for the connections.
+-save web pages copying the site tree locally.
+-filtering of GIF, PNG and JPEG images by width and height.
+-save all images in a single directory.
+-save only URLs with specified mime-type to an output directory.
+-read the options in long format from a text file.
+-read the URLs to download from a text file.
+-write a report of the download activity to a text or csv file.
+-option to save the report progressively.
+-i18n gettext internationalisation.
+-static and dynamic libraries creation (libmulk)
+
+
+Compile & Install:
+
+To compile you need the following libraries:
+libcurl (for Debian try "apt-get install openssl curl libcurl4-openssl-dev" or see http://curl.haxx.se/libcurl/)
+liburiparser (for Debian try "apt-get install liburiparser-dev" or see http://uriparser.sourceforge.net/)
+
+To compile with recursion enabled you need also:
+libtidy (for Debian try "apt-get install libtidy-dev" or see http://tidy.sourceforge.net/)
+
+To compile with Metalink enabled you need also:
+libmetalink (for Debian try "apt-get install libexpat1-devel libxml2-dev" or see http://launchpad.net/libmetalink/)
+
+To compile with checksum verification for Metalink you need also:
+libcrypto (http://www.openssl.org)
+
+
+To compile the project just type following commands:
+
+	$ ./configure
+	$ make
+	$ make install
+
+You can also compile mulk's library (libmulk) in static format:
+
+	$ ./configure --disable-shared --enable-static
+	$ make
+	$ make install
+
+or dynamic format:
+
+	$ ./configure --enable-shared --disable-static
+	$ make
+	$ make install
+
+By default both of them are compiled in libs/.libs.
+
+
+Use:
+
+You can get syntax by typing mulk -h.

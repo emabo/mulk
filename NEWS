@@ -1,0 +1,117 @@
+NEWS about Mulk: open source non-interactive multi-connection network downloader
+  with image filtering and Metalink support (version 0.5.2, beta)
+
+
+version 0.5.2 - XXXX/XX/XX
+-new option to set HTTP proxy and port to use
+-new option to avoid downloading of html dependencies (images, CSS, etc.)
+-new option to save the report files progressively. It's possible to specify the number of lines (downloads) to be saved each time.
+-depth option with value 0 now means infinite recursion
+-new parameters have been added to report files (error code, http code, local filename and mime-type filename)
+-bug fix, some URL strings were not released in case of error
+-bug fix when creating a directory in Windows using an absolute path
+-new functions to rationalise the process of inserting options
+-static and dynamic libraries creation has been added to configure
+-static and dynamic libraries creation has been added to MSVC's solution
+-new arguments (--with-libcurl and --with-uriparser) in configure in order to specify different paths for libcurl and uriparser libraries.
+-gcc's visibility option has been managed in "include/mulk/mulk.h"
+-check in configure.ac for malloc, calloc, free and vsnprintf has been added
+-Mulk license has been changed to LGPL, in order to lead to wider use of libmulk 
+-m_malloc.c has been totally rewritten for license compatibility
+-a short notice about license has been added. It is visible with version option
+-bug fixed in configure, where tidy.h and openssl/sha.h were requested even if they were disabled
+-bug fixed, before the total number of downloaded files was wrong if an error occurred
+-bug fixed, during Metalink download when the filesize was missing and the URLs were wrong, Mulk tried anyway to control the checksum
+-bug fixed, during Metalink download FTP protocol was used erroneously to find the missing filesize
+-bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
+-bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
+-a "(null)" string was printed to reports when a not HTTP protocol was used
+-translations has been updated
+-gettext.h has been updated 
+-unique DEBUG compilation flag has been created 
+-MSVC solution has been revisited and rationalised
+
+version 0.5.1 - 2010/02/01
+-i18n gettext internationalisation has been added
+-new options to go to foreign hosts, accept and reject specific domains
+-new options to specify username and password for the connections
+-new options to follow FTP links in HTML documents
+-new option to change temporary directory
+-new output directory to save downloaded files
+-Italian translation has been added
+-main process simplified and functions moved to a new file
+-new declarations to include code as static library
+-configuration flag to disable recursion in HTML documents
+-new macro for debugging purposes
+-code to debug dynamic memory allocation and find memory leaks
+-options initialisation revisited
+
+version 0.5.0 - 2009/09/19
+-Windows compatibility has been added
+-Metalink option added to resume download of a file
+-Metalink support for FTP added
+-Metalink max number of connections per file parameter supported
+-new option to follow Metalink in HTML documents
+-option to change default user agent identity
+-save URLs with specified mime-type to output directory
+-output data and temporary directories are now separated
+-new HTML tags are parsed in order to download whole site. The new tags are FRAME, IFRAME, AREA, MAP, LINK, and SCRIPT.
+-each file has an extension assigned when saved to the output directory
+-bug fix, when an url doesn't have a filename in the path, a name is automatically added in order to save the file locally
+-better parsing of mime types present in HTTP header
+-all strings are now dynamically allocated
+-created new macros for printing messages
+-off_t data type used for file size
+-check for a recent curl version to avoid a bug when performing intensive downloads
+
+version 0.4.3 - 2009/07/24
+-chunk checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512)
+-Metalink continent option added. It's possible to choose the continent of origin of the Metalink files to download
+-bug fix, when a checksum type isn't recognised, the checksum isn't computed correctly
+
+version 0.4.2 - 2009/06/04
+-mulk now supports all protocols supported by libcurl (HTTP, HTTPS, FTP, FTPS, TFTP, TELNET, DICT and FILE)
+-checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512)
+-Metalink download supports also HTTPS
+-Metalink language option added
+-GNU getopt and getopt_long used for parsing options. Now the program is more flexible to read options.
+-fixed a bug when downloading a Metalink file composed by a single chunk
+
+version 0.4.1 - 2009/05/24
+-liburi replaced by liburiparser (http://uriparser.sourceforge.net/) which is more active and packetised
+-libmetalink is now dynamically loaded and external to the project in order to ease the packetisation process
+-Metalink location option added
+-Metalink OS option added
+-Metalink preference parameter supported
+-Metalink max number of connections per resource parameter supported
+-code cleaned in order to follow GNU coding standards
+
+version 0.4.0 - 2009/04/27
+-Metalink feature added to the project
+-Metalink library added to the source code
+-ability to read a list of options from a text file
+-option to write to a text file a brief report 
+-option to write to a csv file a brief report 
+-quiet option to avoid printing messages
+-DEBUG compilation flag inserted
+-fixed a bug, under particular conditions some URLs in download queue were skipped
+-fixed a compilation problem when tidy header isn't <tidy/tidy.h>
+
+version 0.3.1 - 2009/04/10
+-new option to read URLs to download from a text file
+-new option to list more than one URL to download on the command line
+-some bugs fixed
+
+version 0.3.0 - 2009/03/25
+-uri static library added to the project
+-saving and filtering of GIF and PNG images by width and height
+-JPEG library removed, no more needed
+-user manual added to the software installation
+
+version 0.2.0 - 2008/12/15
+-up to 50 simultaneous connections, 5 for each per host
+-better recognition of file types based on mime types
+
+version 0.1.0 - 2008/10/11
+-first release with basic functionalities
+

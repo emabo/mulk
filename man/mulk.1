@@ -1,0 +1,151 @@
+.\"-----------------------------------------------------------------------------
+.\" Copyright (C) 2008, 2009, 2010, 2011 - Emanuele Bovisio
+.\"
+.\" This file is part of Mulk.
+.\"
+.\" Mulk is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" Mulk is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with Mulk.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" In addition, as a special exception, the copyright holders give
+.\" permission to link the code of portions of this program with the
+.\" OpenSSL library under certain conditions as described in each
+.\" individual source file, and distribute linked combinations
+.\" including the two.
+.\" You must obey the GNU General Public License in all respects
+.\" for all of the code used other than OpenSSL.  If you modify
+.\" file(s) with this exception, you may extend this exception to your
+.\" version of the file(s), but you are not obligated to do so.  If you
+.\" do not wish to do so, delete this exception statement from your
+.\" version.  If you delete this exception statement from all source
+.\" files in the program, then also delete it here.
+.\"-----------------------------------------------------------------------------
+.\" Process this file with
+.\" groff -man -Tascii mulk.1
+.\"
+.TH mulk 1 "August 2010" Version "0.5.2"
+.SH NAME
+mulk \- Non-interactive multi-connection network downloader with image filtering and Metalink support.
+.SH SYNOPSIS
+.B mulk [OPTION]... [URL]... 
+.SH DESCRIPTION
+Multi-connection command line tool for downloading Internet sites with image
+filtering and Metalink support. Similar to wget and cURL, but it manages up to 50
+simultaneous and parallel links. Main features are: HTML code parsing, recursive 
+fetching, Metalink retrieving, segmented download and image filtering by width and height.
+It is based on libcurl, liburiparser, libtidy, libmetalink and libcrypto.
+.SH "GENERAL OPTIONS"
+.IP "    --version"
+Show
+.B Mulk
+version number.
+.IP "-h, --help"
+Show the help message and exit.
+.IP "-q, --quiet"
+Quiet (no output).
+.IP "-v, --verbose"
+Verbosity enabled.
+.SH "DOWNLOAD OPTIONS"
+.IP "-U, --user-agent"
+Identify as different agent instead of Mulk/VERSION.
+.IP "-p, --max-sim-conns-per-host"
+Maximum simultaneous connections per each host (default = 2,
+max value = 5).
+.IP "-m, --max-sim-conns"
+Maximum simultaneous connections (default = 50, max value = 50).
+.IP "    --user"
+Username to use for the connection.
+.IP "    --password"
+Password to use for the connection.
+.IP "    --proxy"
+<host[:port]> use HTTP proxy on given host and port.
+.SH "RECURSIVE DOWNLOAD OPTIONS"
+.IP "-d, --depth"
+Maximum recursion depth (0 for infinite, default = 1).
+.IP "    --no-html-dependencies"
+Don't get all images, links, etc. needed to display HTML page.
+.IP "-H, --span-hosts"
+Go to foreign hosts.
+.IP "-D, --domains"
+Comma-separated list of accepted domains.
+.IP "    --exclude-domains"
+Comma-separated list of rejected domains.
+.IP "    --follow-ftp"
+Follow FTP links from HTML documents.
+.SH "INPUT OPTIONS"
+.IP "-t, --option-file"
+Text file with list of options. The file accepts only long options without '--'.
+The lines starting with '#' are skipped.
+.IP "-f, --url-file"
+Text file with list of URLs to download. The lines starting with '#' are skipped.
+.SH "METALINK OPTIONS"
+.IP "-l, --metalink-file"
+Metalink XML file to download.
+.IP "    --metalink-location"
+Comma-separated list of accepted locations.
+.IP "    --metalink-continent"
+Comma-separated list of accepted continents.
+Valid values are: AF, AS, EU, NA, SA, OC, AN.
+.IP "    --metalink-os"
+Operating system of the file to download.
+.IP "    --metalink-language"
+Language version of the file to download.
+.IP "    --metalink-resume-file"
+Partially downloaded Metalink file to resume. It needs a reference Metalink file.
+.IP "    --follow-metalink"
+Follow Metalink files from HTML documents.
+.SH "REPORTING OPTIONS"
+.IP "-r, --report-file"
+Generate a report in a text file.
+.IP "-c, --report-csv-file"
+Generate a report in a CSV file.
+.IP "    --report-every-lines"
+Write reports to files every n lines/downloads (0 for writing all reports at the end, default = 500). 
+.SH "SAVING OPTIONS"
+.IP "-x, --disable-site-save"
+Don't save whole site tree to disk (enabled by default).
+.IP "-g, --save-gif-image"
+Save GIF images to mime output directory.
+.IP "-n, --save-png-image"
+Save PNG images to mime output directory.
+.IP "-j, --save-jpeg-image"
+Save JPEG images to mime output directory.
+.IP "    --save-mime-type"
+Save URLs with specific mime type to output directory.
+.IP "    --mime-output-dir"
+Output directory to save files by mime types (default = 'data').
+.IP "    --file-output-dir"
+Output directory to save downloaded files (default = '.').
+.IP "    --temp-dir"
+Temporary downloading directory (default = '.tmp-mulk'). 
+.SH "IMAGE OPTIONS (active only with -g, -n or -j)"
+.IP "    --min-image-width"
+Minimum image width.
+.IP "    --max-image-width"
+Maximum image width.
+.IP "    --min-image-height"
+Minimum image height.
+.IP "    --max-image-height"
+Maximum image height.
+.SH BUGS
+.B Please report any bugs using the bug reporting form on the
+.B Mulk
+web site:
+.B http://sourceforge.net/projects/mulk
+.SH "SEE ALSO"
+Additional information and the latest version is available
+at the web site:
+.B http://sourceforge.net/projects/mulk
+.SH AUTHOR
+Emanuele Bovisio <pocoyo@users.sourceforge.net> wrote this manpage.  
+.B Mulk
+was written by Emanuele Bovisio.

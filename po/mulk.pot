@@ -1,0 +1,676 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Emanuele Bovisio
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: mulk 0.5.2\n"
+"Report-Msgid-Bugs-To: http://sourceforge.net/projects/mulk\n"
+"POT-Creation-Date: 2011-04-22 17:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/buffer_array.c:210
+#, c-format
+msgid "Open link #%d, url: %s, tmp file: %s\n"
+msgstr ""
+
+#: lib/buffer_array.c:260 lib/chunk_list.c:286
+msgid "The file will be deleted.\n"
+msgstr ""
+
+#: lib/buffer_array.c:326 lib/buffer_array.c:339 lib/chunk_list.c:280
+#, c-format
+msgid "Saving file: %s\n"
+msgstr ""
+
+#: lib/buffer_array.c:327 lib/buffer_array.c:347
+#, c-format
+msgid "Saving image: %s\n"
+msgstr ""
+
+#: lib/buffer_array.c:361
+#, c-format
+msgid "ERROR: saving file error no. %d\n"
+msgstr ""
+
+#: lib/buffer_array.c:444
+#, c-format
+msgid "Close link #%d\n"
+msgstr ""
+
+#: lib/buffer_array.c:488
+#, c-format
+msgid "Downloaded %d/%d chunks, %ld/%ld bytes\n"
+msgstr ""
+
+#: lib/buffer_array.c:500
+#, c-format
+msgid "RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%ld\n"
+msgstr ""
+
+#: lib/buffer_array.c:504
+#, c-format
+msgid ""
+"RESULT: Metalink error, no more usable URLs for downloading, Filename:\"%s"
+"\"\n"
+msgstr ""
+
+#: lib/buffer_array.c:556 lib/buffer_array.c:561
+msgid "PRESENT"
+msgstr ""
+
+#: lib/buffer_array.c:556 lib/buffer_array.c:561
+msgid "EMPTY"
+msgstr ""
+
+#: lib/buffer_array.c:557
+msgid "NULL"
+msgstr ""
+
+#: lib/buffer_array.c:558
+msgid "CHUNK"
+msgstr ""
+
+#: lib/buffer_array.c:558
+msgid "NO CHUNK"
+msgstr ""
+
+#: lib/buffer_array.c:602
+msgid "ERROR: removing temporary directory\n"
+msgstr ""
+
+#: lib/checksum.c:347 lib/chunk_list.c:325
+msgid "No compatible checksum to verify.\n"
+msgstr ""
+
+#: lib/checksum.c:351
+#, c-format
+msgid "Verifying %s checksum on %s. This may take a while...\n"
+msgstr ""
+
+#: lib/checksum.c:355
+msgid "Checksum correct.\n"
+msgstr ""
+
+#: lib/checksum.c:357
+msgid "Checksum wrong.\n"
+msgstr ""
+
+#: lib/chunk_list.c:81
+msgid "Chunk checksum correct.\n"
+msgstr ""
+
+#: lib/chunk_list.c:83
+msgid "Chunk checksum wrong.\n"
+msgstr ""
+
+#: lib/chunk_list.c:246
+#, c-format
+msgid "Checking chunk no. %d\n"
+msgstr ""
+
+#: lib/chunk_list.c:277 lib/chunk_list.c:291
+#, c-format
+msgid "Resuming file: %s, verified %d/%d chunks.\n"
+msgstr ""
+
+#: lib/chunk_list.c:323
+#, c-format
+msgid "Found chunk checksum of %s type.\n"
+msgstr ""
+
+#: lib/chunk_list.c:329
+msgid "ERROR: wrong length in chunk checksum.\n"
+msgstr ""
+
+#: lib/chunk_list.c:355
+#, c-format
+msgid "filesize: %ld\n"
+msgstr ""
+
+#: lib/chunk_list.c:356
+#, c-format
+msgid "number of chunks: %d\n"
+msgstr ""
+
+#: lib/chunk_list.c:357
+#, c-format
+msgid "chunk size: %ld\n"
+msgstr ""
+
+#: lib/chunk_list.c:358
+#, c-format
+msgid "last chunk size: %ld\n"
+msgstr ""
+
+#: lib/file_obj.c:108
+#, c-format
+msgid "Add url to download coming from text file: %s\n"
+msgstr ""
+
+#: lib/file_obj.c:151
+#, c-format
+msgid "Add option coming from text file: %s%s%s\n"
+msgstr ""
+
+#: lib/gif_obj.c:86
+#, c-format
+msgid "Image GIF %s: %s, width = %d, height = %d\n"
+msgstr ""
+
+#: lib/jpg_obj.c:155
+#, c-format
+msgid "Image JPG %s: %s, width = %d, height = %d\n"
+msgstr ""
+
+#: lib/metalink_list.c:300
+#, c-format
+msgid "ERROR: code=%d\n"
+msgstr ""
+
+#: lib/m_malloc.c:106
+#, c-format
+msgid "ERROR: increase HASH_TABLE_SIZE to a larger value and recompile\n"
+msgstr ""
+
+#: lib/m_malloc.c:151
+#, c-format
+msgid ""
+"\n"
+"CAlloc:  %d\n"
+msgstr ""
+
+#: lib/m_malloc.c:152
+#, c-format
+msgid "Free:    %d\n"
+msgstr ""
+
+#: lib/m_malloc.c:153
+#, c-format
+msgid ""
+"Memory Leaks: %d\n"
+"\n"
+msgstr ""
+
+#: lib/m_malloc.c:157
+#, c-format
+msgid "ptr=0x%lx, %s:%d, %ld bytes\n"
+msgstr ""
+
+#: lib/m_malloc.c:167
+#, c-format
+msgid "chunck %%%d, number %d\n"
+msgstr ""
+
+#: lib/m_malloc.c:180
+#, c-format
+msgid "ERROR: pointer to add already present at %s:%d\n"
+msgstr ""
+
+#: lib/m_malloc.c:190
+#, c-format
+msgid "ERROR: free NULL pointer at %s:%d\n"
+msgstr ""
+
+#: lib/m_malloc.c:195
+#, c-format
+msgid "ERROR: bad free (0x%lx) at %s:%d\n"
+msgstr ""
+
+#: lib/m_malloc.c:209
+#, c-format
+msgid "ERROR: %s,%d: memory allocation failed (%ld bytes)\n"
+msgstr ""
+
+#: lib/mulk.c:84
+#, c-format
+msgid "libcURL version %s\n"
+msgstr ""
+
+#: lib/mulk.c:129
+msgid "ERROR: fdset\n"
+msgstr ""
+
+#: lib/mulk.c:140
+msgid "ERROR: timeout\n"
+msgstr ""
+
+#: lib/mulk.c:159
+#, c-format
+msgid "ERROR: num_fd:%d, time_to_wait %li, error message %s (%d)\n"
+msgstr ""
+
+#: lib/mulk.c:188
+#, c-format
+msgid "RESULT: %d (%s), "
+msgstr ""
+
+#: lib/mulk.c:191
+#, c-format
+msgid "HTTP Code:\"%ld\" Mime-Type:\"%s\" "
+msgstr ""
+
+#: lib/mulk.c:195
+#, c-format
+msgid "Url:\"%s\" Size:%ld\n"
+msgstr ""
+
+#: lib/mulk.c:214
+#, c-format
+msgid "ERROR: message=%d\n"
+msgstr ""
+
+#: lib/mulk.c:237
+#, c-format
+msgid ""
+"\n"
+"Total time to download = %ld seconds"
+msgstr ""
+
+#: lib/mulk.c:238
+#, c-format
+msgid ""
+"\n"
+"Total downloaded files = %ld"
+msgstr ""
+
+#: lib/mulk.c:239
+#, c-format
+msgid ""
+"\n"
+"Total size downloaded = %.2f KB\n"
+msgstr ""
+
+#: lib/mulk.c:241
+#, c-format
+msgid ""
+"\n"
+"Average data rate = %.2f KB/s\n"
+msgstr ""
+
+#: lib/option_obj.c:91
+msgid "display version number and exit"
+msgstr ""
+
+#: lib/option_obj.c:93
+msgid "General options"
+msgstr ""
+
+#: lib/option_obj.c:94
+msgid "display this help and exit"
+msgstr ""
+
+#: lib/option_obj.c:96
+msgid "quiet (no output)"
+msgstr ""
+
+#: lib/option_obj.c:98
+msgid "be verbose"
+msgstr ""
+
+#: lib/option_obj.c:100
+msgid "identify as different agent instead of Mulk/VERSION"
+msgstr ""
+
+#: lib/option_obj.c:102
+msgid "Download options"
+msgstr ""
+
+#: lib/option_obj.c:103
+msgid "maximum simultaneous connections per host"
+msgstr ""
+
+#: lib/option_obj.c:105
+msgid "wrong value for maximum simultaneous connections per host"
+msgstr ""
+
+#: lib/option_obj.c:106
+msgid "maximum simultaneous connections"
+msgstr ""
+
+#: lib/option_obj.c:108
+msgid "wrong value for maximum simultaneous connections"
+msgstr ""
+
+#: lib/option_obj.c:109
+msgid "username to use for the connection"
+msgstr ""
+
+#: lib/option_obj.c:111
+msgid "password to use for the connection"
+msgstr ""
+
+#: lib/option_obj.c:113
+msgid "<host[:port]> use HTTP proxy on given host and port"
+msgstr ""
+
+#: lib/option_obj.c:116
+msgid "maximum recursion depth (0 for infinite)"
+msgstr ""
+
+#: lib/option_obj.c:117
+msgid "wrong depth values"
+msgstr ""
+
+#: lib/option_obj.c:118
+msgid "Recursive download options"
+msgstr ""
+
+#: lib/option_obj.c:119
+msgid "don't get all images, links, etc. needed to display HTML page"
+msgstr ""
+
+#: lib/option_obj.c:121
+msgid "go to foreign hosts"
+msgstr ""
+
+#: lib/option_obj.c:123
+msgid "comma-separated list of accepted domains"
+msgstr ""
+
+#: lib/option_obj.c:125
+msgid "comma-separated list of rejected domains"
+msgstr ""
+
+#: lib/option_obj.c:127
+msgid "follow FTP links from HTML documents"
+msgstr ""
+
+#: lib/option_obj.c:130
+msgid "text file with list of options"
+msgstr ""
+
+#: lib/option_obj.c:132
+msgid "Input options"
+msgstr ""
+
+#: lib/option_obj.c:133
+msgid "text file with list of URLs to download"
+msgstr ""
+
+#: lib/option_obj.c:136
+msgid "Metalink filename"
+msgstr ""
+
+#: lib/option_obj.c:138
+msgid "Metalink options"
+msgstr ""
+
+#: lib/option_obj.c:139
+msgid "comma-separated list of accepted locations"
+msgstr ""
+
+#: lib/option_obj.c:141
+msgid "comma-separated list of accepted continents"
+msgstr ""
+
+#: lib/option_obj.c:143
+msgid "operating system to be considered in Metalink files"
+msgstr ""
+
+#: lib/option_obj.c:145
+msgid "language to be considered in Metalink files"
+msgstr ""
+
+#: lib/option_obj.c:148
+msgid "filename to resume"
+msgstr ""
+
+#: lib/option_obj.c:151
+msgid "follow Metalink files from HTML documents"
+msgstr ""
+
+#: lib/option_obj.c:154
+msgid "report filename"
+msgstr ""
+
+#: lib/option_obj.c:156
+msgid "Reporting options"
+msgstr ""
+
+#: lib/option_obj.c:157
+msgid "report CSV filename"
+msgstr ""
+
+#: lib/option_obj.c:159
+msgid "write report to file every n lines"
+msgstr ""
+
+#: lib/option_obj.c:161
+msgid "wrong maximum number of lines for writing report"
+msgstr ""
+
+#: lib/option_obj.c:162
+msgid "don't save whole site tree to disk (enabled by default)"
+msgstr ""
+
+#: lib/option_obj.c:164
+msgid "Saving options"
+msgstr ""
+
+#: lib/option_obj.c:165
+msgid "save GIF images to mime output directory"
+msgstr ""
+
+#: lib/option_obj.c:167
+msgid "save PNG images to mime output directory"
+msgstr ""
+
+#: lib/option_obj.c:169
+msgid "save JPEG images to mime output directory"
+msgstr ""
+
+#: lib/option_obj.c:171
+msgid "save URLs with specific mime-type to mime output directory"
+msgstr ""
+
+#: lib/option_obj.c:173
+msgid "mime output directory"
+msgstr ""
+
+#: lib/option_obj.c:175
+msgid "file output directory"
+msgstr ""
+
+#: lib/option_obj.c:177
+msgid "temporary directory"
+msgstr ""
+
+#: lib/option_obj.c:179
+msgid "minimum image width"
+msgstr ""
+
+#: lib/option_obj.c:181
+msgid "wrong minimum image width"
+msgstr ""
+
+#: lib/option_obj.c:182
+msgid ""
+"Image options (active only with --save-gif-image, --save-png-image or --save-"
+"jpeg-image)"
+msgstr ""
+
+#: lib/option_obj.c:183
+msgid "maximum image width"
+msgstr ""
+
+#: lib/option_obj.c:185
+msgid "wrong maximum image width"
+msgstr ""
+
+#: lib/option_obj.c:186
+msgid "minimum image height"
+msgstr ""
+
+#: lib/option_obj.c:188
+msgid "wrong minimum image height"
+msgstr ""
+
+#: lib/option_obj.c:189
+msgid "maximum image height"
+msgstr ""
+
+#: lib/option_obj.c:191
+msgid "wrong maximum image height"
+msgstr ""
+
+#: lib/option_obj.c:273
+#, c-format
+msgid "Add domain to list: %s\n"
+msgstr ""
+
+#: lib/option_obj.c:339
+#, c-format
+msgid "ERROR: Metalink location length is wrong: %s\n"
+msgstr ""
+
+#: lib/option_obj.c:348
+#, c-format
+msgid "Add Metalink location to list: %s\n"
+msgstr ""
+
+#: lib/option_obj.c:420
+#, c-format
+msgid "long option inserted %d, %s\n"
+msgstr ""
+
+#: lib/option_obj.c:447
+#, c-format
+msgid "short option string %s\n"
+msgstr ""
+
+#: lib/option_obj.c:456
+#, c-format
+msgid ""
+"Mulk %s, a non-interactive multi-connection network downloader with image "
+"filtering and Metalink support.\n"
+msgstr ""
+
+#: lib/option_obj.c:459
+#, c-format
+msgid ""
+"Mulk %s, a non-interactive multi-connection network downloader with image "
+"filtering.\n"
+msgstr ""
+
+#: lib/option_obj.c:462
+#, c-format
+msgid "Usage: Mulk [OPTION]... [URL]...\n"
+msgstr ""
+
+#: lib/option_obj.c:481
+#, c-format
+msgid "Mulk version %s\n"
+msgstr ""
+
+#: lib/option_obj.c:482
+#, c-format
+msgid ""
+"\n"
+"Mulk  Copyright (C) 2008, 2009, 2010, 2011  Emanuele Bovisio\n"
+msgstr ""
+
+#: lib/option_obj.c:483
+#, c-format
+msgid "This program comes with ABSOLUTELY NO WARRANTY.\n"
+msgstr ""
+
+#: lib/option_obj.c:484
+#, c-format
+msgid "This is free software, and you are welcome to redistribute it\n"
+msgstr ""
+
+#: lib/option_obj.c:485
+#, c-format
+msgid "under certain conditions.\n"
+msgstr ""
+
+#: lib/option_obj.c:486
+#, c-format
+msgid "See the GNU General Public License version 3 or later\n"
+msgstr ""
+
+#: lib/option_obj.c:487
+#, c-format
+msgid ""
+"for more details.\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:500 lib/option_obj.c:520 lib/option_obj.c:602
+#, c-format
+msgid ""
+"\n"
+"ERROR: option not recognised\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:608
+#, c-format
+msgid "option recognised %d, %s=%s\n"
+msgstr ""
+
+#: lib/option_obj.c:616 lib/option_obj.c:628
+#, c-format
+msgid ""
+"\n"
+"ERROR: this option (%s) needs to be followed by a value\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:621
+#, c-format
+msgid ""
+"\n"
+"ERROR: %s\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:641
+#, c-format
+msgid ""
+"\n"
+"ERROR: option type not valid, %d\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:697
+#, c-format
+msgid ""
+"\n"
+"ERROR: url not present\n"
+"\n"
+msgstr ""
+
+#: lib/option_obj.c:703
+#, c-format
+msgid "Add url to download coming from command line: %s\n"
+msgstr ""
+
+#: lib/option_obj.c:713
+#, c-format
+msgid "Try `mulk --help' for more information.\n"
+msgstr ""
+
+#: lib/png_obj.c:92
+#, c-format
+msgid "Image PNG %s: %s, width = %d, height = %d\n"
+msgstr ""
+
+#: lib/string_obj.c:208
+#, c-format
+msgid "ERROR: printf format\n"
+msgstr ""
+
+#: lib/string_obj.c:213
+#, c-format
+msgid "ERROR: vnsprintf failed\n"
+msgstr ""
