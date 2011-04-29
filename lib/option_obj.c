@@ -54,6 +54,8 @@
 #define DEFAULT_TEMP_DIRECTORY ".tmp-mulk"
 
 
+typedef mulk_type_return_t (*set_option_value_t)(void);
+
 typedef enum type_option_t {
 	OPTION_BOOL,
 	OPTION_INT,
@@ -72,6 +74,7 @@ typedef struct option_t {
 	int max_val;
 	char *error;
 	char *title;
+	set_option_value_t set_option_value;
 } option_t;
 
 #ifdef ENABLE_RECURSION
@@ -84,111 +87,122 @@ static char *location_countries = NULL;
 static char *location_continents = NULL;
 #endif
 
+static mulk_type_return_t set_option_option_filename(void);
+static mulk_type_return_t set_option_url_filename(void);
+#ifdef ENABLE_RECURSION
+static mulk_type_return_t set_option_domains(void);
+static mulk_type_return_t set_option_exclude_domains(void);
+#endif
+#ifdef ENABLE_METALINK
+static mulk_type_return_t set_option_metalink_location(void);
+static mulk_type_return_t set_option_metalink_continent(void);
+#endif
+
 /* reset all struct */
 option_value_t option_values = {0};
 
 option_t options[] = {
 	{"version",                  0, gettext_noop("display version number and exit"),
 		NULL,                                  OPTION_VERSION, 0, 0, NULL,
-		gettext_noop("General options")},
+		gettext_noop("General options"), NULL},
 	{"help",                   'h', gettext_noop("display this help and exit"),
-		NULL,                                  OPTION_HELP, 0, 0, NULL, NULL},
+		NULL,                                  OPTION_HELP, 0, 0, NULL, NULL, NULL},
 	{"quiet",                  'q', gettext_noop("quiet (no output)"),
-		&option_values.quiet,                  OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.quiet,                  OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"verbose",                'v', gettext_noop("be verbose"),
-		&option_values.verbosity,              OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.verbosity,              OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"user-agent",             'U', gettext_noop("identify as different agent instead of Mulk/VERSION"),
 		&option_values.user_agent,             OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Download options")},
+		gettext_noop("Download options"), NULL},
 	{"max-sim-conns-per-host", 'p', gettext_noop("maximum simultaneous connections per host"), 
 		&option_values.max_sim_conns_per_host, OPTION_INT, 1, 5,
-		gettext_noop("wrong value for maximum simultaneous connections per host"), NULL},
+		gettext_noop("wrong value for maximum simultaneous connections per host"), NULL, NULL},
 	{"max-sim-conns",          'm', gettext_noop("maximum simultaneous connections"),
 		&option_values.max_sim_conns,          OPTION_INT, 1, 50,
-		gettext_noop("wrong value for maximum simultaneous connections"), NULL},
+		gettext_noop("wrong value for maximum simultaneous connections"), NULL, NULL},
 	{"user",                     0, gettext_noop("username to use for the connection"),
-		&option_values.user,                   OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.user,                   OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"password",                 0, gettext_noop("password to use for the connection"),
-		&option_values.password,               OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.password,               OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"proxy",                    0, gettext_noop("<host[:port]> use HTTP proxy on given host and port"),
-		&option_values.proxy,                  OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.proxy,                  OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #ifdef ENABLE_RECURSION
 	{"depth",                  'd', gettext_noop("maximum recursion depth (0 for infinite)"),
 		&option_values.depth,                  OPTION_INT, 0, INT_MAX, gettext_noop("wrong depth values"),
-		gettext_noop("Recursive download options")},
+		gettext_noop("Recursive download options"), NULL},
 	{"no-html-dependencies",     0, gettext_noop("don't get all images, links, etc. needed to display HTML page"),
-		&option_values.no_html_dependencies,   OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.no_html_dependencies,   OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"span-hosts",             'H', gettext_noop("go to foreign hosts"),
-		&option_values.span_hosts,             OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.span_hosts,             OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"domains",                'D', gettext_noop("comma-separated list of accepted domains"),
-		&option_values.domains,                OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.domains,                OPTION_STRING, 0, 0, NULL, NULL, set_option_domains},
 	{"exclude-domains",          0, gettext_noop("comma-separated list of rejected domains"),
-		&option_values.exclude_domains,        OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.exclude_domains,        OPTION_STRING, 0, 0, NULL, NULL, set_option_exclude_domains},
 	{"follow-ftp",               0, gettext_noop("follow FTP links from HTML documents"),
-		&option_values.follow_ftp,             OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.follow_ftp,             OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 #endif /* ENABLE_RECURSION */
-	{"option-file",            't', gettext_noop("text file with list of options"),
+	{OPT_OPTION_FILE,          't', gettext_noop("text file with list of options"),
 		&option_values.option_filename,        OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Input options")},
+		gettext_noop("Input options"), set_option_option_filename},
 	{"url-file",               'f', gettext_noop("text file with list of URLs to download"),
-		&option_values.url_filename,           OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.url_filename,           OPTION_STRING, 0, 0, NULL, NULL, set_option_url_filename},
 #ifdef ENABLE_METALINK
 	{"metalink-file",          'l', gettext_noop("Metalink filename"),
 		&option_values.metalink_filename,      OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Metalink options")},
+		gettext_noop("Metalink options"), NULL},
 	{"metalink-location",        0, gettext_noop("comma-separated list of accepted locations"),
-		&option_values.metalink_location,      OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.metalink_location,      OPTION_STRING, 0, 0, NULL, NULL, set_option_metalink_location},
 	{"metalink-continent",       0, gettext_noop("comma-separated list of accepted continents"),
-		&option_values.metalink_continent,     OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.metalink_continent,     OPTION_STRING, 0, 0, NULL, NULL, set_option_metalink_continent},
 	{"metalink-os",              0, gettext_noop("operating system to be considered in Metalink files"),
-		&option_values.metalink_os,            OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.metalink_os,            OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"metalink-language",        0, gettext_noop("language to be considered in Metalink files"),
-		&option_values.metalink_language,      OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.metalink_language,      OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #ifdef ENABLE_CHECKSUM
 	{"metalink-resume-file",     0, gettext_noop("filename to resume"),
-		&option_values.metalink_resume_file,   OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.metalink_resume_file,   OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #endif /* ENABLE_CHECKSUM */
 	{"follow-metalink",          0, gettext_noop("follow Metalink files from HTML documents"),
-		&option_values.follow_metalink,        OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.follow_metalink,        OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 #endif /* ENABLE_METALINK */
 	{"report-file",            'r', gettext_noop("report filename"),
 		&option_values.report_filename,        OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Reporting options")},
+		gettext_noop("Reporting options"), NULL},
 	{"report-csv-file",        'c', gettext_noop("report CSV filename"),
-		&option_values.report_csv_filename,    OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.report_csv_filename,    OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"report-every-lines",       0, gettext_noop("write report to file every n lines"),
 		&option_values.report_every_lines,     OPTION_INT, 0, INT_MAX,
-		gettext_noop("wrong maximum number of lines for writing report"), NULL},
+		gettext_noop("wrong maximum number of lines for writing report"), NULL, NULL},
 	{"disable-site-save",      'x', gettext_noop("don't save whole site tree to disk (enabled by default)"),
 		&option_values.disable_save_tree,      OPTION_BOOL, 0, 0, NULL,
-		gettext_noop("Saving options")},
+		gettext_noop("Saving options"), NULL},
 	{"save-gif-image",         'g', gettext_noop("save GIF images to mime output directory"),
-		&option_values.save_gif_image,         OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.save_gif_image,         OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"save-png-image",         'n', gettext_noop("save PNG images to mime output directory"),
-		&option_values.save_png_image,         OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.save_png_image,         OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"save-jpeg-image",        'j', gettext_noop("save JPEG images to mime output directory"),
-		&option_values.save_jpeg_image,        OPTION_BOOL, 0, 0, NULL, NULL},
+		&option_values.save_jpeg_image,        OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"save-mime-type",           0, gettext_noop("save URLs with specific mime-type to mime output directory"),
-		&option_values.save_mime_type,         OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.save_mime_type,         OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"mime-output-dir",          0, gettext_noop("mime output directory"),
-		&option_values.mime_output_directory,  OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.mime_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"file-output-dir",          0, gettext_noop("file output directory"),
-		&option_values.file_output_directory,  OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.file_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"temp-dir",                 0, gettext_noop("temporary directory"),
-		&option_values.temp_directory,         OPTION_STRING, 0, 0, NULL, NULL},
+		&option_values.temp_directory,         OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"min-image-width",          0, gettext_noop("minimum image width"),
 		&option_values.min_image_width,        OPTION_INT, 0, INT_MAX,
 		gettext_noop("wrong minimum image width"),
-		gettext_noop("Image options (active only with --save-gif-image, --save-png-image or --save-jpeg-image)")},
+		gettext_noop("Image options (active only with --save-gif-image, --save-png-image or --save-jpeg-image)"), NULL},
 	{"max-image-width",          0, gettext_noop("maximum image width"),
 		&option_values.max_image_width,        OPTION_INT, 0, INT_MAX,
-		gettext_noop("wrong maximum image width"), NULL},
+		gettext_noop("wrong maximum image width"), NULL, NULL},
 	{"min-image-height",         0, gettext_noop("minimum image height"),
 		&option_values.min_image_height,       OPTION_INT, 0, INT_MAX,
-		gettext_noop("wrong minimum image height"), NULL},
+		gettext_noop("wrong minimum image height"), NULL, NULL},
 	{"max-image-height",         0, gettext_noop("maximum image height"),
 		&option_values.max_image_height,       OPTION_INT, 0, INT_MAX,
-		gettext_noop("wrong maximum image height"), NULL},
+		gettext_noop("wrong maximum image height"), NULL, NULL},
 };
 
 #ifdef ENABLE_RECURSION
@@ -293,6 +307,16 @@ int is_host_compatible_with_domains(UriUriA *uri)
 		&& !is_host_in_domains(uri, rejected_domains);
 }
 
+static mulk_type_return_t set_option_domains(void)
+{
+	return parse_domains(option_values.domains, &accepted_domains);
+}
+
+static mulk_type_return_t set_option_exclude_domains(void)
+{
+	return parse_domains(option_values.exclude_domains, &rejected_domains);
+}
+
 static void free_domain(char ***domains)
 {
 	int i;
@@ -395,12 +419,33 @@ int is_location_in_list(const char *loc)
 	return 0;
 }
 
+static mulk_type_return_t set_option_metalink_location(void)
+{
+	return save_locations(option_values.metalink_location, &location_countries);
+}
+
+static mulk_type_return_t set_option_metalink_continent(void)
+{
+	return save_locations(option_values.metalink_continent, &location_continents);
+}
+
 static void free_locations(void)
 {
 	string_free(&location_countries);
 	string_free(&location_continents);
 }
 #endif /* ENABLE_METALINK */
+
+static mulk_type_return_t set_option_option_filename(void)
+{
+	/* read options from a file */
+	return read_option_from_text_file(option_values.option_filename);
+}
+
+static mulk_type_return_t set_option_url_filename(void)
+{
+	return read_uri_from_text_file(option_values.url_filename);
+}
 
 /* general options */
 static struct option *create_long_options_array(void)
@@ -542,43 +587,12 @@ void init_options(void)
 	option_values.temp_directory = string_new(DEFAULT_TEMP_DIRECTORY);
 }
 
-mulk_type_return_t mulk_compute_options(void)
-{
-	mulk_type_return_t ret = MULK_RET_OK;
-
-	/* read options from a file */
-	if (option_values.option_filename) 
-		if ((ret = read_option_from_text_file(option_values.option_filename)) != MULK_RET_OK)
-			return ret;
-
-#ifdef ENABLE_RECURSION
-	if (option_values.domains)
-		if ((ret = parse_domains(option_values.domains, &accepted_domains)) != MULK_RET_OK)
-			return ret;
-
-	if (option_values.exclude_domains)
-		if ((ret = parse_domains(option_values.exclude_domains, &rejected_domains)) != MULK_RET_OK)
-			return ret;
-#endif /* ENABLE_RECURSION */
-
-	return ret;
-}
-
 mulk_type_return_t mulk_compute_urls(void)
 {
 	mulk_type_return_t ret = MULK_RET_OK;
 
-	if (option_values.url_filename)
-		if ((ret = read_uri_from_text_file(option_values.url_filename)) != MULK_RET_OK)
-			return ret;
-
 #ifdef ENABLE_METALINK
 	if (option_values.metalink_filename) {
-		if ((ret = save_locations(option_values.metalink_location, &location_countries)) != MULK_RET_OK)
-			return ret;
-		if ((ret = save_locations(option_values.metalink_continent, &location_continents)) != MULK_RET_OK)
-			return ret;
-
 		if ((ret = add_new_metalink(option_values.metalink_filename, 1,
 #ifdef ENABLE_CHECKSUM
 			option_values.metalink_resume_file
@@ -642,6 +656,9 @@ mulk_type_return_t mulk_set_option(int ind, const char *value)
 			return MULK_RET_ERR;
 	}
 
+	if (options[ind].set_option_value)
+		return options[ind].set_option_value();
+
 	return MULK_RET_OK;
 }
 
@@ -686,19 +703,6 @@ mulk_type_return_t mulk_set_options(int argc, char **argv)
 	string_free(&short_options);
 	m_free(long_options);
 
-	if ((ret = mulk_compute_options()) != MULK_RET_OK)
-		goto Exit;
-
-	if (optind >= argc && !option_values.url_filename 
-#ifdef ENABLE_METALINK
-		&& !option_values.metalink_filename
-#endif
-		) {
-		fprintf(stderr, _("\nERROR: url not present\n\n"));
-		ret = MULK_RET_URL_ERR;
-		goto Exit;
-	}
-
 	while (optind < argc) {
 		MULK_NOTE((_("Add url to download coming from command line: %s\n"), argv[optind]));
 		if ((ret = mulk_add_new_url(argv[optind++])) != MULK_RET_OK)
@@ -707,6 +711,11 @@ mulk_type_return_t mulk_set_options(int argc, char **argv)
 
 	if ((ret = mulk_compute_urls()) != MULK_RET_OK)
 		goto Exit;
+
+	if (is_url_list_empty()) {
+		fprintf(stderr, _("\nERROR: url not present\n\n"));
+		ret = MULK_RET_URL_ERR;
+	}
 
 Exit:
 	if (ret < MULK_RET_OK)

@@ -2,9 +2,14 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.5.2, beta)
 
 
+2011/04/29 Emanuele <pocoyo@users.sourceforge.net>
+	* the options can be evaluated by callbacks
+	* fix to avoid recursive calls in option file
+	* dependency between new metalink urls and related options has been removed. The options are evaluated when download process is running
+
 2011/04/22 Emanuele <pocoyo@users.sourceforge.net>
 	* specific Mulk return codes have been added to the library functions
-	* new --with-libmetalink option in configure in order to specify different path for libmetalink library.
+	* new --with-libmetalink option in configure in order to specify different path for libmetalink library
 
 2010/11/19 Emanuele <pocoyo@users.sourceforge.net>
 	* MSVC solution has been revisited and rationalised
