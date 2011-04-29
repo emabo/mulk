@@ -53,6 +53,7 @@ typedef struct url_list_t {
 	char *filename;
 	char *mimefilename;
 
+	int not_valid;
 	int downloaded;
 	int reported;
 
@@ -62,6 +63,8 @@ typedef struct url_list_t {
 #endif
 } url_list_t;
 
+
+int is_url_list_empty(void);
 
 UriUriA *create_absolute_url(const char *base_url, const char *url);
 

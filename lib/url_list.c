@@ -46,6 +46,11 @@ url_list_t *download_ptr = NULL;
 url_list_t *report_ptr = NULL;
 
 
+int is_url_list_empty(void)
+{
+	return !top;
+}
+
 static url_list_t *create_new_element(void)
 {
 	url_list_t *elem;
@@ -174,22 +179,28 @@ url_list_t *search_next_url(UriUriA **uri)
 			}
 #ifdef ENABLE_METALINK
 			else if (elem->metalink_uri) {
-				*uri = find_next_url(elem->metalink_uri, chunk, resource, header);
+				if (!elem->not_valid && is_valid_metalink(elem->metalink_uri->file))
+				{
+					*uri = find_next_url(elem->metalink_uri, chunk, resource, header);
 
-				if (*chunk || *header) {
-					if (*uri) {
-						if (update_pointer)
-							download_ptr = elem;
-						return elem;
+					if (*chunk || *header) {
+						if (*uri) {
+							if (update_pointer)
+								download_ptr = elem;
+							return elem;
+						}
+						else
+							update_pointer = 0;
 					}
+					else if (is_file_downloaded(elem->metalink_uri)) 
+						elem->assigned = 1;
 					else
 						update_pointer = 0;
 				}
-				else if (is_file_downloaded(elem->metalink_uri)) {
-					elem->assigned = 1;
+				else {
+					elem->not_valid = 1;
+					elem->err_code = METALINK_RES_INVALID_METALINK;
 				}
-				else
-					update_pointer = 0;
 			}
 #endif /* ENABLE_METALINK */
 			else

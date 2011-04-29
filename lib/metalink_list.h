@@ -42,9 +42,10 @@
 
 
 typedef enum metalink_res_code_t {
-	METALINK_RES_NO_NORE_RESOURCES = 1000,
-	METALINK_RES_WRONG_CHECKSUM =    1001,
-	METALINK_RES_OK =                1002,
+	METALINK_RES_OK =                1000,
+	METALINK_RES_NO_NORE_RESOURCES = 1001,
+	METALINK_RES_WRONG_CHECKSUM =    1002,
+	METALINK_RES_INVALID_METALINK =  1003,
 } metalink_res_code_t;
 
 typedef struct metalink_resource_list_t {
@@ -86,6 +87,8 @@ UriUriA *find_next_url(metalink_file_list_t *file, chunk_t **chunk, metalink_res
 void set_metalink_file_length(metalink_file_list_t *file, off_t size);
 
 void free_metalink_file(metalink_file_list_t *file);
+
+int is_valid_metalink(metalink_file_t* file);
 
 void push_metalink(metalink_t *metalink);
 

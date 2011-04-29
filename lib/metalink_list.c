@@ -116,7 +116,7 @@ int is_resource_available(metalink_file_list_t *file, int header)
 
 	elem = file->usable_res_top;
 	while (elem) {
-		if (!elem->error
+		if (!elem->error && is_valid_resource(elem->resource)
 				/* only HTTP or HTTPS to read filesize information */
 				&& (!header || (header && string_casecmp(elem->resource->type, FTP_PROTOCOL)))) 
 			return 1;
@@ -139,7 +139,9 @@ static metalink_resource_list_t *find_free_resource(metalink_file_list_t *file, 
 
 	elem = file->usable_res_top;
 	while (elem) {
-		if (!elem->error && elem->resource->preference > max_preference 
+		if (!elem->error 
+				&& elem->resource->preference > max_preference 
+				&& is_valid_resource(elem->resource)
 				&& is_uri_compatible(elem->uri, elem->resource->maxconnections)
 				/* only HTTP or HTTPS to read filesize information */
 				&& (!header || (header && string_casecmp(elem->resource->type, FTP_PROTOCOL)))) {
@@ -285,6 +287,25 @@ void free_metalinks(void)
 	}
 }
 
+int is_valid_metalink(metalink_file_t* file)
+{
+	/* resources not present */
+	if (!file || !file->resources || !file->resources[0])
+		return 0;
+
+	/* different OS */
+	if (option_values.metalink_os && *(option_values.metalink_os)
+		&& !string_casestr(file->os, option_values.metalink_os))
+		return 0;
+
+	/* different language */
+	if (option_values.metalink_language && *(option_values.metalink_language)
+		&& string_casecmp(file->language, option_values.metalink_language))
+		return 0;
+
+	return 1;
+}
+
 mulk_type_return_t add_new_metalink(const char *filename, int level, const char *resume_filename)
 {
 	metalink_error_t err;
@@ -306,20 +327,6 @@ mulk_type_return_t add_new_metalink(const char *filename, int level, const char 
 	for (files = metalink->files; *files; files++) {
 		MULK_DEBUG(("name = %s\n", (*files)->name ? (*files)->name : "(null)"));
 
-		/* resources not present */
-		if (!(*files)->resources || !(*files)->resources[0])
-			continue;
-
-		/* different OS */
-		if (option_values.metalink_os && *(option_values.metalink_os)
-			&& !string_casestr((*files)->os, option_values.metalink_os))
-			continue;
-
-		/* different language */
-		if (option_values.metalink_language && *(option_values.metalink_language)
-			&& string_casecmp((*files)->language, option_values.metalink_language))
-			continue;
-
 		if (!(new_file = create_metalink_file(*files, 
 				!resume_file_used && resume_filename ? resume_filename : NULL)))
 			continue;
@@ -329,10 +336,8 @@ mulk_type_return_t add_new_metalink(const char *filename, int level, const char 
 			resume_file_used = 1;
 
 		for (resources = (*files)->resources; *resources; resources++) {
-			if (is_valid_resource(*resources)) {
-				MULK_DEBUG(("resource = %s\n", (*resources)->url ? (*resources)->url : "(null)"));
-				push_metalink_resource(new_file, *resources);
-			}
+			MULK_DEBUG(("resource = %s\n", (*resources)->url ? (*resources)->url : "(null)"));
+			push_metalink_resource(new_file, *resources);
 		}
 
 		if (new_file->usable_res_top)
