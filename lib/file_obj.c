@@ -154,6 +154,12 @@ mulk_type_return_t read_option_from_text_file(const char *filename)
 		if ((ret = mulk_find_long_option(option, &option_index)) != MULK_RET_OK)
 			break;
 	
+		if (!strcmp(option, OPT_OPTION_FILE)) {
+			fprintf(stderr, _("\nERROR: option not valid inside an option file\n\n"));
+			ret = MULK_RET_OPTION_ERR;
+			break;
+		}
+
 		if ((ret = mulk_set_option(option_index, value)) != MULK_RET_OK)
 			break;
 	}

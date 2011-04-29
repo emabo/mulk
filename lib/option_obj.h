@@ -35,6 +35,8 @@
 
 #include "defines.h"
 
+#define OPT_OPTION_FILE "option-file"
+
 
 typedef struct option_value_t {
 	int quiet;
