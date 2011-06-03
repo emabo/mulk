@@ -38,11 +38,13 @@
 #include "metalink_list.h"
 #endif
 
+#define ERR_CODE_NOT_ASSIGNED -1
+#define ERR_CODE_EMPTY_URL     10000
+
 
 typedef struct url_list_t {
 	int id;
 	int level;
-	int assigned;
 	int tmp_file_created;
 	UriUriA *uri;
 	char *mimetype;
@@ -53,8 +55,7 @@ typedef struct url_list_t {
 	char *filename;
 	char *mimefilename;
 
-	int not_valid;
-	int downloaded;
+	int assigned;
 	int reported;
 
 #ifdef ENABLE_METALINK

@@ -50,8 +50,22 @@ void reset_chunk(chunk_t *chunk)
 
 	chunk->checksum_correct = 0;
 	chunk->checksum_computed = 0;
-#endif
+#endif /* ENABLE_CHECKSUM */
 }
+
+#ifdef ENABLE_CHECKSUM
+void reset_chunks_cs_none(metalink_file_list_t *file)
+{
+	chunk_t *elem;
+
+	if (!file)
+		return;
+
+	for (elem = file->chunk; elem; elem = elem->next) 
+		if (elem->checksum.cs_type == CS_NONE)
+			reset_chunk(elem);
+}
+#endif /* ENABLE_CHECKSUM */
 
 int is_chunk_downloaded(chunk_t *chunk)
 {
@@ -262,36 +276,52 @@ static checksum_verify_type_t verify_chunk_checksum_metalink_file(metalink_file_
 	return verified;
 }
 
-static mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file)
+mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfilename)
 {
-	int num_chunk;
+	int num_chunk, res;
+	mulk_type_return_t ret;
 
 	if (!metalink_file || !metalink_file->file->name || !metalink_file->resume_filename 
-		|| !is_file_exist(metalink_file->resume_filename))
+		|| !is_file_exist(metalink_file->resume_filename) || !newfilename)
 		return MULK_RET_FILE_ERR;
 
 	if (create_truncated_file(metalink_file->resume_filename, metalink_file->size))
 		return MULK_RET_FILE_ERR;
 
+	MULK_NOTE((_("Resuming file: %s, verified %d/%d chunks.\n"), metalink_file->file->name,
+		num_chunk, metalink_file->chunk_number));
+
 	if (verify_chunk_checksum_metalink_file(metalink_file, metalink_file->resume_filename, &num_chunk) == CS_VERIFY_OK) {
-		MULK_NOTE((_("Resuming file: %s, verified %d/%d chunks.\n"), metalink_file->file->name,
-			num_chunk, metalink_file->chunk_number));
-
-		MULK_INFO((_("Saving file: %s\n"), metalink_file->file->name));
-
 		if (verify_metalink_file(metalink_file->file, metalink_file->resume_filename) == CS_VERIFY_OK) {
-			if (!make_dir_pathname(metalink_file->file->name))
-				rename(metalink_file->resume_filename, metalink_file->file->name);
+			string_printf(newfilename, "%s%s%s", option_values.file_output_directory,
+				GET_SEPAR(option_values.file_output_directory), metalink_file->file->name);
+
+			MULK_INFO((_("Saving file: %s\n"), *newfilename));
+
+			if (!make_dir_pathname(*newfilename))
+				res = rename(metalink_file->resume_filename, *newfilename);
+			else
+				res = remove(metalink_file->resume_filename);
+
+			/* error saving file */
+			if (res) {
+				/* file exists */
+				if (errno != 17)
+					MULK_ERROR((_("ERROR: saving file error no. %d\n"), errno));
+				remove(metalink_file->resume_filename);
+
+				ret = MULK_RET_FILE_ERR;
+			}
+			else
+				ret = MULK_RET_OK;
+
+			return ret;
 		} else {
-			MULK_NOTE((_("The file will be deleted.\n")));
-			remove(metalink_file->resume_filename);
+			reset_chunks_cs_none(metalink_file);
 		}
 	}
-	else 
-		MULK_NOTE((_("Resuming file: %s, verified %d/%d chunks.\n"), metalink_file->file->name,
-			num_chunk, metalink_file->chunk_number));
 
-	return MULK_RET_OK;
+	return MULK_RET_ERR;
 }
 #endif /* ENABLE_CHECKSUM */
 
@@ -370,11 +400,6 @@ void create_chunks(metalink_file_list_t *file)
 #endif
 	}
 	file->chunk_number = chunk_number;
-
-	/* load a resume file if present */
-#ifdef ENABLE_CHECKSUM
-	init_chunks(file);
-#endif
 }
 
 void free_chunks(metalink_file_list_t *file)

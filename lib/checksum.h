@@ -43,7 +43,8 @@
 
 typedef enum checksum_verify_type_t {
 	CS_VERIFY_ERR = -1,
-	CS_VERIFY_OK = 0
+	CS_VERIFY_NONE = 0,
+	CS_VERIFY_OK = 1
 } checksum_verify_type_t;
 
 typedef enum checksum_type_t {

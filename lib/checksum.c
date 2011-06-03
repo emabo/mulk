@@ -273,9 +273,9 @@ static checksum_verify_type_t verify_checksum(const char *filename, checksum_typ
 {
 	char *str_checksum;
 
-	/* no checksum to verify, verification ok */
+	/* no checksum to verify */
 	if (cs <= CS_NONE || !hash)
-		return CS_VERIFY_OK;
+		return CS_VERIFY_NONE;
 
 	str_checksum = compute_file_checksum(filename, cs);
 
@@ -345,15 +345,16 @@ checksum_verify_type_t verify_metalink_file(metalink_file_t *file, const char *f
 
 	if ((cs = find_verification_hash(file, &hash)) <= CS_NONE) {
 		MULK_NOTE((_("No compatible checksum to verify.\n")));
-		return CS_VERIFY_OK;
+		return CS_VERIFY_NONE;
 	}
 
 	MULK_NOTE((_("Verifying %s checksum on %s. This may take a while...\n"), 
 		checksum_type2string(cs), file->name));
 
-	if ((ret = verify_checksum(filename, cs, hash)) == CS_VERIFY_OK)
+	ret = verify_checksum(filename, cs, hash);
+	if (ret == CS_VERIFY_OK)
 		MULK_NOTE((_("Checksum correct.\n")));
-	else 
+	else if (ret == CS_VERIFY_ERR)
 		MULK_NOTE((_("Checksum wrong.\n")));
 
 	return ret;

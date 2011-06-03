@@ -53,9 +53,6 @@
 #include "chunk_list.h"
 #endif
 
-#define GET_SEPAR(out_dir) \
-	((!*(out_dir) || (out_dir)[strlen(out_dir)-1] == *DIR_SEPAR_STR) ? "" : DIR_SEPAR_STR)
-
 buffer_t *buffer_array = NULL;
 
 void reset_buffer_array(void)
@@ -233,8 +230,6 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		buffer_array[i].url->err_code = err_code;
 		buffer_array[i].url->http_code = resp_code;
 	}
-
-	buffer_array[i].url->downloaded = 1;
 
 	if (!valid_res) {
 #ifdef ENABLE_METALINK
@@ -456,8 +451,6 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 
 				if (length > 0) {
 					buffer_array[i].url->metalink_uri->size = length;
-					create_chunks(buffer_array[i].url->metalink_uri);
-					init_buffer_file(&buffer_array[i], buffer_array[i].url->metalink_uri);
 
 					goto Exit;
 				}

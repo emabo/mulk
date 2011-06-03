@@ -65,6 +65,12 @@ typedef struct chunk_t {
 
 void reset_chunk(chunk_t *chunk);
 
+#ifdef ENABLE_CHECKSUM
+void reset_chunks_cs_none(struct metalink_file_list_t *file);
+
+mulk_type_return_t init_chunks(struct metalink_file_list_t *metalink_file, char **newfilename);
+#endif /* ENABLE_CHECKSUM */
+
 void print_chunks(struct metalink_file_list_t *file);
 
 chunk_t *find_free_chunk(struct metalink_file_list_t *file);

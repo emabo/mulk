@@ -85,6 +85,9 @@ typedef UINT32 uint32_t;
 #define DIR_SEPAR_STR "/"
 #endif
 
+#define GET_SEPAR(out_dir) \
+	((!*(out_dir) || (out_dir)[strlen(out_dir)-1] == *DIR_SEPAR_STR) ? "" : DIR_SEPAR_STR)
+
 #define MULK_ERROR(args) \
 REMOVE_4127_WARNING \
 do {if (is_printf(MERR)) printf args;} while (0)

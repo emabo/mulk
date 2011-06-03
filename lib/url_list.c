@@ -58,6 +58,7 @@ static url_list_t *create_new_element(void)
 
 	elem = m_calloc(1, sizeof(url_list_t));
 	elem->id = count++;
+	elem->err_code = ERR_CODE_NOT_ASSIGNED;
 
 	if (bottom)
 		bottom->next = elem;
@@ -160,7 +161,7 @@ url_list_t *search_next_url(UriUriA **uri)
 	int update_pointer = 1;
 
 	for (elem = download_ptr; elem; elem = elem->next) {
-		if (!elem->assigned) {
+		if (!elem->assigned && elem->err_code != ERR_CODE_NOT_ASSIGNED) {
 			if (elem->uri) {
 				if (is_uri_compatible(elem->uri, -1)) {
 					elem->assigned = 1;
@@ -179,32 +180,40 @@ url_list_t *search_next_url(UriUriA **uri)
 			}
 #ifdef ENABLE_METALINK
 			else if (elem->metalink_uri) {
-				if (!elem->not_valid && is_valid_metalink(elem->metalink_uri->file))
+				if (is_valid_metalink(elem->metalink_uri->file))
 				{
+					if (!elem->metalink_uri->chunk && elem->metalink_uri->size >= 0) {
+						char *newfilename = NULL;
+
+						create_chunks(elem->metalink_uri);
+
+#ifdef ENABLE_CHECKSUM
+						/* load a resume file if present */
+						if (init_chunks(elem->metalink_uri, &newfilename) == MULK_RET_OK) {
+							elem->filename = string_new(newfilename);
+							elem->err_code = METALINK_RES_OK;
+							continue;
+						}
+#endif /* ENABLE_CHECKSUM */
+						string_free(&newfilename);
+					}
+
 					*uri = find_next_url(elem->metalink_uri, chunk, resource, header);
 
-					if (*chunk || *header) {
-						if (*uri) {
-							if (update_pointer)
-								download_ptr = elem;
-							return elem;
-						}
-						else
-							update_pointer = 0;
+					if ((*chunk || *header) && *uri) {
+						if (update_pointer)
+							download_ptr = elem;
+						return elem;
 					}
-					else if (is_file_downloaded(elem->metalink_uri)) 
-						elem->assigned = 1;
-					else
-						update_pointer = 0;
+
+					update_pointer = 0;
 				}
-				else {
-					elem->not_valid = 1;
+				else 
 					elem->err_code = METALINK_RES_INVALID_METALINK;
-				}
 			}
 #endif /* ENABLE_METALINK */
-			else
-				elem->assigned = 1;
+			else 
+				elem->err_code = ERR_CODE_EMPTY_URL;
 		}
 	}
 
@@ -285,7 +294,7 @@ void report_urls(const char *text_filename, const char *csv_filename)
 	}
 
 	for (elem = report_ptr; elem; elem = elem->next) {
-		if (!elem->downloaded) {
+		if (elem->err_code == ERR_CODE_NOT_ASSIGNED) {
 			update_pointer = 0;
 			continue;
 		}

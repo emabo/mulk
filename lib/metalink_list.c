@@ -192,9 +192,6 @@ metalink_file_list_t *create_metalink_file(metalink_file_t *file, const char *re
 	if (resume_filename)
 		elem->resume_filename = string_new(resume_filename);
 
-	if (elem->size > 0) 
-		create_chunks(elem);
-
 	return elem;
 }
 
@@ -205,7 +202,7 @@ UriUriA *find_next_url(metalink_file_list_t *file, chunk_t **chunk, metalink_res
 
 	if (file->size >= 0) {
 		*header = 0;
-		if (!*chunk || !file->usable_res_top) {
+		if (!*chunk || !is_resource_available(file, 0)) {
 			/* all chunks have an url assigned or there aren't anymore urls */
 			*resource = NULL;
 			*chunk = NULL;
