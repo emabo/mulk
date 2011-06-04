@@ -32,7 +32,7 @@
 .\" Process this file with
 .\" groff -man -Tascii mulk.1
 .\"
-.TH mulk 1 "August 2010" Version "0.5.2"
+.TH mulk 1 "June 2011" Version "0.5.2"
 .SH NAME
 mulk \- Non-interactive multi-connection network downloader with image filtering and Metalink support.
 .SH SYNOPSIS
@@ -90,6 +90,8 @@ Text file with list of URLs to download. The lines starting with '#' are skipped
 .SH "METALINK OPTIONS"
 .IP "-l, --metalink-file"
 Metalink XML file to download.
+.IP "    --metalink-list-file"
+Text file with list of Metalink files to download. The lines starting with '#' are skipped.
 .IP "    --metalink-location"
 Comma-separated list of accepted locations.
 .IP "    --metalink-continent"

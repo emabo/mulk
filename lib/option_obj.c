@@ -85,18 +85,29 @@ static char **rejected_domains = NULL;
 #ifdef ENABLE_METALINK
 static char *location_countries = NULL;
 static char *location_continents = NULL;
+#ifdef ENABLE_CHECKSUM
+int resume_file_used = 0;
 #endif
+#endif /* ENABLE_METALINK */
 
 static mulk_type_return_t set_option_option_filename(void);
 static mulk_type_return_t set_option_url_filename(void);
+static mulk_type_return_t set_option_mime_output_directory(void);
+static mulk_type_return_t set_option_file_output_directory(void);
+static mulk_type_return_t set_option_temp_directory(void);
 #ifdef ENABLE_RECURSION
 static mulk_type_return_t set_option_domains(void);
 static mulk_type_return_t set_option_exclude_domains(void);
 #endif
 #ifdef ENABLE_METALINK
+static mulk_type_return_t set_option_metalink_filename(void);
+static mulk_type_return_t set_option_metalink_list_filename(void);
 static mulk_type_return_t set_option_metalink_location(void);
 static mulk_type_return_t set_option_metalink_continent(void);
+#ifdef ENABLE_CHECKSUM
+static mulk_type_return_t set_option_metalink_resume_file(void);
 #endif
+#endif /* ENABLE_METALINK */
 
 /* reset all struct */
 option_value_t option_values = {0};
@@ -149,7 +160,9 @@ option_t options[] = {
 #ifdef ENABLE_METALINK
 	{"metalink-file",          'l', gettext_noop("Metalink filename"),
 		&option_values.metalink_filename,      OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Metalink options"), NULL},
+		gettext_noop("Metalink options"), set_option_metalink_filename},
+	{"metalink-list-file",       0, gettext_noop("text file with list of Metalink files to download"),
+		&option_values.metalink_list_filename, OPTION_STRING, 0, 0, NULL, NULL, set_option_metalink_list_filename},
 	{"metalink-location",        0, gettext_noop("comma-separated list of accepted locations"),
 		&option_values.metalink_location,      OPTION_STRING, 0, 0, NULL, NULL, set_option_metalink_location},
 	{"metalink-continent",       0, gettext_noop("comma-separated list of accepted continents"),
@@ -160,7 +173,7 @@ option_t options[] = {
 		&option_values.metalink_language,      OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #ifdef ENABLE_CHECKSUM
 	{"metalink-resume-file",     0, gettext_noop("filename to resume"),
-		&option_values.metalink_resume_file,   OPTION_STRING, 0, 0, NULL, NULL, NULL},
+		&option_values.metalink_resume_file,   OPTION_STRING, 0, 0, NULL, NULL, set_option_metalink_resume_file},
 #endif /* ENABLE_CHECKSUM */
 	{"follow-metalink",          0, gettext_noop("follow Metalink files from HTML documents"),
 		&option_values.follow_metalink,        OPTION_BOOL, 0, 0, NULL, NULL, NULL},
@@ -185,11 +198,11 @@ option_t options[] = {
 	{"save-mime-type",           0, gettext_noop("save URLs with specific mime-type to mime output directory"),
 		&option_values.save_mime_type,         OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"mime-output-dir",          0, gettext_noop("mime output directory"),
-		&option_values.mime_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, NULL},
+		&option_values.mime_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, set_option_mime_output_directory},
 	{"file-output-dir",          0, gettext_noop("file output directory"),
-		&option_values.file_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, NULL},
+		&option_values.file_output_directory,  OPTION_STRING, 0, 0, NULL, NULL, set_option_file_output_directory},
 	{"temp-dir",                 0, gettext_noop("temporary directory"),
-		&option_values.temp_directory,         OPTION_STRING, 0, 0, NULL, NULL, NULL},
+		&option_values.temp_directory,         OPTION_STRING, 0, 0, NULL, NULL, set_option_temp_directory},
 	{"min-image-width",          0, gettext_noop("minimum image width"),
 		&option_values.min_image_width,        OPTION_INT, 0, INT_MAX,
 		gettext_noop("wrong minimum image width"),
@@ -419,6 +432,16 @@ int is_location_in_list(const char *loc)
 	return 0;
 }
 
+static mulk_type_return_t set_option_metalink_filename(void)
+{
+	return mulk_add_new_metalink_file(option_values.metalink_filename);
+}
+
+static mulk_type_return_t set_option_metalink_list_filename(void)
+{
+	return read_metalink_list_from_text_file(option_values.metalink_list_filename);
+}
+
 static mulk_type_return_t set_option_metalink_location(void)
 {
 	return save_locations(option_values.metalink_location, &location_countries);
@@ -429,6 +452,15 @@ static mulk_type_return_t set_option_metalink_continent(void)
 	return save_locations(option_values.metalink_continent, &location_continents);
 }
 
+#ifdef ENABLE_CHECKSUM
+static mulk_type_return_t set_option_metalink_resume_file(void)
+{
+	resume_file_used = 0;
+
+	return MULK_RET_OK;
+}
+#endif /* ENABLE_CHECKSUM */
+
 static void free_locations(void)
 {
 	string_free(&location_countries);
@@ -436,15 +468,40 @@ static void free_locations(void)
 }
 #endif /* ENABLE_METALINK */
 
+static mulk_type_return_t add_directory_separ(char **dir)
+{
+	if (!dir || !*dir)
+		return MULK_RET_OPTION_VALUE_ERR; 
+
+	if (**dir && ((*dir)[strlen(*dir)-1] != *DIR_SEPAR_STR))
+		string_cat(dir, DIR_SEPAR_STR);
+
+	return MULK_RET_OK; 
+}
+
 static mulk_type_return_t set_option_option_filename(void)
 {
-	/* read options from a file */
 	return read_option_from_text_file(option_values.option_filename);
 }
 
 static mulk_type_return_t set_option_url_filename(void)
 {
 	return read_uri_from_text_file(option_values.url_filename);
+}
+
+static mulk_type_return_t set_option_mime_output_directory(void)
+{
+	return add_directory_separ(&option_values.mime_output_directory);
+}
+
+static mulk_type_return_t set_option_file_output_directory(void)
+{
+	return add_directory_separ(&option_values.file_output_directory);
+}
+
+static mulk_type_return_t set_option_temp_directory(void)
+{
+	return add_directory_separ(&option_values.temp_directory);
 }
 
 /* general options */
@@ -585,26 +642,10 @@ void init_options(void)
 	option_values.mime_output_directory = string_new(DEFAULT_MIME_OUTPUT_DIRECTORY);
 	option_values.file_output_directory = string_new(DEFAULT_FILE_OUTPUT_DIRECTORY);
 	option_values.temp_directory = string_new(DEFAULT_TEMP_DIRECTORY);
-}
 
-mulk_type_return_t mulk_compute_urls(void)
-{
-	mulk_type_return_t ret = MULK_RET_OK;
-
-#ifdef ENABLE_METALINK
-	if (option_values.metalink_filename) {
-		if ((ret = add_new_metalink(option_values.metalink_filename, 1,
 #ifdef ENABLE_CHECKSUM
-			option_values.metalink_resume_file
-#else /* not ENABLE_CHECKSUM */
-			NULL
-#endif /* not ENABLE_CHECKSUM */
-			)) != MULK_RET_OK)
-			return ret;
-	}
-#endif /* ENABLE_METALINK */
-
-	return ret;
+	resume_file_used = 0;
+#endif
 }
 
 mulk_type_return_t mulk_set_option(int ind, const char *value)
@@ -708,9 +749,6 @@ mulk_type_return_t mulk_set_options(int argc, char **argv)
 		if ((ret = mulk_add_new_url(argv[optind++])) != MULK_RET_OK)
 			goto Exit;
 	}
-
-	if ((ret = mulk_compute_urls()) != MULK_RET_OK)
-		goto Exit;
 
 	if (is_url_list_empty()) {
 		fprintf(stderr, _("\nERROR: url not present\n\n"));

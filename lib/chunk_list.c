@@ -37,6 +37,7 @@
 #include "buffer_array.h"
 #include "file_obj.h"
 
+
 void reset_chunk(chunk_t *chunk)
 {
 	if (!chunk)
@@ -278,12 +279,18 @@ static checksum_verify_type_t verify_chunk_checksum_metalink_file(metalink_file_
 
 mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfilename)
 {
-	int num_chunk, res;
-	mulk_type_return_t ret;
+	int num_chunk;
+
+	if (!resume_file_used && option_values.metalink_resume_file) {
+		resume_file_used = 1;
+		metalink_file->resume_filename = string_new(option_values.metalink_resume_file);
+	}
 
 	if (!metalink_file || !metalink_file->file->name || !metalink_file->resume_filename 
 		|| !is_file_exist(metalink_file->resume_filename) || !newfilename)
 		return MULK_RET_FILE_ERR;
+
+	*newfilename = NULL;
 
 	if (create_truncated_file(metalink_file->resume_filename, metalink_file->size))
 		return MULK_RET_FILE_ERR;
@@ -293,29 +300,9 @@ mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfi
 
 	if (verify_chunk_checksum_metalink_file(metalink_file, metalink_file->resume_filename, &num_chunk) == CS_VERIFY_OK) {
 		if (verify_metalink_file(metalink_file->file, metalink_file->resume_filename) == CS_VERIFY_OK) {
-			string_printf(newfilename, "%s%s%s", option_values.file_output_directory,
-				GET_SEPAR(option_values.file_output_directory), metalink_file->file->name);
+			string_printf(newfilename, "%s%s", option_values.file_output_directory, metalink_file->file->name);
 
-			MULK_INFO((_("Saving file: %s\n"), *newfilename));
-
-			if (!make_dir_pathname(*newfilename))
-				res = rename(metalink_file->resume_filename, *newfilename);
-			else
-				res = remove(metalink_file->resume_filename);
-
-			/* error saving file */
-			if (res) {
-				/* file exists */
-				if (errno != 17)
-					MULK_ERROR((_("ERROR: saving file error no. %d\n"), errno));
-				remove(metalink_file->resume_filename);
-
-				ret = MULK_RET_FILE_ERR;
-			}
-			else
-				ret = MULK_RET_OK;
-
-			return ret;
+			return save_file_to_outputdir(metalink_file->resume_filename, *newfilename, 0);
 		} else {
 			reset_chunks_cs_none(metalink_file);
 		}

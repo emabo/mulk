@@ -59,6 +59,7 @@ typedef struct option_value_t {
 	char *url_filename;
 #ifdef ENABLE_METALINK
 	char *metalink_filename;
+	char *metalink_list_filename;
 	char *metalink_location;
 	char *metalink_continent;
 	char *metalink_os;
@@ -86,6 +87,9 @@ typedef struct option_value_t {
 } option_value_t;
 
 extern option_value_t option_values;
+#ifdef ENABLE_CHECKSUM
+extern int resume_file_used;
+#endif
 
 #ifdef ENABLE_RECURSION
 mulk_type_return_t add_url_to_default_domains(UriUriA *uri);

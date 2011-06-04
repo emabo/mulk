@@ -369,3 +369,12 @@ void set_url_file_length(url_list_t *url, off_t size)
 		set_metalink_file_length(url->metalink_uri, size);
 }
 #endif /* ENABLE_METALINK */
+
+MULK_API mulk_type_return_t mulk_add_new_metalink_file(const char *metalink_filename)
+{
+#ifdef ENABLE_METALINK
+	return add_new_metalink(metalink_filename, 1);
+#else
+	return MULK_RET_OPTION_ERR;
+#endif
+}

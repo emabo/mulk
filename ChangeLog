@@ -2,6 +2,11 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.5.2, beta)
 
 
+2011/06/04 Emanuele <pocoyo@users.sourceforge.net>
+	* the option directories are now evaluated only once at startup
+	* removed last dependencies between metalink files and their options
+	* new option to read, from an external text file, a list of metalink urls to download
+
 2011/04/29 Emanuele <pocoyo@users.sourceforge.net>
 	* the options can be evaluated by callbacks
 	* fix to avoid recursive calls in option file

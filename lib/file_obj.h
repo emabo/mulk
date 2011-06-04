@@ -54,6 +54,11 @@ int is_file_exist(const char *filename);
 
 mulk_type_return_t read_option_from_text_file(const char *filename);
 mulk_type_return_t read_uri_from_text_file(const char *filename);
+#ifdef ENABLE_METALINK
+mulk_type_return_t read_metalink_list_from_text_file(const char *filename);
+#endif
+
+mulk_type_return_t save_file_to_outputdir(char *oldfilename, char* newfilename, int copy);
 
 int create_truncated_file(const char *filename, off_t size);
 

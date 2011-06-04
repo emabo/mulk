@@ -102,10 +102,12 @@ extern char mulk_version_number[];
 /* initialisation */
 MULK_API mulk_type_return_t mulk_find_short_option(const char name, int *index);
 MULK_API mulk_type_return_t mulk_find_long_option(const char *name, int *index);
-MULK_API mulk_type_return_t mulk_compute_urls(void);
 MULK_API mulk_type_return_t mulk_set_option(int ind, const char *value);
 MULK_API mulk_type_return_t mulk_set_options(int argc, char **argv);
 MULK_API mulk_type_return_t mulk_add_new_url(const char *url);
+/* defined only if --enable-metalink is specified when compiling library, 
+ * otherwise this fucntion returns option error */
+MULK_API mulk_type_return_t mulk_add_new_metalink_file(const char *metalink_filename);
 
 /* print info */
 MULK_API void mulk_printf_usage(void);

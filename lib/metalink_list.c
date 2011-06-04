@@ -179,7 +179,7 @@ void free_resources(metalink_file_list_t *file)
 
 /* metalink_file_list_t */
 
-metalink_file_list_t *create_metalink_file(metalink_file_t *file, const char *resume_filename)
+metalink_file_list_t *create_metalink_file(metalink_file_t *file)
 {
 	metalink_file_list_t *elem;
 
@@ -189,8 +189,6 @@ metalink_file_list_t *create_metalink_file(metalink_file_t *file, const char *re
 	elem = m_calloc(1, sizeof(metalink_file_list_t));
 	elem->file = file;
 	elem->size = (long) (file->size ? file->size : -1L);
-	if (resume_filename)
-		elem->resume_filename = string_new(resume_filename);
 
 	return elem;
 }
@@ -303,14 +301,13 @@ int is_valid_metalink(metalink_file_t* file)
 	return 1;
 }
 
-mulk_type_return_t add_new_metalink(const char *filename, int level, const char *resume_filename)
+mulk_type_return_t add_new_metalink(const char *filename, int level)
 {
 	metalink_error_t err;
 	metalink_t* metalink;
 	metalink_file_t** files;
 	metalink_resource_t** resources;
 	metalink_file_list_t* new_file;
-	int resume_file_used = 0;
 
 	err = metalink_parse_file(filename, &metalink);
 
@@ -324,13 +321,8 @@ mulk_type_return_t add_new_metalink(const char *filename, int level, const char 
 	for (files = metalink->files; *files; files++) {
 		MULK_DEBUG(("name = %s\n", (*files)->name ? (*files)->name : "(null)"));
 
-		if (!(new_file = create_metalink_file(*files, 
-				!resume_file_used && resume_filename ? resume_filename : NULL)))
+		if (!(new_file = create_metalink_file(*files))) 
 			continue;
-
-		/* resume filename is used only once */
-		if (!resume_file_used && resume_filename) 
-			resume_file_used = 1;
 
 		for (resources = (*files)->resources; *resources; resources++) {
 			MULK_DEBUG(("resource = %s\n", (*resources)->url ? (*resources)->url : "(null)"));

@@ -171,8 +171,8 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 	if (chunk || header) {
 		int id_file;
 
-		string_printf(&buffer_array[i].filename, "%s%smetalink-mulktmp%05d",
-			option_values.temp_directory, GET_SEPAR(option_values.temp_directory) , url->id);
+		string_printf(&buffer_array[i].filename, "%smetalink-mulktmp%05d",
+			option_values.temp_directory, url->id);
 
 		if (header || !is_file_exist(buffer_array[i].filename) || !url->tmp_file_created) {
 			if (!make_dir_pathname(buffer_array[i].filename)) {
@@ -195,8 +195,8 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 	else
 #endif /* ENABLE_METALINK */
 	{
-		string_printf(&buffer_array[i].filename, "%s%smulktmp%05d",
-			option_values.temp_directory, GET_SEPAR(option_values.temp_directory), i);
+		string_printf(&buffer_array[i].filename, "%smulktmp%05d",
+			option_values.temp_directory, i);
 
 		if (!make_dir_pathname(buffer_array[i].filename))
 			buffer_array[i].file_pt = fopen(buffer_array[i].filename, "wb");
@@ -218,7 +218,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	char *newmimefilename = NULL;
 	char *subtype = NULL;
 	char *type = NULL;
-	int len, res = 0;
+	int len;
 	mulk_type_return_t ret = MULK_RET_OK;
 
 #ifdef ENABLE_METALINK
@@ -247,7 +247,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 
 #ifdef ENABLE_METALINK
 	if (option_values.follow_metalink && is_metalink_file(buffer_array[i].url->mimetype)) 
-		add_new_metalink(buffer_array[i].filename, buffer_array[i].url->level, NULL);
+		add_new_metalink(buffer_array[i].filename, buffer_array[i].url->level);
 
 	if (buffer_array[i].url->metalink_uri) {
 #ifdef ENABLE_CHECKSUM
@@ -260,8 +260,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		else
 #endif /* ENABLE_CHECKSUM */
 		{
-			string_printf(&newfilename, "%s%s%s", option_values.file_output_directory,
-				GET_SEPAR(option_values.file_output_directory),
+			string_printf(&newfilename, "%s%s", option_values.file_output_directory,
 				buffer_array[i].url->metalink_uri->file->name);
 			buffer_array[i].url->err_code = METALINK_RES_OK;
 		}
@@ -273,8 +272,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		char *furi_str = uri2filename(uri);
 
 		if (furi_str) {
-			string_printf(&newfilename, "%s%s%s", option_values.file_output_directory,
-				GET_SEPAR(option_values.file_output_directory), furi_str);
+			string_printf(&newfilename, "%s%s", option_values.file_output_directory, furi_str);
 			len = strlen(newfilename);
 
 			/* add index.<mime-type> if uri doesn't contains an explicit path */
@@ -305,8 +303,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		|| (is_jpeg_image(buffer_array[i].url->mimetype) && is_valid_jpeg_image(buffer_array[i].filename))
 		|| (is_saved_mime_type(buffer_array[i].url->mimetype))) {
 		if (extract_mime_type(buffer_array[i].url->mimetype, &type, &subtype) == MULK_RET_OK) {
-			string_printf(&newmimefilename, "%s%s%s%s%s_%05d.%s", option_values.mime_output_directory,
-				GET_SEPAR(option_values.mime_output_directory),
+			string_printf(&newmimefilename, "%s%s%s%s_%05d.%s", option_values.mime_output_directory,
 				type, DIR_SEPAR_STR, subtype, buffer_array[i].url->id, subtype);
 			string_free(&type);
 			string_free(&subtype);
@@ -318,46 +315,15 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	buffer_array[i].url->mimefilename = string_new(newmimefilename);
 
 	if (newfilename && newmimefilename) {
-		MULK_INFO((_("Saving file: %s\n"), newfilename));
-		MULK_INFO((_("Saving image: %s\n"), newmimefilename));
-
-		if (!make_dir_pathname(newfilename))
-			res = copy(buffer_array[i].filename, newfilename);
-		if (!res) {
-			if (!make_dir_pathname(newmimefilename))
-				res = rename(buffer_array[i].filename, newmimefilename);
-			else
-				res = remove(buffer_array[i].filename);
-		}
+		if ((ret = save_file_to_outputdir(buffer_array[i].filename, newfilename, 1)) == MULK_RET_OK)
+			ret = save_file_to_outputdir(buffer_array[i].filename, newmimefilename, 0);
 	}
-	else if (newfilename) {
-		MULK_INFO((_("Saving file: %s\n"), newfilename));
-
-		if (!make_dir_pathname(newfilename))
-			res = rename(buffer_array[i].filename, newfilename);
-		else
-			res = remove(buffer_array[i].filename);
-	}
-	else if (newmimefilename) {
-		MULK_INFO((_("Saving image: %s\n"), newmimefilename));
-
-		if (!make_dir_pathname(newmimefilename))
-			res = rename(buffer_array[i].filename, newmimefilename);
-		else
-			res = remove(buffer_array[i].filename);
-	}
+	else if (newfilename) 
+		ret = save_file_to_outputdir(buffer_array[i].filename, newfilename, 0);
+	else if (newmimefilename) 
+		ret = save_file_to_outputdir(buffer_array[i].filename, newmimefilename, 0);
 	else
-		res = remove(buffer_array[i].filename);
-
-	/* error saving file */
-	if (res) {
-		/* file exists */
-		if (errno != 17)
-			MULK_ERROR((_("ERROR: saving file error no. %d\n"), errno));
 		remove(buffer_array[i].filename);
-
-		ret = MULK_RET_FILE_ERR;
-	}
 
 	string_free(&newmimefilename);
 	string_free(&newfilename);

@@ -3,6 +3,7 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
 
 
 version 0.5.2 - XXXX/XX/XX
+-new option to read, from an external text file, a list of metalink urls to download
 -new option to set HTTP proxy and port to use
 -new option to avoid downloading of html dependencies (images, CSS, etc.)
 -new option to save the report files progressively. It's possible to specify the number of lines (downloads) to be saved each time.
@@ -13,6 +14,7 @@ version 0.5.2 - XXXX/XX/XX
 -new functions to rationalise the process of inserting options
 -static and dynamic libraries creation has been added to configure
 -static and dynamic libraries creation has been added to MSVC's solution
+-new --with-libmetalink option in configure in order to specify different path for libmetalink library
 -new arguments (--with-libcurl and --with-uriparser) in configure in order to specify different paths for libcurl and uriparser libraries.
 -gcc's visibility option has been managed in "include/mulk/mulk.h"
 -check in configure.ac for malloc, calloc, free and vsnprintf has been added
@@ -26,6 +28,11 @@ version 0.5.2 - XXXX/XX/XX
 -bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
 -bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
 -a "(null)" string was printed to reports when a not HTTP protocol was used
+-the option directories are now evaluated only once at startup
+-the options can be evaluated by callbacks
+-fix to avoid recursive calls in option file
+-dependency between new metalink urls and related options has been removed. The options are evaluated when download process is running
+-specific Mulk return codes have been added to the library functions
 -translations has been updated
 -gettext.h has been updated 
 -unique DEBUG compilation flag has been created 

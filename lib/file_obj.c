@@ -84,37 +84,6 @@ size_t fwrite_offset(unsigned char *buf, size_t size, size_t nmemb, off_t offset
 	return fwrite(buf, size, nmemb, file);
 }
 
-mulk_type_return_t read_uri_from_text_file(const char *filename)
-{
-	FILE *file;
-	char buf[MAX_LINE_LENGTH];
-	mulk_type_return_t ret = MULK_RET_OK;
-
-	if ((file = fopen(filename, "r")) == NULL)
-		return MULK_RET_FILE_ERR;
-
-	for (;;) {
-		if (!fgets(buf, MAX_LINE_LENGTH, file))
-			break;
-		if (feof(file))
-			break;
-
-		string_trim(buf);
-
-		/* skip empty lines and comments */
-		if (!strlen(buf) || *buf == '#')
-			continue;
- 
-		MULK_NOTE((_("Add url to download coming from text file: %s\n"), buf));
-		if ((ret = mulk_add_new_url(buf)) != MULK_RET_OK)
-			break;
-	}
-
-	fclose(file);
-
-	return ret;
-}
-
 /* read only long option */
 mulk_type_return_t read_option_from_text_file(const char *filename)
 {
@@ -167,6 +136,100 @@ mulk_type_return_t read_option_from_text_file(const char *filename)
 	fclose(file);
 
 	return ret;
+}
+
+mulk_type_return_t read_uri_from_text_file(const char *filename)
+{
+	FILE *file;
+	char buf[MAX_LINE_LENGTH];
+	mulk_type_return_t ret = MULK_RET_OK;
+
+	if ((file = fopen(filename, "r")) == NULL)
+		return MULK_RET_FILE_ERR;
+
+	for (;;) {
+		if (!fgets(buf, MAX_LINE_LENGTH, file))
+			break;
+		if (feof(file))
+			break;
+
+		string_trim(buf);
+
+		/* skip empty lines and comments */
+		if (!strlen(buf) || *buf == '#')
+			continue;
+
+		MULK_NOTE((_("Add url to download coming from text file: %s\n"), buf));
+		if ((ret = mulk_add_new_url(buf)) != MULK_RET_OK)
+			break;
+	}
+
+	fclose(file);
+
+	return ret;
+}
+
+#ifdef ENABLE_METALINK
+mulk_type_return_t read_metalink_list_from_text_file(const char *filename)
+{
+	FILE *file;
+	char buf[MAX_LINE_LENGTH];
+	mulk_type_return_t ret = MULK_RET_OK;
+
+	if ((file = fopen(filename, "r")) == NULL)
+		return MULK_RET_FILE_ERR;
+
+	for (;;) {
+		if (!fgets(buf, MAX_LINE_LENGTH, file))
+			break;
+		if (feof(file))
+			break;
+
+		string_trim(buf);
+
+		/* skip empty lines and comments */
+		if (!strlen(buf) || *buf == '#')
+			continue;
+ 
+		MULK_NOTE((_("Add metalink file to download coming from text file: %s\n"), buf));
+		if ((ret = mulk_add_new_metalink_file(buf)) != MULK_RET_OK)
+			break;
+	}
+
+	fclose(file);
+
+	return ret;
+}
+#endif /* ENABLE_METALINK */
+
+mulk_type_return_t save_file_to_outputdir(char *oldfilename, char* newfilename, int make_copy)
+{
+	int res;
+
+	MULK_INFO((_("Saving file: %s\n"), newfilename));
+
+	if (make_dir_pathname(newfilename)) {
+		MULK_ERROR((_("ERROR: creating directory error no. %d\n"), errno));
+
+		return MULK_RET_FILE_ERR;
+	}
+
+	if (make_copy)
+		res = copy(oldfilename, newfilename);
+	else
+		res = rename(oldfilename, newfilename);
+
+	if (res) {
+		/* file exists */
+		if (errno != 17)
+			MULK_ERROR((_("ERROR: saving file error no. %d\n"), errno));
+
+		remove(oldfilename);
+
+		return MULK_RET_FILE_ERR;
+	}
+
+	return MULK_RET_OK;
 }
 
 #ifdef _WIN32
@@ -282,3 +345,4 @@ int create_truncated_file(const char *filename, off_t size)
 }
 
 #endif /* not _WIN32 */
+

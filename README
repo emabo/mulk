@@ -13,11 +13,13 @@ Features:
 -multiple URLs in command line.
 -Metalink retrieving with segmented download.
 -Metalink support for FTP, HTTP(S).
+-multiple Metalink URLs in command line.
 -checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
 -chunk checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
 -several Metalink options (location, OS, language, preference, max connections per resource, max connections per file, continent of origin).
 -resume Metalink download.
--option to follow Metalink urls in HTML pages.
+-read Metalink URLs from a text file.
+-option to follow Metalink URLs in HTML pages.
 -option to follow FTP links in HTML documents.
 -options to specify username and password for the connections.
 -option to specify a proxy for the connections.

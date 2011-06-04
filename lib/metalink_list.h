@@ -79,7 +79,7 @@ int is_resource_available(metalink_file_list_t *file, int header);
 
 void free_resources(metalink_file_list_t *file);
 
-metalink_file_list_t *create_metalink_file(metalink_file_t *file, const char *resume_filename);
+metalink_file_list_t *create_metalink_file(metalink_file_t *file);
 
 UriUriA *find_next_url(metalink_file_list_t *file, chunk_t **chunk, metalink_resource_list_t **resource, 
 	int *header);
@@ -94,6 +94,6 @@ void push_metalink(metalink_t *metalink);
 
 void free_metalinks(void);
 
-mulk_type_return_t add_new_metalink(const char *filename, int level, const char *resume_filename);
+mulk_type_return_t add_new_metalink(const char *filename, int level);
 
 #endif /* not _METALINK_LIST_H_ */
