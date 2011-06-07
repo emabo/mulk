@@ -50,7 +50,7 @@
 #define NUM_OPTIONS ((int) (sizeof(options) / sizeof(option_t)))
 
 #define DEFAULT_MIME_OUTPUT_DIRECTORY "data"
-#define DEFAULT_FILE_OUTPUT_DIRECTORY ""
+#define DEFAULT_FILE_OUTPUT_DIRECTORY "."
 #define DEFAULT_TEMP_DIRECTORY ".tmp-mulk"
 
 
@@ -640,8 +640,11 @@ void init_options(void)
 	option_values.report_every_lines = 500;
 
 	option_values.mime_output_directory = string_new(DEFAULT_MIME_OUTPUT_DIRECTORY);
+	add_directory_separ(&option_values.mime_output_directory);
 	option_values.file_output_directory = string_new(DEFAULT_FILE_OUTPUT_DIRECTORY);
+	add_directory_separ(&option_values.file_output_directory);
 	option_values.temp_directory = string_new(DEFAULT_TEMP_DIRECTORY);
+	add_directory_separ(&option_values.temp_directory);
 
 #ifdef ENABLE_CHECKSUM
 	resume_file_used = 0;
@@ -778,16 +781,32 @@ void free_options(void)
 #endif
 }
 
-void reset_options(void)
+void mulk_reset_options(void)
 {
 	int i;
 
-	free_options();
+	for (i = 0; i < NUM_OPTIONS; i++) {
+		switch (options[i].type) {
+			case OPTION_BOOL:
+			case OPTION_INT:
+				*((int*) options[i].value) = 0;
+				break;
+			case OPTION_STRING:
+				string_free((char **) options[i].value);
+				break;
+			default:
+				break;
+		}
+	}
 
-	for (i = 0; i < NUM_OPTIONS; i++)
-		if (options[i].type == OPTION_BOOL
-			|| options[i].type == OPTION_INT)
-			*((int*) options[i].value) = 0;
+#ifdef ENABLE_RECURSION
+	free_domain(&accepted_domains);
+	free_domain(&rejected_domains);
+#endif /* ENABLE_RECURSION */
+
+#ifdef ENABLE_METALINK
+	free_locations();
+#endif
 
 	init_options();
 }

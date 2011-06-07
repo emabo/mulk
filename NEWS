@@ -32,6 +32,7 @@ version 0.5.2 - XXXX/XX/XX
 -the options can be evaluated by callbacks
 -fix to avoid recursive calls in option file
 -dependency between new metalink urls and related options has been removed. The options are evaluated when download process is running
+-several fixes made in order to assure that the library's functions can called more than once for each instance
 -specific Mulk return codes have been added to the library functions
 -translations has been updated
 -gettext.h has been updated 

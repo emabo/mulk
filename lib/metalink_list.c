@@ -75,8 +75,7 @@ void remove_metalink_resource(metalink_file_list_t *file, metalink_resource_list
 	if (!file || !resource || !file->usable_res_top)
 		return;
 
-	if (resource->assigned)
-	{
+	if (resource->assigned) {
 		resource->error = 1;
 		return;
 	}
@@ -114,13 +113,11 @@ int is_resource_available(metalink_file_list_t *file, int header)
 	if (!file)
 		return 0;
 
-	elem = file->usable_res_top;
-	while (elem) {
+	for (elem = file->usable_res_top; elem; elem = elem->next) {
 		if (!elem->error && is_valid_resource(elem->resource)
 				/* only HTTP or HTTPS to read filesize information */
 				&& (!header || (header && string_casecmp(elem->resource->type, FTP_PROTOCOL)))) 
 			return 1;
-		elem = elem->next;
 	} 
 
 	return 0;
@@ -137,8 +134,7 @@ static metalink_resource_list_t *find_free_resource(metalink_file_list_t *file, 
 	if (file->file->maxconnections > 0 && count_number_of_chunks(file) >= file->file->maxconnections)
 		return NULL;
 
-	elem = file->usable_res_top;
-	while (elem) {
+	for (elem = file->usable_res_top; elem; elem = elem->next) {
 		if (!elem->error 
 				&& elem->resource->preference > max_preference 
 				&& is_valid_resource(elem->resource)
@@ -148,7 +144,6 @@ static metalink_resource_list_t *find_free_resource(metalink_file_list_t *file, 
 			max_preference = elem->resource->preference;
 			max_elem = elem;
 		}
-		elem = elem->next;
 	} 
 
 	if (max_elem)
@@ -176,6 +171,16 @@ void free_resources(metalink_file_list_t *file)
 	file->usable_res_top = file->usable_res_bottom = NULL;
 }
 
+static void reset_resources(metalink_file_list_t *file)
+{
+	metalink_resource_list_t *elem;
+
+	if (!file)
+		return;
+
+	for (elem = file->usable_res_top; elem; elem = elem->next)
+		elem->assigned = elem->error = 0;
+}
 
 /* metalink_file_list_t */
 
@@ -250,6 +255,19 @@ void free_metalink_file(metalink_file_list_t *file)
 	m_free(file);
 }
 
+void reset_metalink_file(metalink_file_list_t *file, const char *resume_filename)
+{
+	if (!file)
+		return;
+
+	free_chunks(file);
+	reset_resources(file);
+
+	file->chunk_number = 0;
+	file->header = 0;
+	string_free(&file->resume_filename);
+	file->resume_filename = string_new(resume_filename);
+}
 
 /* metalink_list_t */
 

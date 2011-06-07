@@ -88,8 +88,9 @@ typedef enum mulk_type_return_t {
 	MULK_RET_FILE_ERR = -2,
 	MULK_RET_ERR = -1,
 	MULK_RET_OK = 0,
-	MULK_RET_HELP = 1,
-	MULK_RET_VERSION = 2,
+	MULK_RET_EXIT = 1,
+	MULK_RET_HELP = 2,
+	MULK_RET_VERSION = 3,
 } mulk_type_return_t;
 
 typedef int (*mulk_check_exit_cb)(void *context);
@@ -121,6 +122,9 @@ MULK_API void mulk_set_write_download_info_cb(mulk_write_download_info_cb cb, vo
 MULK_API void mulk_init(void);
 MULK_API mulk_type_return_t mulk_run(void);
 MULK_API void mulk_close(void);
+
+/* restart process */
+MULK_API void mulk_reset_options(void);
 
 #ifdef __cplusplus
 }

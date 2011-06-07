@@ -281,12 +281,12 @@ mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfi
 {
 	int num_chunk;
 
-	if (!resume_file_used && option_values.metalink_resume_file) {
+	if (!metalink_file->resume_filename && !resume_file_used && option_values.metalink_resume_file) {
 		resume_file_used = 1;
 		metalink_file->resume_filename = string_new(option_values.metalink_resume_file);
 	}
 
-	if (!metalink_file || !metalink_file->file->name || !metalink_file->resume_filename 
+	if (!metalink_file->file->name || !metalink_file->resume_filename 
 		|| !is_file_exist(metalink_file->resume_filename) || !newfilename)
 		return MULK_RET_FILE_ERR;
 

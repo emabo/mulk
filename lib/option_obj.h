@@ -98,7 +98,6 @@ int is_host_compatible_with_domains(UriUriA *uri);
 int is_location_in_list(const char *loc);
 void init_options(void);
 void free_options(void);
-void reset_options(void);
 
 #endif /* not _OPTION_OBJ_H_ */
 

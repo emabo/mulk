@@ -145,11 +145,6 @@ void add_new_url_and_check(const char *base_url, const char *url, int level)
 }
 #endif /* ENABLE_RECURSION */
 
-url_list_t *get_next(url_list_t *next)
-{
-	return next ? next->next : top;
-}
-
 #ifdef ENABLE_METALINK
 url_list_t *search_next_url(UriUriA **uri, chunk_t **chunk, metalink_resource_list_t **resource,
 	int *header)
@@ -161,7 +156,7 @@ url_list_t *search_next_url(UriUriA **uri)
 	int update_pointer = 1;
 
 	for (elem = download_ptr; elem; elem = elem->next) {
-		if (!elem->assigned && elem->err_code != ERR_CODE_NOT_ASSIGNED) {
+		if (!elem->assigned && elem->err_code == ERR_CODE_NOT_ASSIGNED) {
 			if (elem->uri) {
 				if (is_uri_compatible(elem->uri, -1)) {
 					elem->assigned = 1;
@@ -190,7 +185,7 @@ url_list_t *search_next_url(UriUriA **uri)
 #ifdef ENABLE_CHECKSUM
 						/* load a resume file if present */
 						if (init_chunks(elem->metalink_uri, &newfilename) == MULK_RET_OK) {
-							elem->filename = string_new(newfilename);
+							elem->filename = newfilename;
 							elem->err_code = METALINK_RES_OK;
 							continue;
 						}
@@ -342,8 +337,7 @@ void report_urls(const char *text_filename, const char *csv_filename)
 
 void free_urls(void)
 {
-	while (top)
-	{
+	while (top) {
 		UriUriA *uri = pop_url();
 		if (uri)
 			uri_free(uri);
@@ -377,4 +371,35 @@ MULK_API mulk_type_return_t mulk_add_new_metalink_file(const char *metalink_file
 #else
 	return MULK_RET_OPTION_ERR;
 #endif
+}
+
+void reset_url(url_list_t *url)
+{
+	if (!url)
+		return;
+
+	url->err_code = ERR_CODE_NOT_ASSIGNED;
+	url->assigned = url->reported = url->tmp_file_created = 0;
+	url->http_code = 0;
+	string_free(&url->mimetype);
+	string_free(&url->filename);
+	string_free(&url->mimefilename);
+}
+
+void reset_url_list(void)
+{
+	url_list_t *elem;
+	int update_report_ptr = 1;
+
+	for (elem = top; elem; elem = elem->next) {
+		download_ptr = elem;
+		if (update_report_ptr)
+			report_ptr = elem;
+
+		if (elem->err_code == ERR_CODE_NOT_ASSIGNED) 
+			break;
+
+		if (!elem->reported)
+			update_report_ptr = 0;
+	}
 }

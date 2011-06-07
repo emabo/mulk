@@ -88,6 +88,8 @@ void set_metalink_file_length(metalink_file_list_t *file, off_t size);
 
 void free_metalink_file(metalink_file_list_t *file);
 
+void reset_metalink_file(metalink_file_list_t *file, const char *resume_filename);
+
 int is_valid_metalink(metalink_file_t* file);
 
 void push_metalink(metalink_t *metalink);

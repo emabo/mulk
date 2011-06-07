@@ -104,14 +104,15 @@ mulk_type_return_t mulk_run(void)
 
 	(void) time(&t1);
 
+	if (is_file_exist(option_values.temp_directory) && remove_dir(option_values.temp_directory))
+		MULK_ERROR((_("ERROR: removing temporary directory\n")));
+
 	if (option_values.report_filename || option_values.report_csv_filename)
 		remove_report_files(option_values.report_filename, option_values.report_csv_filename);
 
-	reset_buffer_array();
+	create_buffer_array();
 	curl_global_init(CURL_GLOBAL_ALL);
-
 	curl_obj = curl_multi_init();
-
 	curl_multi_setopt(curl_obj, CURLMOPT_MAXCONNECTS, (long)option_values.max_sim_conns);
 
 	for (active_handles = 0; (active_handles < option_values.max_sim_conns) && (init_url(curl_obj) == MULK_RET_OK);
@@ -132,7 +133,7 @@ mulk_type_return_t mulk_run(void)
 			}
 
 			if (check_exit && check_exit(exit_context)) {
-				ret = MULK_RET_ERR;
+				ret = MULK_RET_EXIT;
 				goto Exit;
 			}
 
@@ -185,8 +186,7 @@ mulk_type_return_t mulk_run(void)
 
 					download_tot += (long)download_size;
 
-					MULK_NOTE((_("RESULT: %d (%s), "), curl_msg->data.result,
-							curl_easy_strerror(curl_msg->data.result)));
+					MULK_NOTE((_("RESULT: %d (%s), "), curl_msg->data.result, curl_easy_strerror(curl_msg->data.result)));
 					if ((is_http = is_uri_http_buffer(e)) != 0) {
 						MULK_NOTE((_("HTTP Code:\"%ld\" Mime-Type:\"%s\" "), resp_code,
 							mime_type ? mime_type : ""));
@@ -227,7 +227,7 @@ mulk_type_return_t mulk_run(void)
 	}
 
 Exit:
-	free_buffer_easy_handles(curl_obj);
+	free_buffer_array(curl_obj);
 	curl_multi_cleanup(curl_obj);
 	curl_global_cleanup();
 
@@ -240,15 +240,14 @@ Exit:
 	if (tot_time > 0)
 		MULK_NOTE((_("\nAverage data rate = %.2f KB/s\n"), ((float) download_tot) / (tot_time * 1000.0f)));
 
+	if (option_values.report_filename || option_values.report_csv_filename)
+		report_urls(option_values.report_filename, option_values.report_csv_filename);
+
 	return ret;
 }
 
 void mulk_close(void)
 {
-	if (option_values.report_filename || option_values.report_csv_filename)
-		report_urls(option_values.report_filename, option_values.report_csv_filename);
-
-	free_buffer_array();
 	free_urls();
 #ifdef ENABLE_METALINK
 	free_metalinks();

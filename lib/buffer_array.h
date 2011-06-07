@@ -56,7 +56,7 @@ typedef struct buffer_t {
 /* url struct */
 extern buffer_t *buffer_array;
 
-void reset_buffer_array(void);
+void create_buffer_array(void);
 
 #ifdef ENABLE_METALINK
 int count_number_of_chunks(metalink_file_list_t *file);
@@ -77,9 +77,7 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 
 void print_buffers(void);
 
-void free_buffer_easy_handles(CURLM *curl_obj);
-
-void free_buffer_array(void);
+void free_buffer_array(CURLM *curl_obj);
 
 void set_buffer_mime_type(CURL *id, const char *mimetype);
 

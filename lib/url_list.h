@@ -73,7 +73,6 @@ UriUriA *create_absolute_url(const char *base_url, const char *url);
 void add_new_url_and_check(const char *base_url, const char *url, int level);
 #endif /* ENABLE_RECURSION */
 
-url_list_t *get_next(url_list_t *next);
 #ifdef ENABLE_METALINK
 url_list_t *search_next_url(UriUriA **uri, chunk_t **chunk, metalink_resource_list_t **resource,
 	int *header);
@@ -90,6 +89,9 @@ UriUriA *pop_url(void);
 
 void remove_report_files(const char *text_filename, const char *csv_filename);
 void report_urls(const char *text_filename, const char *csv_filename);
+
+void reset_url(url_list_t *url);
+void reset_url_list(void);
 
 void free_urls(void);
 

@@ -55,7 +55,7 @@
 
 buffer_t *buffer_array = NULL;
 
-void reset_buffer_array(void)
+void create_buffer_array(void)
 {
 	buffer_array = m_calloc(option_values.max_sim_conns, sizeof(buffer_t));
 }
@@ -157,39 +157,41 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 #endif
 {
 	int i;
+	buffer_t *buffer;
 
 	if ((i = get_buffer(NULL)) < 0)
 		return i;
 
-	buffer_array[i].id = id;
-	buffer_array[i].url = url;
-	buffer_array[i].uri = uri;
+	buffer = buffer_array + i;
+	buffer->id = id;
+	buffer->url = url;
+	buffer->uri = uri;
 #ifdef ENABLE_METALINK
-	buffer_array[i].chunk = chunk;
-	buffer_array[i].used_res = resource;
+	buffer->chunk = chunk;
+	buffer->used_res = resource;
 
 	if (chunk || header) {
 		int id_file;
 
-		string_printf(&buffer_array[i].filename, "%smetalink-mulktmp%05d",
+		string_printf(&buffer->filename, "%smetalink-mulktmp%05d",
 			option_values.temp_directory, url->id);
 
-		if (header || !is_file_exist(buffer_array[i].filename) || !url->tmp_file_created) {
-			if (!make_dir_pathname(buffer_array[i].filename)) {
-				if (is_file_exist(buffer_array[i].filename))
-					buffer_array[i].file_pt = fopen(buffer_array[i].filename, "rb+");
+		if (header || !is_file_exist(buffer->filename) || !url->tmp_file_created) {
+			if (!make_dir_pathname(buffer->filename)) {
+				if (is_file_exist(buffer->filename))
+					buffer->file_pt = fopen(buffer->filename, "rb+");
 				else
-					buffer_array[i].file_pt = fopen(buffer_array[i].filename, "wb");
+					buffer->file_pt = fopen(buffer->filename, "wb");
 				if (!header && url->metalink_uri->size > 0)
-					init_buffer_file(&buffer_array[i], url->metalink_uri);
+					init_buffer_file(buffer, url->metalink_uri);
 			}
 		}
 		else if ((id_file = get_buffer_by_url(url, i)) < 0) {
-			if (!make_dir_pathname(buffer_array[i].filename))
-				buffer_array[i].file_pt = fopen(buffer_array[i].filename, "rb+");
+			if (!make_dir_pathname(buffer->filename))
+				buffer->file_pt = fopen(buffer->filename, "rb+");
 		}
 		else {
-			buffer_array[i].file_pt = buffer_array[id_file].file_pt;
+			buffer->file_pt = buffer_array[id_file].file_pt;
 		}
 	}
 	else
@@ -220,40 +222,43 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	char *type = NULL;
 	int len;
 	mulk_type_return_t ret = MULK_RET_OK;
+	buffer_t *buffer = buffer_array + i;
 
 #ifdef ENABLE_METALINK
-	if (buffer_array[i].url->metalink_uri)
-		buffer_array[i].url->http_code = 0;
+	metalink_file_list_t *metalink = buffer->url->metalink_uri;
+
+	if (metalink)
+		buffer->url->http_code = 0;
 	else
 #endif
 	{
-		buffer_array[i].url->err_code = err_code;
-		buffer_array[i].url->http_code = resp_code;
+		buffer->url->err_code = err_code;
+		buffer->url->http_code = resp_code;
 	}
 
 	if (!valid_res) {
 #ifdef ENABLE_METALINK
-		if (buffer_array[i].url->metalink_uri)
-			buffer_array[i].url->err_code = METALINK_RES_NO_NORE_RESOURCES;
+		if (metalink)
+			buffer->url->err_code = METALINK_RES_NO_NORE_RESOURCES;
 #endif
-		remove(buffer_array[i].filename);
+		remove(buffer->filename);
 		return MULK_RET_ERR;
 	}
 
 #ifdef ENABLE_RECURSION
-	if (is_html_file(buffer_array[i].url->mimetype)) 
-		parse_urls(buffer_array[i].filename, base_url, buffer_array[i].url->level);
+	if (is_html_file(buffer->url->mimetype)) 
+		parse_urls(buffer->filename, base_url, buffer->url->level);
 #endif
 
 #ifdef ENABLE_METALINK
-	if (option_values.follow_metalink && is_metalink_file(buffer_array[i].url->mimetype)) 
-		add_new_metalink(buffer_array[i].filename, buffer_array[i].url->level);
+	if (option_values.follow_metalink && is_metalink_file(buffer->url->mimetype)) 
+		add_new_metalink(buffer->filename, buffer->url->level);
 
-	if (buffer_array[i].url->metalink_uri) {
+	if (metalink) {
 #ifdef ENABLE_CHECKSUM
-		if (verify_metalink_file(buffer_array[i].url->metalink_uri->file, buffer_array[i].filename) == CS_VERIFY_ERR) {
+		if (verify_metalink_file(metalink->file, buffer->filename) == CS_VERIFY_ERR) {
 			MULK_NOTE((_("The file will be deleted.\n")));
-			buffer_array[i].url->err_code = METALINK_RES_WRONG_CHECKSUM;
+			buffer->url->err_code = METALINK_RES_WRONG_CHECKSUM;
 
 			ret = MULK_RET_ERR;
 		}
@@ -261,8 +266,8 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 #endif /* ENABLE_CHECKSUM */
 		{
 			string_printf(&newfilename, "%s%s", option_values.file_output_directory,
-				buffer_array[i].url->metalink_uri->file->name);
-			buffer_array[i].url->err_code = METALINK_RES_OK;
+				metalink->file->name);
+			buffer->url->err_code = METALINK_RES_OK;
 		}
 	}
 	else 
@@ -286,7 +291,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 			/* add index.<mime-type> if the filename represents a directory name */
 			if (newfilename[len-1] == *DIR_SEPAR_STR) {
 				string_cat(&newfilename, "index.");
-				if (extract_mime_type(buffer_array[i].url->mimetype, NULL, &subtype) == MULK_RET_OK) {
+				if (extract_mime_type(buffer->url->mimetype, NULL, &subtype) == MULK_RET_OK) {
 					string_cat(&newfilename, subtype);
 					string_free(&subtype);
 				} else
@@ -298,32 +303,32 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		uri_free(uri);
 	}
 
-	if ((is_gif_image(buffer_array[i].url->mimetype) && is_valid_gif_image(buffer_array[i].filename))
-		|| (is_png_image(buffer_array[i].url->mimetype) && is_valid_png_image(buffer_array[i].filename)) 
-		|| (is_jpeg_image(buffer_array[i].url->mimetype) && is_valid_jpeg_image(buffer_array[i].filename))
-		|| (is_saved_mime_type(buffer_array[i].url->mimetype))) {
-		if (extract_mime_type(buffer_array[i].url->mimetype, &type, &subtype) == MULK_RET_OK) {
+	if ((is_gif_image(buffer->url->mimetype) && is_valid_gif_image(buffer->filename))
+		|| (is_png_image(buffer->url->mimetype) && is_valid_png_image(buffer->filename)) 
+		|| (is_jpeg_image(buffer->url->mimetype) && is_valid_jpeg_image(buffer->filename))
+		|| (is_saved_mime_type(buffer->url->mimetype))) {
+		if (extract_mime_type(buffer->url->mimetype, &type, &subtype) == MULK_RET_OK) {
 			string_printf(&newmimefilename, "%s%s%s%s_%05d.%s", option_values.mime_output_directory,
-				type, DIR_SEPAR_STR, subtype, buffer_array[i].url->id, subtype);
+				type, DIR_SEPAR_STR, subtype, buffer->url->id, subtype);
 			string_free(&type);
 			string_free(&subtype);
 		}
 	}
 
 	/* save file */
-	buffer_array[i].url->filename = string_new(newfilename);
-	buffer_array[i].url->mimefilename = string_new(newmimefilename);
+	buffer->url->filename = string_new(newfilename);
+	buffer->url->mimefilename = string_new(newmimefilename);
 
 	if (newfilename && newmimefilename) {
-		if ((ret = save_file_to_outputdir(buffer_array[i].filename, newfilename, 1)) == MULK_RET_OK)
-			ret = save_file_to_outputdir(buffer_array[i].filename, newmimefilename, 0);
+		if ((ret = save_file_to_outputdir(buffer->filename, newfilename, 1)) == MULK_RET_OK)
+			ret = save_file_to_outputdir(buffer->filename, newmimefilename, 0);
 	}
 	else if (newfilename) 
-		ret = save_file_to_outputdir(buffer_array[i].filename, newfilename, 0);
+		ret = save_file_to_outputdir(buffer->filename, newfilename, 0);
 	else if (newmimefilename) 
-		ret = save_file_to_outputdir(buffer_array[i].filename, newmimefilename, 0);
+		ret = save_file_to_outputdir(buffer->filename, newmimefilename, 0);
 	else
-		remove(buffer_array[i].filename);
+		remove(buffer->filename);
 
 	string_free(&newmimefilename);
 	string_free(&newfilename);
@@ -348,17 +353,20 @@ void set_buffer_mime_type(CURL *id, const char *mimetype)
 {
 	int i;
 	char *ptr;
+	buffer_t *buffer;
 
 	if ((i = get_buffer(id)) < 0)
 		return;
 
-	string_free(&buffer_array[i].url->mimetype);
+	buffer = buffer_array + i;
+
+	string_free(&buffer->url->mimetype);
 	
 	if (mimetype) {
-		buffer_array[i].url->mimetype = string_new(mimetype);
-		if ((ptr = strchr(buffer_array[i].url->mimetype, ';')) != NULL)
+		buffer->url->mimetype = string_new(mimetype);
+		if ((ptr = strchr(buffer->url->mimetype, ';')) != NULL)
 			*ptr = 0;
-		string_lower(buffer_array[i].url->mimetype);
+		string_lower(buffer->url->mimetype);
 	}
 }
 
@@ -392,9 +400,11 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 	double length_double;
 	long length, byte_downloaded = 0, byte_total = 0;
 	int chunk_completed = 0, chunk_total = 0, single_chunk = 0, is_file_ok = 0;
-#endif
+	metalink_file_list_t *metalink;
+#endif /* ENABLE_METALINK */
 	int i, valid_res = 0;
 	mulk_type_return_t ret = MULK_RET_OK;
+	buffer_t *buffer;
 
 	if ((i = get_buffer(id)) < 0)
 		return MULK_RET_ERR;
@@ -404,19 +414,23 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 
 	MULK_INFO((_("Close link #%d\n"), i));
 
-#ifdef ENABLE_METALINK
-	if (buffer_array[i].url->metalink_uri) {
-		buffer_array[i].url->metalink_uri->header = 0;
+	buffer = buffer_array + i;
 
-		if (buffer_array[i].url->metalink_uri->size < 0) {
-			valid_res = is_valid_response(buffer_array[i].uri, err_code, resp_code, NULL, 0);
+#ifdef ENABLE_METALINK
+	metalink = buffer->url->metalink_uri;
+
+	if (metalink) {
+		metalink->header = 0;
+
+		if (metalink->size < 0) {
+			valid_res = is_valid_response(buffer->uri, err_code, resp_code, NULL, 0);
 
 		   	if (valid_res) {
 				curl_easy_getinfo(id, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length_double);
 				length = (long) length_double;
 
 				if (length > 0) {
-					buffer_array[i].url->metalink_uri->size = length;
+					metalink->size = length;
 
 					goto Exit;
 				}
@@ -425,24 +439,24 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 			}
 		}
 		else {
-			single_chunk = buffer_array[i].chunk && (buffer_array[i].url->metalink_uri->chunk_number == 1);
-			valid_res = is_valid_response(buffer_array[i].uri, err_code, resp_code, buffer_array[i].chunk, single_chunk);
+			single_chunk = buffer->chunk && (metalink->chunk_number == 1);
+			valid_res = is_valid_response(buffer->uri, err_code, resp_code, buffer->chunk, single_chunk);
 		}
 
 		/* actual URL no more used, decrement assignement counter */
-		if (buffer_array[i].used_res) {
-			buffer_array[i].used_res->assigned--;
-			if (buffer_array[i].used_res->assigned < 0)
-				buffer_array[i].used_res->assigned = 0;
+		if (buffer->used_res) {
+			buffer->used_res->assigned--;
+			if (buffer->used_res->assigned < 0)
+				buffer->used_res->assigned = 0;
 		}
 
-		if (buffer_array[i].chunk) {
-			buffer_array[i].chunk->used_res = NULL;
+		if (buffer->chunk) {
+			buffer->chunk->used_res = NULL;
 
 			if (!valid_res)
-				reset_chunk(buffer_array[i].chunk);
+				reset_chunk(buffer->chunk);
 
-			if (file_statistics(buffer_array[i].url->metalink_uri, &chunk_completed, &chunk_total,
+			if (file_statistics(metalink, &chunk_completed, &chunk_total,
 				&byte_downloaded, &byte_total) == MULK_RET_OK) {
 				MULK_INFO((_("Downloaded %d/%d chunks, %ld/%ld bytes\n"), chunk_completed, chunk_total,
 					byte_downloaded, byte_total));
@@ -452,38 +466,36 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 		}
 
 		/* remove URL that returns an error from the list of usable URLs */
-		if (!valid_res && buffer_array[i].used_res)
-			remove_metalink_resource(buffer_array[i].url->metalink_uri, buffer_array[i].used_res);
+		if (!valid_res && buffer->used_res)
+			remove_metalink_resource(metalink, buffer->used_res);
 
-		if (buffer_array[i].chunk && is_file_ok) 
+		if (buffer->chunk && is_file_ok) 
 			MULK_NOTE((_("RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%ld\n"),
-				buffer_array[i].url->metalink_uri->file->name, byte_downloaded));
-		else if (!is_resource_available(buffer_array[i].url->metalink_uri, 
-				(buffer_array[i].url->metalink_uri->size < 0)))
+				metalink->file->name, byte_downloaded));
+		else if (!is_resource_available(metalink, (metalink->size < 0)))
 			MULK_NOTE((_("RESULT: Metalink error, no more usable URLs for downloading, Filename:\"%s\"\n"),
-				buffer_array[i].url->metalink_uri->file->name));
+				metalink->file->name));
 	}
 	else
-		valid_res = is_valid_response(buffer_array[i].uri, err_code, resp_code, NULL, 0);
+		valid_res = is_valid_response(buffer->uri, err_code, resp_code, NULL, 0);
 #else /* not ENABLE_METALINK */
-	valid_res = is_valid_response(buffer_array[i].uri, err_code, resp_code);
+	valid_res = is_valid_response(buffer->uri, err_code, resp_code);
 #endif /* ENABLE_METALINK */
 
 	/* is the last chunk? */
-	if (get_buffer_by_url(buffer_array[i].url, i) < 0) {
+	if (get_buffer_by_url(buffer->url, i) < 0) {
 #ifdef ENABLE_METALINK
-		if (buffer_array[i].url->metalink_uri) {
-			if (!is_file_ok && is_resource_available(buffer_array[i].url->metalink_uri,
-					(buffer_array[i].url->metalink_uri->size < 0)))
+		if (metalink) {
+			if (!is_file_ok && is_resource_available(metalink, (metalink->size < 0)))
 				goto Exit;
 
 			valid_res = is_file_ok;
 		}
-#endif
+#endif /* ENABLE_METALINK */
 
-		if (buffer_array[i].file_pt)
-			fclose(buffer_array[i].file_pt);
-		buffer_array[i].file_pt = NULL;
+		if (buffer->file_pt)
+			fclose(buffer->file_pt);
+		buffer->file_pt = NULL;
 
 		if ((ret = filter_buffer(i, valid_res, base_url, err_code, resp_code)) == MULK_RET_OK && file_completed)
 			*file_completed = 1;
@@ -491,14 +503,14 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 	
 #ifdef ENABLE_METALINK
 Exit:
-	buffer_array[i].chunk = NULL;
-	buffer_array[i].used_res = NULL;
+	buffer->chunk = NULL;
+	buffer->used_res = NULL;
 #endif
-	buffer_array[i].file_pt = NULL;
-	buffer_array[i].id = NULL;
-	buffer_array[i].url = NULL;
-	buffer_array[i].uri = NULL;
-	string_free(&buffer_array[i].filename);
+	buffer->file_pt = NULL;
+	buffer->id = NULL;
+	buffer->url = NULL;
+	buffer->uri = NULL;
+	string_free(&buffer->filename);
 
 	return ret;
 }
@@ -506,58 +518,68 @@ Exit:
 void print_buffers(void)
 {
 	int i;
+	buffer_t *buffer;
 
 	if (is_printf(MINFO)) {
-		for (i = 0; i < option_values.max_sim_conns; i++)
+		for (i = 0, buffer = buffer_array; i < option_values.max_sim_conns; i++, buffer++)
 		{
 #ifdef ENABLE_METALINK
-			char *uri_str = uri2string(buffer_array[i].used_res->uri);
-			MULK_INFO(("%d: %s, %s, %s", i, buffer_array[i].id ? _("PRESENT") : _("EMPTY"), 
-				buffer_array[i].used_res ? uri_str : _("NULL"),
-				buffer_array[i].chunk ? _("CHUNK") : _("NO CHUNK")));
+			char *uri_str = uri2string(buffer->used_res->uri);
+			MULK_INFO(("%d: %s, %s, %s", i, buffer->id ? _("PRESENT") : _("EMPTY"), 
+				buffer->used_res ? uri_str : _("NULL"),
+				buffer->chunk ? _("CHUNK") : _("NO CHUNK")));
 			string_free(&uri_str);
 #else /* not ENABLE_METALINK */
-			MULK_INFO(("%d: %s", i, buffer_array[i].id ? _("PRESENT") : _("EMPTY")));
+			MULK_INFO(("%d: %s", i, buffer->id ? _("PRESENT") : _("EMPTY")));
 #endif /* not ENABLE_METALINK */
 			MULK_INFO(("\n"));
 		} 
 	}
 }
 
-void free_buffer_easy_handles(CURLM *curl_obj)
+void free_buffer_array(CURLM *curl_obj)
 {
 	int i;
-	char *orig_url = NULL;
+	char *orig_url = NULL, *resume_filename = NULL;
+	buffer_t *buffer;
 
 	if (!buffer_array)
 		return;
 
-	for (i = 0; i < option_values.max_sim_conns; i++) {
-		if (!buffer_array[i].id)
+	for (i = 0, buffer = buffer_array; i < option_values.max_sim_conns; i++, buffer++)
+		if (buffer->file_pt)
+			fclose(buffer->file_pt);
+
+	for (i = 0, buffer = buffer_array; i < option_values.max_sim_conns; i++, buffer++) {
+		if (!buffer->id)
 			continue;
 
-		curl_easy_getinfo(buffer_array[i].id, CURLINFO_PRIVATE, &orig_url);
-		curl_multi_remove_handle(curl_obj, buffer_array[i].id);
+		curl_easy_getinfo(buffer->id, CURLINFO_PRIVATE, &orig_url);
+		curl_multi_remove_handle(curl_obj, buffer->id);
 		string_free(&orig_url);
-		curl_easy_cleanup(buffer_array[i].id);
+		curl_easy_cleanup(buffer->id);
 
-		buffer_array[i].id = NULL;
+#ifdef ENABLE_METALINK
+		if (buffer->url->metalink_uri) {
+			if (is_file_exist(buffer->filename)) {
+				string_printf(&resume_filename, "%smetalink-mulkresume%05d",
+					option_values.temp_directory, buffer->url->id);
+				rename(buffer->filename, resume_filename);
+				reset_metalink_file(buffer->url->metalink_uri, resume_filename);
+				string_free(&resume_filename);
+			}
+		}
+		else 
+#endif /* ENABLE_METALINK */
+		{
+			if (is_file_exist(buffer->filename))
+				remove(buffer->filename);
+		}
+		string_free(&buffer->filename);
+		reset_url(buffer->url);
 	}
-}
-
-void free_buffer_array(void)
-{
-	int i;
-
-	if (!buffer_array)
-		return;
-
-	for (i = 0; i < option_values.max_sim_conns; i++)
-		string_free(&buffer_array[i].filename);
 
 	m_free(buffer_array);
 
-	if (is_file_exist(option_values.temp_directory) && remove_dir(option_values.temp_directory))
-		MULK_ERROR((_("ERROR: removing temporary directory\n")));
+	reset_url_list();
 }
-
