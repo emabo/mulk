@@ -92,6 +92,8 @@ int resume_file_used = 0;
 
 static mulk_type_return_t set_option_option_filename(void);
 static mulk_type_return_t set_option_url_filename(void);
+static mulk_type_return_t set_option_report_filename(void);
+static mulk_type_return_t set_option_report_csv_filename(void);
 static mulk_type_return_t set_option_mime_output_directory(void);
 static mulk_type_return_t set_option_file_output_directory(void);
 static mulk_type_return_t set_option_temp_directory(void);
@@ -180,9 +182,9 @@ option_t options[] = {
 #endif /* ENABLE_METALINK */
 	{"report-file",            'r', gettext_noop("report filename"),
 		&option_values.report_filename,        OPTION_STRING, 0, 0, NULL,
-		gettext_noop("Reporting options"), NULL},
+		gettext_noop("Reporting options"), set_option_report_filename},
 	{"report-csv-file",        'c', gettext_noop("report CSV filename"),
-		&option_values.report_csv_filename,    OPTION_STRING, 0, 0, NULL, NULL, NULL},
+		&option_values.report_csv_filename,    OPTION_STRING, 0, 0, NULL, NULL, set_option_report_csv_filename},
 	{"report-every-lines",       0, gettext_noop("write report to file every n lines"),
 		&option_values.report_every_lines,     OPTION_INT, 0, INT_MAX,
 		gettext_noop("wrong maximum number of lines for writing report"), NULL, NULL},
@@ -489,6 +491,30 @@ static mulk_type_return_t set_option_url_filename(void)
 	return read_uri_from_text_file(option_values.url_filename);
 }
 
+static mulk_type_return_t set_option_report_filename(void)
+{
+	if (option_values.report_filename && *option_values.report_filename) {
+		if (is_file_exist(option_values.report_filename) && remove(option_values.report_filename))
+			return MULK_RET_FILE_ERR;
+		else
+			return MULK_RET_OK;
+	}
+	else
+		return MULK_RET_FILE_ERR;
+}
+
+static mulk_type_return_t set_option_report_csv_filename(void)
+{
+	if (option_values.report_csv_filename && *option_values.report_csv_filename) {
+		if (is_file_exist(option_values.report_csv_filename) && remove(option_values.report_csv_filename))
+			return MULK_RET_FILE_ERR;
+		else
+			return MULK_RET_OK;
+	}
+	else
+		return MULK_RET_FILE_ERR;
+}
+
 static mulk_type_return_t set_option_mime_output_directory(void)
 {
 	return add_directory_separ(&option_values.mime_output_directory);
@@ -501,7 +527,12 @@ static mulk_type_return_t set_option_file_output_directory(void)
 
 static mulk_type_return_t set_option_temp_directory(void)
 {
-	return add_directory_separ(&option_values.temp_directory);
+	mulk_type_return_t ret = add_directory_separ(&option_values.temp_directory);
+	
+	if (is_file_exist(option_values.temp_directory) && remove_dir(option_values.temp_directory))
+		MULK_WARN((_("WARNING: removing temporary directory\n")));
+
+	return  ret;
 }
 
 /* general options */
@@ -640,11 +671,11 @@ void init_options(void)
 	option_values.report_every_lines = 500;
 
 	option_values.mime_output_directory = string_new(DEFAULT_MIME_OUTPUT_DIRECTORY);
-	add_directory_separ(&option_values.mime_output_directory);
+	set_option_mime_output_directory();
 	option_values.file_output_directory = string_new(DEFAULT_FILE_OUTPUT_DIRECTORY);
-	add_directory_separ(&option_values.file_output_directory);
+	set_option_file_output_directory();
 	option_values.temp_directory = string_new(DEFAULT_TEMP_DIRECTORY);
-	add_directory_separ(&option_values.temp_directory);
+	set_option_temp_directory();
 
 #ifdef ENABLE_CHECKSUM
 	resume_file_used = 0;

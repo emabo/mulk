@@ -87,8 +87,7 @@ url_list_t *search_next_url(UriUriA **uri);
 /* remember to free the url */
 UriUriA *pop_url(void);
 
-void remove_report_files(const char *text_filename, const char *csv_filename);
-void report_urls(const char *text_filename, const char *csv_filename);
+void report_urls(void);
 
 void reset_url(url_list_t *url);
 void reset_url_list(void);

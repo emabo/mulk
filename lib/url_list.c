@@ -257,22 +257,15 @@ UriUriA *pop_url(void)
 	return ret_uri;
 }
 
-void remove_report_files(const char *text_filename, const char *csv_filename)
-{
-	if (text_filename && *text_filename && is_file_exist(text_filename))
-		remove(text_filename);
-
-	if (csv_filename && *csv_filename && is_file_exist(csv_filename))
-		remove(csv_filename);
-}
-
-void report_urls(const char *text_filename, const char *csv_filename)
+void report_urls(void)
 {
 	url_list_t *elem;
 	FILE *textfile = NULL, *csvfile = NULL;
 	char *uri_str, *rep_uri, *rep_mime, *rep_file, *rep_mimefile;
 	int update_pointer = 1;
 	static int write_header = 1;
+	char *text_filename = option_values.report_filename;
+	char *csv_filename = option_values.report_csv_filename;
 
 	if (text_filename && *text_filename)
 		textfile = fopen(text_filename, "a");

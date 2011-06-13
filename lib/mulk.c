@@ -104,12 +104,6 @@ mulk_type_return_t mulk_run(void)
 
 	(void) time(&t1);
 
-	if (is_file_exist(option_values.temp_directory) && remove_dir(option_values.temp_directory))
-		MULK_ERROR((_("ERROR: removing temporary directory\n")));
-
-	if (option_values.report_filename || option_values.report_csv_filename)
-		remove_report_files(option_values.report_filename, option_values.report_csv_filename);
-
 	create_buffer_array();
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl_obj = curl_multi_init();
@@ -217,7 +211,7 @@ mulk_type_return_t mulk_run(void)
 				if ((option_values.report_filename || option_values.report_csv_filename)
 					&& option_values.report_every_lines) {
 					if ((file_tot % option_values.report_every_lines) == 0)
-						report_urls(option_values.report_filename, option_values.report_csv_filename);
+						report_urls();
 				}
 			}
 		} while (e);
@@ -241,7 +235,7 @@ Exit:
 		MULK_NOTE((_("\nAverage data rate = %.2f KB/s\n"), ((float) download_tot) / (tot_time * 1000.0f)));
 
 	if (option_values.report_filename || option_values.report_csv_filename)
-		report_urls(option_values.report_filename, option_values.report_csv_filename);
+		report_urls();
 
 	return ret;
 }
