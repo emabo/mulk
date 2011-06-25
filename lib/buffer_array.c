@@ -32,11 +32,6 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#ifdef _WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
 #include "buffer_array.h"
 #include "jpg_obj.h"
 #include "gif_obj.h"

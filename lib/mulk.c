@@ -30,9 +30,6 @@
  * files in the program, then also delete it here.
  *---------------------------------------------------------------------------*/
 
-#ifndef _WIN32
-#include <unistd.h>
-#endif
 #include "m_malloc.h"
 #include "buffer_array.h"
 #include "url_list.h"

@@ -30,17 +30,6 @@
  * files in the program, then also delete it here.
  *---------------------------------------------------------------------------*/
 
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <share.h>
-#else
-#include <unistd.h>
-#endif
 #include "file_obj.h"
 #include "string_obj.h"
 #include "url_list.h"

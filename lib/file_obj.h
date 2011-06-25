@@ -35,6 +35,16 @@
 
 #include "defines.h"
 #include <sys/stat.h>
+#ifdef _WIN32
+#include <direct.h>
+#include <io.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <share.h>
+#else
+#include <unistd.h>
+#endif
 
 #define DEFAULT_MASK 0777
 
