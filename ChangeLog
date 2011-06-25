@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.5.2, beta)
 
 
+2011/06/26 Emanuele <pocoyo@users.sourceforge.net>
+	* two new library's functions have added, mulk_set_short_option and mulk_set_long_option
+
 2011/06/08 Emanuele <pocoyo@users.sourceforge.net>
 	* several fixes made in order to assure that the library's functions can called more than once for each instance
 

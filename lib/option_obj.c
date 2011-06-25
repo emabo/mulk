@@ -755,28 +755,17 @@ mulk_type_return_t mulk_set_options(int argc, char **argv)
 
 		/* not recognised */
 		if (c == '?') {
-			string_free(&short_options);
-			m_free(long_options);
 			ret = MULK_RET_OPTION_ERR;
 			goto Exit;
 		}
 
 		/* short option */
-		if (c && ((ret = mulk_find_short_option((char) c, &option_index)) != MULK_RET_OK)) {
-			string_free(&short_options);
-			m_free(long_options);
+		if (c && ((ret = mulk_find_short_option((char) c, &option_index)) != MULK_RET_OK)) 
 			goto Exit;
-		}
 
-		if ((ret = mulk_set_option(option_index, optarg)) != MULK_RET_OK) {
-			string_free(&short_options);
-			m_free(long_options);
+		if ((ret = mulk_set_option(option_index, optarg)) != MULK_RET_OK) 
 			goto Exit;
-		}
 	}
-
-	string_free(&short_options);
-	m_free(long_options);
 
 	while (optind < argc) {
 		MULK_NOTE((_("Add url to download coming from command line: %s\n"), argv[optind]));
@@ -793,7 +782,32 @@ Exit:
 	if (ret < MULK_RET_OK)
 		fprintf(stderr, _("Try `mulk --help' for more information.\n"));
 
+	string_free(&short_options);
+	m_free(long_options);
+
 	return ret;
+}
+
+MULK_API mulk_type_return_t mulk_set_short_option(const char name, const char *value)
+{
+	mulk_type_return_t ret = MULK_RET_OK;
+	int opt_index = 0;
+
+	if ((ret = mulk_find_short_option(name, &opt_index)) != MULK_RET_OK)
+		return ret;
+
+	return mulk_set_option(opt_index, value);
+}
+
+MULK_API mulk_type_return_t mulk_set_long_option(const char *name, const char *value)
+{
+	mulk_type_return_t ret = MULK_RET_OK;
+	int opt_index = 0;
+
+	if ((ret = mulk_find_long_option(name, &opt_index)) != MULK_RET_OK)
+		return ret;
+
+	return mulk_set_option(opt_index, value);
 }
 
 void free_options(void)
