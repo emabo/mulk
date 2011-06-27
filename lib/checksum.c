@@ -224,7 +224,7 @@ static char *compute_file_checksum(const char *filename, checksum_type_t cs)
 	FILE *file;
 	unsigned char buffer[FILE_BLOCK];
 	size_t num;
-    checksum_t checksum;
+	checksum_t checksum;
 
 	if (!filename)
 		return NULL;
@@ -235,10 +235,10 @@ static char *compute_file_checksum(const char *filename, checksum_type_t cs)
 	checksum.cs_type = cs;
 
 	init_context(&checksum);
-	while (!feof(file)) 
+	while (!feof(file))
 		if ((num = fread(buffer, 1, FILE_BLOCK, file)))
 			update_context(&checksum, buffer, num);
-	
+
 	fclose(file);
 
 	final_context(&checksum);

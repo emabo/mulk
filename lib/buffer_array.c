@@ -74,7 +74,6 @@ static int get_buffer_by_url(url_list_t *url, int id)
 	if (!url)
 		return MULK_RET_ERR;
 
-
 	for (i = 0; i < option_values.max_sim_conns; i++)
 		if (i != id && buffer_array[i].url && buffer_array[i].url->id == url->id)
 			break;
