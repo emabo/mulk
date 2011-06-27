@@ -201,7 +201,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib tidy.lib uriparser.lib libcurld_imp.lib"
-				Version="0.5.2"
+				Version="0.6.0"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\..\..\tidy-060405-dll\lib&quot;;&quot;..\..\..\uriparser-0.7.5\win32\Visual_Studio_2005\Debug&quot;;&quot;..\..\..\curl-7.21.2\lib\DLL-Debug&quot;"
 				GenerateDebugInformation="true"
@@ -279,7 +279,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib tidy.lib uriparser.lib libcurl_imp.lib"
-				Version="0.5.2"
+				Version="0.6.0"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\..\tidy-060405-dll\lib&quot;;&quot;..\..\..\uriparser-0.7.5\win32\Visual_Studio_2005\Release&quot;;&quot;..\..\..\curl-7.21.2\lib\DLL-Release&quot;"
 				GenerateDebugInformation="true"

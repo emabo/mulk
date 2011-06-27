@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mulk 0.5.2\n"
+"Project-Id-Version: mulk 0.6.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/projects/mulk\n"
 "POT-Creation-Date: 2011-04-22 17:07+0200\n"
 "PO-Revision-Date: 2009-11-18 00:52+0100\n"

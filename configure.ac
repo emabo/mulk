@@ -31,10 +31,10 @@
 #-----------------------------------------------------------------------------
 
 AC_PREREQ(2.61)
-AC_INIT([mulk], [0.5.2], [http://sourceforge.net/projects/mulk])
+AC_INIT([mulk], [0.6.0], [http://sourceforge.net/projects/mulk])
 LT_PREREQ([2.2.6])
 LT_INIT
-AM_INIT_AUTOMAKE([mulk], [0.5.2])
+AM_INIT_AUTOMAKE([mulk], [0.6.0])
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER([config.h])

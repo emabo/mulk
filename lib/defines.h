@@ -76,7 +76,7 @@
 
 typedef UINT32 uint32_t;
 
-#define VERSION "0.5.2"
+#define VERSION "0.6.0"
 #define DIR_SEPAR_STR "\\"
 
 #else

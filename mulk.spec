@@ -1,6 +1,6 @@
 Summary: Non-interactive multi-connection network downloader with image filtering and Metalink support.
 Name: mulk
-Version: 0.5.2
+Version: 0.6.0
 Release: 1
 License: GPL
 Group: Utilities/Console
