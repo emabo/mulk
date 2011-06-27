@@ -27,6 +27,7 @@ version 0.6.0 - XXXX/XX/XX
 -bug fixed, during Metalink download FTP protocol was used erroneously to find the missing filesize
 -bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
 -bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
+-bug fixed, whole checksum of a file sometimes was miscomputed due to unsynchronised file
 -a "(null)" string was printed to reports when a not HTTP protocol was used
 -the option directories are now evaluated only once at startup
 -the options can be evaluated by callbacks

@@ -64,6 +64,7 @@ static size_t write_data_cb(void *ptr, size_t size, size_t nmemb, void *outstrea
 				return 0;
 
 			nmemb_writed = fwrite_offset(ptr, size, nmemb, offset, buffer->file_pt);
+			fflush(buffer->file_pt);
 			byte_writed = size * nmemb_writed;
 			buffer->chunk->pos += byte_writed;
 
@@ -74,7 +75,10 @@ static size_t write_data_cb(void *ptr, size_t size, size_t nmemb, void *outstrea
 		}
 		else
 #endif /* ENABLE_METALINK */
+		{
 			nmemb_writed = fwrite(ptr, size, nmemb, buffer->file_pt);
+			fflush(buffer->file_pt);
+		}
 	}
 
 	return nmemb_writed * size;

@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0, beta)
 
 
+2011/06/28 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fixed, whole checksum of a file sometimes was miscomputed due to unsynchronised file
+
 2011/06/26 Emanuele <pocoyo@users.sourceforge.net>
 	* two new library's functions have added, mulk_set_short_option and mulk_set_long_option
 
