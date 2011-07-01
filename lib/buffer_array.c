@@ -214,7 +214,6 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	char *newmimefilename = NULL;
 	char *subtype = NULL;
 	char *type = NULL;
-	int len;
 	mulk_type_return_t ret = MULK_RET_OK;
 	buffer_t *buffer = buffer_array + i;
 
@@ -272,18 +271,9 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 
 		if (furi_str) {
 			string_printf(&newfilename, "%s%s", option_values.file_output_directory, furi_str);
-			len = strlen(newfilename);
-
-			/* add index.<mime-type> if uri doesn't contains an explicit path */
-			if ((!uri->pathHead || !uri->pathHead->text.afterLast || !uri->pathHead->text.first
-				|| !(uri->pathHead->text.afterLast-uri->pathHead->text.first))
-				&& newfilename[len-1] != *DIR_SEPAR_STR) {
-				string_cat(&newfilename, DIR_SEPAR_STR);
-				len++;
-			}
 
 			/* add index.<mime-type> if the filename represents a directory name */
-			if (newfilename[len-1] == *DIR_SEPAR_STR) {
+			if (newfilename[strlen(newfilename)-1] == *DIR_SEPAR_STR) {
 				string_cat(&newfilename, "index.");
 				if (extract_mime_type(buffer->url->mimetype, NULL, &subtype) == MULK_RET_OK) {
 					string_cat(&newfilename, subtype);

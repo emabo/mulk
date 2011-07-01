@@ -91,6 +91,7 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 {
 	UriParserStateA state;
 	UriUriA *abs_dest, abs_base, rel_source;
+	char *newurl;
 
 	if (!url || !*url)
 		return NULL;
@@ -135,6 +136,21 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	if (uriNormalizeSyntaxA(abs_dest) != URI_SUCCESS) {
 		uri_free(abs_dest);
 		return NULL;
+	}
+
+	/* http://www.example.com and http://www.example.com/ have to generate the same object */
+	if (!base_url && (!abs_dest->pathHead || !abs_dest->pathHead->text.first)
+		&& !abs_dest->query.first) {
+		newurl = string_new(url);
+		string_cat(&newurl, DIR_SEPAR_STR);
+
+		state.uri = abs_dest;
+		if (uriParseUriA(&state, newurl) != URI_SUCCESS) {
+			uri_free(abs_dest); 
+			string_free(&newurl);
+			return NULL;
+		}
+		string_free(&newurl);
 	}
 
 	return abs_dest;

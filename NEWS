@@ -28,6 +28,7 @@ version 0.6.0 - XXXX/XX/XX
 -bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
 -bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
 -bug fixed, whole checksum of a file sometimes was miscomputed due to unsynchronised file
+-bug fixed, http://www.example.com and http://www.example.com/ have to be considered the same url
 -a "(null)" string was printed to reports when a not HTTP protocol was used
 -the option directories are now evaluated only once at startup
 -the options can be evaluated by callbacks
