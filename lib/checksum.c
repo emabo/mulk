@@ -246,15 +246,16 @@ static char *compute_file_checksum(const char *filename, checksum_type_t cs)
 	return str_digest(&checksum);
 }
 
-size_t update_context_chunk_file(FILE *file, checksum_t *checksum, off_t offset, size_t size) 
+off_t update_context_chunk_file(FILE *file, checksum_t *checksum, off_t offset, off_t size) 
 {
 	unsigned char buffer[FILE_BLOCK];
-	size_t byte_to_read, byte_read = 0, num;
+	size_t byte_to_read, num;
+	off_t byte_read = 0;
 
 	if (!file || !checksum || size < 0)
 		return 0;
 
-	fseek(file, offset, SEEK_SET); 
+	mulk_fseek(file, offset, SEEK_SET); 
 
 	while (size) {
 		byte_to_read = (size >= FILE_BLOCK) ? FILE_BLOCK : size;

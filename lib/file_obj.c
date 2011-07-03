@@ -68,7 +68,7 @@ Exit1:
 
 size_t fwrite_offset(unsigned char *buf, size_t size, size_t nmemb, off_t offset, FILE *file)
 {
-	fseek(file, offset, SEEK_SET); 
+	mulk_fseek(file, offset, SEEK_SET); 
 
 	return fwrite(buf, size, nmemb, file);
 }

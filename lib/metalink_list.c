@@ -193,7 +193,7 @@ metalink_file_list_t *create_metalink_file(metalink_file_t *file)
 
 	elem = m_calloc(1, sizeof(metalink_file_list_t));
 	elem->file = file;
-	elem->size = (long) (file->size ? file->size : -1L);
+	elem->size = file->size ? file->size : -1L;
 
 	return elem;
 }

@@ -110,7 +110,7 @@ static mulk_type_return_t read_jpeg_dim(const char *filename, int *width, int *h
 			if (strcmp((char *)buffer, "JFIF"))
 				goto Exit;
 
-			if (fseek(file, size - 2 - JPEG_DIM_SIZE, SEEK_CUR))
+			if (mulk_fseek(file, size - 2 - JPEG_DIM_SIZE, SEEK_CUR))
 				goto Exit;
 		}
 		else if (is_start_of_frame(mark))
@@ -127,7 +127,7 @@ static mulk_type_return_t read_jpeg_dim(const char *filename, int *width, int *h
 		}
 		else
 		{
-			if (fseek(file, size - 2, SEEK_CUR))
+			if (mulk_fseek(file, size - 2, SEEK_CUR))
 				goto Exit;
 		}
 		first_time = 0;

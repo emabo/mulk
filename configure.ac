@@ -248,6 +248,7 @@ fi
 AC_TYPE_SIZE_T
 AC_C_CONST
 gl_VISIBILITY
+AC_SYS_LARGEFILE
 
 # Checks for library functions.
 AC_FUNC_SELECT_ARGTYPES
@@ -264,6 +265,7 @@ AC_CHECK_FUNCS([mkdir select truncate rename remove rmdir])
 AC_CHECK_FUNCS([strchr strstr strcmp strncmp strcpy strncpy strlen strerror tolower strtok])
 AC_CHECK_FUNCS([malloc calloc free])
 AC_CHECK_FUNCS([vsnprintf])
+AC_FUNC_FSEEKO
 
 # It should compile also with -Werror
 if test "X$GCC" = "Xyes"; then

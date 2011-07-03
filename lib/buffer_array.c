@@ -30,8 +30,6 @@
  * files in the program, then also delete it here.
  *---------------------------------------------------------------------------*/
 
-#include <stdio.h>
-#include <sys/types.h>
 #include "buffer_array.h"
 #include "jpg_obj.h"
 #include "gif_obj.h"
@@ -382,7 +380,7 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 {
 #ifdef ENABLE_METALINK
 	double length_double;
-	long length, byte_downloaded = 0, byte_total = 0;
+	off_t length, byte_downloaded = 0, byte_total = 0;
 	int chunk_completed = 0, chunk_total = 0, single_chunk = 0, is_file_ok = 0;
 	metalink_file_list_t *metalink;
 #endif /* ENABLE_METALINK */
@@ -411,7 +409,7 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 
 		   	if (valid_res) {
 				curl_easy_getinfo(id, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length_double);
-				length = (long) length_double;
+				length = (off_t) length_double;
 
 				if (length > 0) {
 					metalink->size = length;
@@ -442,8 +440,8 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 
 			if (file_statistics(metalink, &chunk_completed, &chunk_total,
 				&byte_downloaded, &byte_total) == MULK_RET_OK) {
-				MULK_INFO((_("Downloaded %d/%d chunks, %ld/%ld bytes\n"), chunk_completed, chunk_total,
-					byte_downloaded, byte_total));
+				MULK_INFO((_("Downloaded %d/%d chunks, %" PRIdMAX "/%" PRIdMAX " bytes\n"), chunk_completed, chunk_total,
+					(intmax_t) byte_downloaded, (intmax_t) byte_total));
 			}
 
 			is_file_ok = (chunk_completed == chunk_total);
@@ -453,9 +451,9 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 		if (!valid_res && buffer->used_res)
 			remove_metalink_resource(metalink, buffer->used_res);
 
-		if (buffer->chunk && is_file_ok) 
-			MULK_NOTE((_("RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%ld\n"),
-				metalink->file->name, byte_downloaded));
+		if (buffer->chunk && is_file_ok)
+			MULK_NOTE((_("RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%" PRIdMAX "\n"),
+				metalink->file->name, (intmax_t) byte_downloaded));
 		else if (!is_resource_available(metalink, (metalink->size < 0)))
 			MULK_NOTE((_("RESULT: Metalink error, no more usable URLs for downloading, Filename:\"%s\"\n"),
 				metalink->file->name));

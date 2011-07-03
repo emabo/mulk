@@ -105,10 +105,10 @@ int is_chunk_downloaded(chunk_t *chunk)
 }
 
 #ifdef ENABLE_CHECKSUM
-static void push_chunk(metalink_file_list_t *file, long start, long length, 
+static void push_chunk(metalink_file_list_t *file, off_t start, off_t length, 
 	checksum_type_t cs, metalink_piece_hash_t *piece_hash)
 #else
-static void push_chunk(metalink_file_list_t *file, long start, long length)
+static void push_chunk(metalink_file_list_t *file, off_t start, off_t length)
 #endif
 {
 	chunk_t *elem;
@@ -142,8 +142,8 @@ void print_chunks(metalink_file_list_t *file)
 	for (elem = file->chunk; elem; elem = elem->next) {
 		char *uri_str = elem->used_res ? uri2string(elem->used_res->uri) : "NULL";
 
-		printf("%d: %ld %ld-%ld/%ld, %s\n", ++i, (long)elem->pos, (long)elem->start,
-			(long)elem->start+elem->length-1, (long)elem->length, uri_str);
+		printf("%d: %" PRIdMAX " %" PRIdMAX "-%" PRIdMAX "/%" PRIdMAX ", %s\n", ++i, (intmax_t) elem->pos, (intmax_t) elem->start,
+			(intmax_t) elem->start+elem->length-1, (intmax_t) elem->length, uri_str);
 
 		if (elem->used_res)
 			string_free(&uri_str);
@@ -182,7 +182,7 @@ int is_file_downloaded(metalink_file_list_t *file)
 }
 
 mulk_type_return_t file_statistics(metalink_file_list_t *file, int *chunk_completed, int *chunk_total,
-	long *byte_downloaded, long *byte_total)
+	off_t *byte_downloaded, off_t *byte_total)
 {
 	chunk_t *elem;
 
@@ -315,7 +315,7 @@ mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfi
 void create_chunks(metalink_file_list_t *file)
 {
 	int chunk_number = CHUNK_NUMBER, i;
-	long last_chunk_size = 0, chunk_size = 0, chunk_remainder, filesize;
+	off_t last_chunk_size = 0, chunk_size = 0, chunk_remainder, filesize;
 #ifdef ENABLE_CHECKSUM
 	checksum_type_t cs = CS_NONE;
 #else
@@ -369,13 +369,13 @@ void create_chunks(metalink_file_list_t *file)
 		last_chunk_size = chunk_size + chunk_remainder;
 	}
 
-	MULK_DEBUG((_("filesize: %ld\n"), filesize));
+	MULK_DEBUG((_("filesize: %" PRIdMAX "\n"), (intmax_t) filesize));
 	MULK_DEBUG((_("number of chunks: %d\n"), chunk_number));
-	MULK_DEBUG((_("chunk size: %ld\n"), chunk_size));
-	MULK_DEBUG((_("last chunk size: %ld\n"), last_chunk_size));
+	MULK_DEBUG((_("chunk size: %" PRIdMAX "\n"), (intmax_t) chunk_size));
+	MULK_DEBUG((_("last chunk size: %" PRIdMAX "\n"), (intmax_t) last_chunk_size));
 
 	for (i = 0; i < chunk_number && filesize > 0; i++) {
-		long size = i ? chunk_size : last_chunk_size;
+		off_t size = i ? chunk_size : last_chunk_size;
 
 		filesize -= size;
 

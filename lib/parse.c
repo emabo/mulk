@@ -135,8 +135,8 @@ mulk_type_return_t init_url(CURLM *cm)
 		if (chunk) {
 		    char *range = NULL;
 
-			string_printf(&range, "%ld-%ld", chunk->start, 
-				chunk->start + chunk->length - 1);
+			string_printf(&range, "%" PRIdMAX "-%" PRIdMAX, (intmax_t) chunk->start, 
+				(intmax_t) (chunk->start + chunk->length - 1));
 
 			curl_easy_setopt(eh, CURLOPT_RANGE, range);
 

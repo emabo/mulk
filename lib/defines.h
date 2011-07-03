@@ -79,10 +79,19 @@ typedef UINT32 uint32_t;
 #define VERSION "0.6.0"
 #define DIR_SEPAR_STR "\\"
 
+#define mulk_fseek fseek
+
 #else
 #define REMOVE_4127_WARNING
 
 #define DIR_SEPAR_STR "/"
+
+#ifdef HAVE_FSEEKO
+#define mulk_fseek fseeko
+#else
+#define mulk_fseek fseek
+#endif
+
 #endif
 
 #define GET_SEPAR(out_dir) \

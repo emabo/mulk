@@ -40,7 +40,6 @@
 #include <io.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <stdio.h>
 #include <share.h>
 #else
 #include <unistd.h>

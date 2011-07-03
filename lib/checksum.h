@@ -93,7 +93,7 @@ char *checksum_type2string(checksum_type_t cs);
 
 void init_context(checksum_t *cs);
 void update_context(checksum_t *cs, const unsigned char *input, size_t length);
-size_t update_context_chunk_file(FILE *file, checksum_t *checksum, off_t offset, size_t size);
+off_t update_context_chunk_file(FILE *file, checksum_t *checksum, off_t offset, off_t size);
 void final_context(checksum_t *cs);
 char *str_digest(checksum_t *cs);
 

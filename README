@@ -33,6 +33,7 @@ Features:
 -option to save the report progressively.
 -i18n gettext internationalisation.
 -static and dynamic libraries creation (libmulk)
+-large file support (LFS)
 
 
 Compile & Install:

@@ -33,8 +33,8 @@
 #ifndef _METALINK_LIST_H_
 #define _METALINK_LIST_H_
 
-#include <metalink/metalink_parser.h>
 #include "defines.h"
+#include <metalink/metalink_parser.h>
 #include "chunk_list.h"
 #ifdef ENABLE_CHECKSUM
 #include "checksum.h"

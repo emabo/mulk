@@ -52,8 +52,8 @@ typedef struct chunk_t {
 	struct metalink_file_list_t *file;
 	struct metalink_resource_list_t* used_res;
 	off_t start;
-	size_t length;
-	size_t pos;
+	off_t length;
+	off_t pos;
 #ifdef ENABLE_CHECKSUM
 	metalink_piece_hash_t *piece_hash;
 	checksum_t checksum;
@@ -80,7 +80,7 @@ int is_chunk_downloaded(chunk_t *chunk);
 int is_file_downloaded(struct metalink_file_list_t *file);
 
 mulk_type_return_t file_statistics(struct metalink_file_list_t *file, int *chunk_completed, int *chunk_total,
-	long *byte_downloaded, long *byte_total);
+	off_t *byte_downloaded, off_t *byte_total);
 
 void create_chunks(struct metalink_file_list_t *file);
 

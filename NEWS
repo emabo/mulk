@@ -3,6 +3,7 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
 
 
 version 0.6.0 - XXXX/XX/XX
+-large file support has been added
 -new option to read, from an external text file, a list of metalink urls to download
 -new option to set HTTP proxy and port to use
 -new option to avoid downloading of html dependencies (images, CSS, etc.)
