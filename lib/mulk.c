@@ -93,7 +93,8 @@ mulk_type_return_t mulk_run(void)
 	CURL *e;
 	CURLMsg *curl_msg;
 	int num_fd, num_msgs, active_handles;
-	long time_to_wait, download_tot = 0, file_tot = 0;
+	long time_to_wait, file_tot = 0;
+	off_t download_tot = 0;
 	fd_set read_fd, write_fd, except_fd;
 	struct timeval timeout;
 	time_t t1, t2, tot_time;
@@ -175,7 +176,7 @@ mulk_type_return_t mulk_run(void)
 					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_RESPONSE_CODE, &resp_code);
 					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_SIZE_DOWNLOAD, &download_size);
 
-					download_tot += (long)download_size;
+					download_tot += (off_t) download_size;
 
 					MULK_NOTE((_("RESULT: %d (%s), "), curl_msg->data.result, curl_easy_strerror(curl_msg->data.result)));
 					if ((is_http = is_uri_http_buffer(e)) != 0) {
@@ -183,11 +184,11 @@ mulk_type_return_t mulk_run(void)
 							mime_type ? mime_type : ""));
 						set_buffer_mime_type(e, mime_type);
 					}
-					MULK_NOTE((_("Url:\"%s\" Size:%ld\n"), url, (long)download_size));
+					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), url, (intmax_t) download_size));
 
-					if (write_download_info) 
+					if (write_download_info)
 						write_download_info(info_context, curl_msg->data.result, curl_easy_strerror(curl_msg->data.result),
-							is_http, resp_code, mime_type, url, (long)download_size);
+							is_http, resp_code, mime_type, url, (off_t) download_size);
 
 					if (close_buffer(e, url, curl_msg->data.result, resp_code, &is_file_completed) == MULK_RET_OK)
 						file_tot += is_file_completed;
@@ -227,9 +228,9 @@ Exit:
 
 	MULK_NOTE((_("\nTotal time to download = %ld seconds"), (long int) tot_time));
 	MULK_NOTE((_("\nTotal downloaded files = %ld"), (long int) file_tot));
-	MULK_NOTE((_("\nTotal size downloaded = %.2f KB\n"), (float) download_tot / 1000.0f));
+	MULK_NOTE((_("\nTotal size downloaded = %.2f KB\n"), (double) download_tot / 1000.0f));
 	if (tot_time > 0)
-		MULK_NOTE((_("\nAverage data rate = %.2f KB/s\n"), ((float) download_tot) / (tot_time * 1000.0f)));
+		MULK_NOTE((_("\nAverage data rate = %.2f KB/s\n"), ((double) download_tot) / (tot_time * 1000.0f)));
 
 	if (option_values.report_filename || option_values.report_csv_filename)
 		report_urls();
