@@ -144,9 +144,17 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 		newurl = string_new(url);
 		string_cat(&newurl, DIR_SEPAR_STR);
 
+		uriFreeUriMembersA(abs_dest);
+
 		state.uri = abs_dest;
 		if (uriParseUriA(&state, newurl) != URI_SUCCESS) {
-			uri_free(abs_dest); 
+			uri_free(abs_dest);
+			string_free(&newurl);
+			return NULL;
+		}
+
+		if (uriNormalizeSyntaxA(abs_dest) != URI_SUCCESS) {
+			uri_free(abs_dest);
 			string_free(&newurl);
 			return NULL;
 		}
