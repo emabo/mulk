@@ -180,7 +180,10 @@ url_list_t *search_next_url(UriUriA **uri)
 					if (!elem->metalink_uri->chunk && elem->metalink_uri->size >= 0) {
 						char *newfilename = NULL;
 
-						create_chunks(elem->metalink_uri);
+						if (create_chunks(elem->metalink_uri) != MULK_RET_OK) {
+							elem->err_code = METALINK_RES_INVALID_METALINK;
+							continue;
+						}
 
 #ifdef ENABLE_CHECKSUM
 						/* load a resume file if present */

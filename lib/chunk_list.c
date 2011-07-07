@@ -312,18 +312,16 @@ mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfi
 }
 #endif /* ENABLE_CHECKSUM */
 
-void create_chunks(metalink_file_list_t *file)
+mulk_type_return_t create_chunks(metalink_file_list_t *file)
 {
 	int chunk_number = CHUNK_NUMBER, i;
 	off_t last_chunk_size = 0, chunk_size = 0, chunk_remainder, filesize;
 #ifdef ENABLE_CHECKSUM
 	checksum_type_t cs = CS_NONE;
-#else
-	int cs = 0;
 #endif
-	
+
 	if (!file || file->size < 0 || !file->file)
-		return;
+		return MULK_RET_FILE_ERR;
 
 	filesize = file->size;
 
@@ -336,21 +334,22 @@ void create_chunks(metalink_file_list_t *file)
 
 		if (chunk_number && chunk_size > 0 && last_chunk_size > 0 && last_chunk_size < 2 * chunk_size) {
 			cs = string2checksum_type(file->file->chunk_checksum->type);
-			if (cs)
+			if (cs > CS_NONE)
 				MULK_NOTE((_("Found chunk checksum of %s type.\n"), checksum_type2string(cs)));
 			else
 				MULK_NOTE((_("No compatible checksum to verify.\n")));
 		}
 		else {
-			cs = CS_NONE;
 			MULK_ERROR((_("ERROR: wrong length in chunk checksum.\n")));
+			return MULK_RET_ERR;
 		}
 	}
 	else
 		cs = CS_NONE;
-#endif /* ENABLE_CHECKSUM */
 
-	if (!cs) {
+	if (cs == CS_NONE)
+#endif /* ENABLE_CHECKSUM */
+	{
 		chunk_size = filesize / chunk_number;
 		if (chunk_size < MIN_CHUNK_SIZE) {
 			chunk_number = filesize / MIN_CHUNK_SIZE;
@@ -380,13 +379,15 @@ void create_chunks(metalink_file_list_t *file)
 		filesize -= size;
 
 #ifdef ENABLE_CHECKSUM
-		push_chunk(file, filesize >= 0 ? filesize : 0, size, cs, 
-			cs ? get_piece_hash(file->file->chunk_checksum->piece_hashes, chunk_number - i - 1) : NULL);
+		push_chunk(file, filesize >= 0 ? filesize : 0, size, cs,
+			cs > CS_NONE ? get_piece_hash(file->file->chunk_checksum->piece_hashes, chunk_number - i - 1) : NULL);
 #else
 		push_chunk(file, filesize >= 0 ? filesize : 0, size);
 #endif
 	}
 	file->chunk_number = chunk_number;
+
+	return MULK_RET_OK;
 }
 
 void free_chunks(metalink_file_list_t *file)

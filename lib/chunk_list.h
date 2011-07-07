@@ -82,7 +82,7 @@ int is_file_downloaded(struct metalink_file_list_t *file);
 mulk_type_return_t file_statistics(struct metalink_file_list_t *file, int *chunk_completed, int *chunk_total,
 	off_t *byte_downloaded, off_t *byte_total);
 
-void create_chunks(struct metalink_file_list_t *file);
+mulk_type_return_t create_chunks(struct metalink_file_list_t *file);
 
 void free_chunks(struct metalink_file_list_t *file);
 
