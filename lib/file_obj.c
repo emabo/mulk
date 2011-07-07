@@ -179,8 +179,8 @@ mulk_type_return_t read_metalink_list_from_text_file(const char *filename)
 		/* skip empty lines and comments */
 		if (!strlen(buf) || *buf == '#')
 			continue;
- 
-		MULK_NOTE((_("Add metalink file to download coming from text file: %s\n"), buf));
+
+		MULK_NOTE((_("Add Metalink file to download coming from text file: %s\n"), buf));
 		if ((ret = mulk_add_new_metalink_file(buf)) != MULK_RET_OK)
 			break;
 	}

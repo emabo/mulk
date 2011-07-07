@@ -330,7 +330,7 @@ mulk_type_return_t add_new_metalink(const char *filename, int level)
 	err = metalink_parse_file(filename, &metalink);
 
 	if (err || !metalink || !metalink->files) {
-		MULK_ERROR((_("ERROR: fail parsing metalink file, error code=%d\n"), err));
+		MULK_ERROR((_("ERROR: fail parsing Metalink file, error code=%d\n"), err));
 		return MULK_RET_FILE_ERR;
 	}
 
