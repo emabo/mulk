@@ -36,6 +36,11 @@
 #include "defines.h"
 #include <string.h>
 
+typedef struct val_str_t {
+	int val;
+	char *str;
+} val_str_t;
+
 char *string_alloc(int length);
 char *string_new(const char *str);
 char *string_nnew(const char *str, int length);
@@ -56,5 +61,8 @@ void string_move(char *to, const char *from);
 void string_replace_with_char(char *buf, const char *str, const char ch);
 
 char **string_printf(char **str, const char *fmt, ...);
+
+char *value2string(val_str_t *list, int val);
+int string2value(val_str_t *list, const char *str);
 
 #endif /* not _STRING_OBJ_H_ */

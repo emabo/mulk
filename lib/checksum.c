@@ -45,11 +45,6 @@
 #define CS_SHA512_STR "sha512"
 
 
-typedef struct val_str_t {
-	int val;
-	char *str;
-} val_str_t;
-
 static val_str_t checksum_strings[] = {
 	{CS_MD2, CS_MD2_STR},
 	{CS_MD4, CS_MD4_STR},
@@ -281,23 +276,6 @@ static checksum_verify_type_t verify_checksum(const char *filename, checksum_typ
 	str_checksum = compute_file_checksum(filename, cs);
 
 	return (str_checksum && !strcmp(str_checksum, hash)) ? CS_VERIFY_OK : CS_VERIFY_ERR;
-}
-
-static char *value2string(val_str_t *list, int val)
-{
-	for (; list->val != -1 && list->val != val; list++);
-
-	return list->str;
-}
-
-static int string2value(val_str_t *list, const char *str)
-{
-	if (!str || !*str)
-		return -1;
-
-	for (; list->val != -1 && string_casecmp(list->str, str); list++);
-
-	return list->val;
 }
 
 char *checksum_type2string(checksum_type_t cs)

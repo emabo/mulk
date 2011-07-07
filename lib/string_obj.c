@@ -216,3 +216,20 @@ char **string_printf(char **str, const char *fmt, ...)
 	return str;
 }
 
+char *value2string(val_str_t *list, int val)
+{
+	for (; list->val != -1 && list->val != val; list++);
+
+	return list->str;
+}
+
+int string2value(val_str_t *list, const char *str)
+{
+	if (!str || !*str)
+		return -1;
+
+	for (; list->val != -1 && string_casecmp(list->str, str); list++);
+
+	return list->val;
+}
+
