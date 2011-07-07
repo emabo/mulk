@@ -154,6 +154,8 @@ mulk_type_return_t init_url(CURLM *cm)
 	curl_easy_setopt(eh, CURLOPT_CONNECTTIMEOUT, 30L);
 	curl_easy_setopt(eh, CURLOPT_LOW_SPEED_LIMIT, 100L);
 	curl_easy_setopt(eh, CURLOPT_LOW_SPEED_TIME, 30L);
+	curl_easy_setopt(eh, CURLOPT_SSL_VERIFYPEER, 0L);
+	curl_easy_setopt(eh, CURLOPT_SSL_VERIFYHOST, 0L);
 
 	if (option_values.user || option_values.password) {
 		char *usr_pwd = NULL;
