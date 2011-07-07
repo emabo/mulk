@@ -55,6 +55,9 @@ static size_t write_data_cb(void *ptr, size_t size, size_t nmemb, void *outstrea
 	size_t nmemb_writed = 0;
 	buffer_t *buffer = outstream;
 
+	if (!buffer || !ptr)
+		return 0;
+
 	if (buffer->file_pt) {
 #ifdef ENABLE_METALINK
 		if (buffer->chunk) {
