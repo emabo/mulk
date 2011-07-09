@@ -347,13 +347,13 @@ mulk_type_return_t add_new_metalink(const char *filename, int level)
 	push_metalink(metalink);
 
 	for (files = metalink->files; *files; files++) {
-		MULK_DEBUG(("name = %s\n", (*files)->name ? (*files)->name : "(null)"));
+		MULK_DEBUG((_("name = %s\n"), (*files)->name ? (*files)->name : "(null)"));
 
-		if (!(new_file = create_metalink_file(*files))) 
+		if (!(new_file = create_metalink_file(*files)))
 			continue;
 
 		for (resources = (*files)->resources; *resources; resources++) {
-			MULK_DEBUG(("resource = %s\n", (*resources)->url ? (*resources)->url : "(null)"));
+			MULK_DEBUG((_("resource = %s\n"), (*resources)->url ? (*resources)->url : "(null)"));
 			push_metalink_resource(new_file, *resources);
 		}
 
