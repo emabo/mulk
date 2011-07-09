@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mulk 0.6.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/projects/mulk\n"
-"POT-Creation-Date: 2011-07-07 23:28+0200\n"
+"POT-Creation-Date: 2011-07-10 00:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,41 +30,41 @@ msgstr ""
 msgid "Close link #%d\n"
 msgstr ""
 
-#: lib/buffer_array.c:443
+#: lib/buffer_array.c:445
 #, c-format
 msgid "Downloaded %d/%d chunks, %<PRIdMAX>/%<PRIdMAX> bytes\n"
 msgstr ""
 
-#: lib/buffer_array.c:455
+#: lib/buffer_array.c:457
 #, c-format
 msgid ""
 "RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%<PRIdMAX>\n"
 msgstr ""
 
-#: lib/buffer_array.c:458
+#: lib/buffer_array.c:460
 #, c-format
 msgid ""
 "RESULT: Metalink error, no more usable URLs for downloading, Filename:\"%s"
 "\"\n"
 msgstr ""
 
-#: lib/buffer_array.c:510 lib/buffer_array.c:515
+#: lib/buffer_array.c:512 lib/buffer_array.c:517
 msgid "PRESENT"
 msgstr ""
 
-#: lib/buffer_array.c:510 lib/buffer_array.c:515
+#: lib/buffer_array.c:512 lib/buffer_array.c:517
 msgid "EMPTY"
 msgstr ""
 
-#: lib/buffer_array.c:511
+#: lib/buffer_array.c:513
 msgid "NULL"
 msgstr ""
 
-#: lib/buffer_array.c:512
+#: lib/buffer_array.c:514
 msgid "CHUNK"
 msgstr ""
 
-#: lib/buffer_array.c:512
+#: lib/buffer_array.c:514
 msgid "NO CHUNK"
 msgstr ""
 
@@ -180,9 +180,24 @@ msgstr ""
 msgid "Image JPG %s: %s, width = %d, height = %d\n"
 msgstr ""
 
-#: lib/metalink_list.c:333
+#: lib/metalink_list.c:59
+#, c-format
+msgid "ERROR: resource \"%s\" has an inconsistent protocol (\"%s\")\n"
+msgstr ""
+
+#: lib/metalink_list.c:343
 #, c-format
 msgid "ERROR: fail parsing Metalink file, error code=%d\n"
+msgstr ""
+
+#: lib/metalink_list.c:350
+#, c-format
+msgid "name = %s\n"
+msgstr ""
+
+#: lib/metalink_list.c:356
+#, c-format
+msgid "resource = %s\n"
 msgstr ""
 
 #: lib/m_malloc.c:106
@@ -244,61 +259,65 @@ msgstr ""
 msgid "libcURL version %s\n"
 msgstr ""
 
-#: lib/mulk.c:122
+#: lib/mulk.c:114
+msgid "No usable URLs for downloading\n"
+msgstr ""
+
+#: lib/mulk.c:125
 msgid "ERROR: fdset\n"
 msgstr ""
 
-#: lib/mulk.c:133
+#: lib/mulk.c:136
 msgid "ERROR: timeout\n"
 msgstr ""
 
-#: lib/mulk.c:152
+#: lib/mulk.c:155
 #, c-format
 msgid "ERROR: num_fd:%d, time_to_wait %li, error message %s (%d)\n"
 msgstr ""
 
-#: lib/mulk.c:181
+#: lib/mulk.c:189
 #, c-format
 msgid "RESULT: %d (%s), "
 msgstr ""
 
-#: lib/mulk.c:183
+#: lib/mulk.c:193
 #, c-format
 msgid "HTTP Code:\"%ld\" Mime-Type:\"%s\" "
 msgstr ""
 
-#: lib/mulk.c:187
+#: lib/mulk.c:198
 #, c-format
 msgid "Url:\"%s\" Size:%<PRIdMAX>\n"
 msgstr ""
 
-#: lib/mulk.c:206
+#: lib/mulk.c:217
 #, c-format
 msgid "ERROR: message=%d\n"
 msgstr ""
 
-#: lib/mulk.c:229
+#: lib/mulk.c:240
 #, c-format
 msgid ""
 "\n"
 "Total time to download = %ld seconds"
 msgstr ""
 
-#: lib/mulk.c:230
+#: lib/mulk.c:241
 #, c-format
 msgid ""
 "\n"
 "Total downloaded files = %ld"
 msgstr ""
 
-#: lib/mulk.c:231
+#: lib/mulk.c:242
 #, c-format
 msgid ""
 "\n"
 "Total size downloaded = %.2f KB\n"
 msgstr ""
 
-#: lib/mulk.c:233
+#: lib/mulk.c:244
 #, c-format
 msgid ""
 "\n"
