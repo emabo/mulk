@@ -365,7 +365,8 @@ MULK_API mulk_type_return_t mulk_add_new_metalink_file(const char *metalink_file
 #ifdef ENABLE_METALINK
 	return add_new_metalink(metalink_filename, 1);
 #else
-	return MULK_RET_OPTION_ERR;
+	/* just to avoid compilation warning */
+	return metalink_filename ? MULK_RET_OPTION_ERR : MULK_RET_OPTION_ERR;
 #endif
 }
 

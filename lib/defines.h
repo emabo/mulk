@@ -75,6 +75,9 @@
 #define REMOVE_4127_WARNING __pragma(warning(disable:4127))
 
 typedef UINT32 uint32_t;
+typedef UINT32 intmax_t;
+
+#define PRIdMAX "d"
 
 #define VERSION "0.6.0"
 #define DIR_SEPAR_STR "\\"

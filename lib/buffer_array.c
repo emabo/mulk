@@ -524,7 +524,7 @@ void print_buffers(void)
 void free_buffer_array(CURLM *curl_obj)
 {
 	int i;
-	char *orig_url = NULL, *resume_filename = NULL;
+	char *orig_url = NULL;
 	buffer_t *buffer;
 	CURLcode ret;
 
@@ -548,6 +548,8 @@ void free_buffer_array(CURLM *curl_obj)
 #ifdef ENABLE_METALINK
 		if (buffer->url->metalink_uri) {
 			if (is_file_exist(buffer->filename)) {
+				char *resume_filename = NULL;
+
 				string_printf(&resume_filename, "%smetalink-mulkresume%05d",
 					option_values.temp_directory, buffer->url->id);
 				rename(buffer->filename, resume_filename);
