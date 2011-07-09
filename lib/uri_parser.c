@@ -142,7 +142,7 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	if (!base_url && (!abs_dest->pathHead || !abs_dest->pathHead->text.first)
 		&& !abs_dest->query.first) {
 		newurl = string_new(url);
-		string_cat(&newurl, DIR_SEPAR_STR);
+		string_cat(&newurl, "/");
 
 		uriFreeUriMembersA(abs_dest);
 
