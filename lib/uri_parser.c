@@ -37,7 +37,7 @@
 char *uri2string(UriUriA *uri)
 {
 	char *uri_str = NULL;
-	int length;
+	int length = 0;
 
 	if (!uri)
 		return NULL;
@@ -166,37 +166,32 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 
 int are_hosts_equal(UriUriA *uri1, UriUriA *uri2)
 {
-	return (uri1->hostText.first && uri2->hostText.first 
-		&& (uri1->hostText.afterLast - uri1->hostText.first) == (uri2->hostText.afterLast - uri2->hostText.first) 
+	return (uri1->hostText.first && uri2->hostText.first
+		&& (uri1->hostText.afterLast - uri1->hostText.first) > 1
+		&& (uri1->hostText.afterLast - uri1->hostText.first) == (uri2->hostText.afterLast - uri2->hostText.first)
 		&& !strncmp(uri1->hostText.first, uri2->hostText.first, uri1->hostText.afterLast - uri1->hostText.first));
+}
+
+int is_uri_protocol(UriUriA *uri, const char *protocol)
+{
+	if (!uri || !uri->scheme.first || !uri->scheme.afterLast)
+		return 0;
+
+	if (((size_t) (uri->scheme.afterLast - uri->scheme.first)) == strlen(protocol)
+		&& !string_ncasecmp(uri->scheme.first, protocol, uri->scheme.afterLast - uri->scheme.first))
+		return 1;
+
+	return 0;
 }
 
 int is_uri_http(UriUriA *uri)
 {
-	if (!uri || !uri->scheme.first || !uri->scheme.afterLast)
-		return 0;
-
-	if (((size_t) (uri->scheme.afterLast - uri->scheme.first)) == strlen(HTTP_PROTOCOL)
-		&& !string_ncasecmp(uri->scheme.first, HTTP_PROTOCOL, uri->scheme.afterLast - uri->scheme.first))
-		return 1;
-
-	if (((size_t) (uri->scheme.afterLast - uri->scheme.first)) == strlen(HTTPS_PROTOCOL)
-		&& !string_ncasecmp(uri->scheme.first, HTTPS_PROTOCOL, uri->scheme.afterLast - uri->scheme.first))
-		return 1;
-
-	return 0;
+	return is_uri_protocol(uri, HTTP_PROTOCOL) || is_uri_protocol(uri, HTTPS_PROTOCOL);
 }
 
 int is_uri_ftp(UriUriA *uri)
 {
-	if (!uri || !uri->scheme.first || !uri->scheme.afterLast)
-		return 0;
-
-	if (((size_t) (uri->scheme.afterLast - uri->scheme.first)) == strlen(FTP_PROTOCOL)
-		&& !string_ncasecmp(uri->scheme.first, FTP_PROTOCOL, uri->scheme.afterLast - uri->scheme.first))
-		return 1;
-
-	return 0;
+	return is_uri_protocol(uri, FTP_PROTOCOL);
 }
 
 int is_host_equal_domain(UriUriA *uri, const char *domain)

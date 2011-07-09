@@ -46,16 +46,26 @@ static void push_metalink_resource(metalink_file_list_t *file, metalink_resource
 {
 	metalink_resource_list_t *elem;
 	char *res_url = NULL;
+	UriUriA* uri;
 
 	if (!file || !resource)
 		return;
 
 	res_url = string_new(resource->url);
 	string_trim(res_url);
+	uri = create_absolute_uri(NULL, res_url);
+
+	if (!is_uri_protocol(uri, resource->type)) {
+		MULK_ERROR((_("ERROR: resource \"%s\" has an inconsistent protocol (\"%s\")\n"), resource->url ? resource->url : "",
+			resource->type ? resource->type : ""));
+		uri_free(uri);
+		string_free(&res_url);
+		return;
+	}
 
 	elem = m_calloc(1, sizeof(metalink_resource_list_t));
 	elem->resource = resource;
-	elem->uri = (UriUriA*)create_absolute_uri(NULL, res_url);
+	elem->uri = uri;
 	elem->prev = file->usable_res_bottom;
 
 	if (file->usable_res_bottom)

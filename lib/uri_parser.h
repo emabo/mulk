@@ -44,6 +44,7 @@ char *uri2filename(UriUriA *uri);
 void uri_free(UriUriA *uri);
 UriUriA *create_absolute_uri(const char *base_url, const char *url);
 
+int is_uri_protocol(UriUriA *uri, const char *protocol);
 int is_uri_http(UriUriA *uri);
 int is_uri_ftp(UriUriA *uri);
 
