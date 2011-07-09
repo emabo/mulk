@@ -189,17 +189,17 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 	else
 #endif /* ENABLE_METALINK */
 	{
-		string_printf(&buffer_array[i].filename, "%smulktmp%05d",
+		string_printf(&buffer->filename, "%smulktmp%05d",
 			option_values.temp_directory, i);
 
-		if (!make_dir_pathname(buffer_array[i].filename))
-			buffer_array[i].file_pt = fopen(buffer_array[i].filename, "wb");
+		if (!make_dir_pathname(buffer->filename))
+			buffer->file_pt = fopen(buffer->filename, "wb");
 	}
 
 	if (is_printf(MINFO)) {
 		char *uri_str = uri2string(uri);
 		MULK_INFO((_("Open link #%d, url: %s, tmp file: %s\n"), i, uri_str ? uri_str : "",
-			buffer_array[i].filename));
+			buffer->filename ? buffer->filename : ""));
 		string_free(&uri_str);
 	}
 
