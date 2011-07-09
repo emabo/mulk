@@ -408,8 +408,10 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 			valid_res = is_valid_response(buffer->uri, err_code, resp_code, NULL, 0);
 
 		   	if (valid_res) {
-				curl_easy_getinfo(id, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length_double);
-				length = (off_t) length_double;
+				if (curl_easy_getinfo(id, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length_double) == CURLE_OK)
+					length = (off_t) length_double;
+				else
+					length = 0;
 
 				if (length > 0) {
 					metalink->size = length;
@@ -524,6 +526,7 @@ void free_buffer_array(CURLM *curl_obj)
 	int i;
 	char *orig_url = NULL, *resume_filename = NULL;
 	buffer_t *buffer;
+	CURLcode ret;
 
 	if (!buffer_array)
 		return;
@@ -536,9 +539,10 @@ void free_buffer_array(CURLM *curl_obj)
 		if (!buffer->id)
 			continue;
 
-		curl_easy_getinfo(buffer->id, CURLINFO_PRIVATE, &orig_url);
+		ret = curl_easy_getinfo(buffer->id, CURLINFO_PRIVATE, &orig_url);
 		curl_multi_remove_handle(curl_obj, buffer->id);
-		string_free(&orig_url);
+		if (ret == CURLE_OK)
+			string_free(&orig_url);
 		curl_easy_cleanup(buffer->id);
 
 #ifdef ENABLE_METALINK

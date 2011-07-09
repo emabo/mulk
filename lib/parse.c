@@ -111,8 +111,9 @@ mulk_type_return_t init_url(CURLM *cm)
 #endif
 		return MULK_RET_ERR;
 
-	eh = curl_easy_init();
-	
+	if ((eh = curl_easy_init()) == NULL)
+		return MULK_RET_ERR;
+
 #ifdef ENABLE_METALINK
 	i = open_buffer(eh, url, uri, chunk, resource, header);
 #else
@@ -173,7 +174,8 @@ mulk_type_return_t init_url(CURLM *cm)
 	if (option_values.proxy)
 		curl_easy_setopt(eh, CURLOPT_PROXY, option_values.proxy);
 
-	curl_multi_add_handle(cm, eh);
+	if (curl_multi_add_handle(cm, eh) != CURLM_OK)
+		return MULK_RET_ERR;
 
 	return MULK_RET_OK;
 }

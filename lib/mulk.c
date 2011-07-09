@@ -105,10 +105,13 @@ mulk_type_return_t mulk_run(void)
 	create_buffer_array();
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl_obj = curl_multi_init();
-	curl_multi_setopt(curl_obj, CURLMOPT_MAXCONNECTS, (long)option_values.max_sim_conns);
+	curl_multi_setopt(curl_obj, CURLMOPT_MAXCONNECTS, (long) option_values.max_sim_conns);
 
 	for (active_handles = 0; (active_handles < option_values.max_sim_conns) && (init_url(curl_obj) == MULK_RET_OK);
 		active_handles++);
+
+	if (!active_handles)
+		MULK_ERROR((_("No usable URLs for downloading\n")));
 
 	while (active_handles) {
 		while (curl_multi_perform(curl_obj, &active_handles) == CURLM_CALL_MULTI_PERFORM);
@@ -165,37 +168,45 @@ mulk_type_return_t mulk_run(void)
 			}
 			if (e) {
 				if (curl_msg->msg == CURLMSG_DONE) {
-					char *url, *mime_type = NULL, *orig_url = NULL;
+					char *url = NULL, *mime_type = NULL, *orig_url = NULL;
 					long resp_code = -1;
-					double download_size;
+					double download_size = 0;
 					int is_http, is_file_completed = 0;
+					CURLcode err_code = curl_msg->data.result;
+					const char *err_str = curl_easy_strerror(err_code);
 
-					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_PRIVATE, &orig_url);
-					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_EFFECTIVE_URL, &url);
-					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_CONTENT_TYPE, &mime_type);
-					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_RESPONSE_CODE, &resp_code);
-					curl_easy_getinfo(curl_msg->easy_handle, CURLINFO_SIZE_DOWNLOAD, &download_size);
+					if (curl_easy_getinfo(e, CURLINFO_PRIVATE, &orig_url) != CURLE_OK)
+						orig_url = NULL;
+					if (curl_easy_getinfo(e, CURLINFO_EFFECTIVE_URL, &url) != CURLE_OK)
+						url = NULL;
+					if (curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &resp_code) != CURLE_OK)
+						resp_code = 0;
+					if (curl_easy_getinfo(e, CURLINFO_SIZE_DOWNLOAD, &download_size) != CURLE_OK)
+						download_size = 0;
 
 					download_tot += (off_t) download_size;
 
-					MULK_NOTE((_("RESULT: %d (%s), "), curl_msg->data.result, curl_easy_strerror(curl_msg->data.result)));
+					MULK_NOTE((_("RESULT: %d (%s), "), err_code, err_str ? err_str : ""));
 					if ((is_http = is_uri_http_buffer(e)) != 0) {
-						MULK_NOTE((_("HTTP Code:\"%ld\" Mime-Type:\"%s\" "), resp_code,
-							mime_type ? mime_type : ""));
+						if (curl_easy_getinfo(e, CURLINFO_CONTENT_TYPE, &mime_type) != CURLE_OK)
+							mime_type = NULL;
+						MULK_NOTE((_("HTTP Code:\"%ld\" Mime-Type:\"%s\" "), resp_code, mime_type ? mime_type : ""));
 						set_buffer_mime_type(e, mime_type);
 					}
-					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), url, (intmax_t) download_size));
+					else
+						mime_type = NULL;
+					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), url ? url : "", (intmax_t) download_size));
 
 					if (write_download_info)
-						write_download_info(info_context, curl_msg->data.result, curl_easy_strerror(curl_msg->data.result),
-							is_http, resp_code, mime_type, url, (off_t) download_size);
+						write_download_info(info_context, err_code, err_str, is_http, resp_code, mime_type,
+							url, (off_t) download_size);
 
-					if (close_buffer(e, url, curl_msg->data.result, resp_code, &is_file_completed) == MULK_RET_OK)
+					if (close_buffer(e, url, err_code, resp_code, &is_file_completed) == MULK_RET_OK)
 						file_tot += is_file_completed;
 
 					curl_multi_remove_handle(curl_obj, e);
-					string_free(&orig_url);
 					curl_easy_cleanup(e);
+					string_free(&orig_url);
 				}
 				else {
 					int is_file_completed;
