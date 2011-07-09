@@ -199,7 +199,7 @@ mulk_type_return_t mulk_run(void)
 
 					if (write_download_info)
 						write_download_info(info_context, err_code, err_str, is_http, resp_code, mime_type,
-							url, (off_t) download_size);
+							url, (long long int) download_size);
 
 					if (close_buffer(e, url, err_code, resp_code, &is_file_completed) == MULK_RET_OK)
 						file_tot += is_file_completed;

@@ -96,7 +96,7 @@ typedef enum mulk_type_return_t {
 typedef int (*mulk_check_exit_cb)(void *context);
 
 typedef void (*mulk_write_download_info_cb)(void *context, int ret_code, const char *result,
-	int is_http, long http_code, const char *mime_type, const char *url, off_t size);
+	int is_http, long http_code, const char *mime_type, const char *url, long long int size);
 
 extern char mulk_version_number[];
 
