@@ -244,13 +244,17 @@ mulk_type_return_t add_url_to_default_domains(UriUriA *uri)
 {
 	int i, dom_num;
 	char **new_default_domains = NULL;
+	char *host;
 
-	if (!uri || !uri->hostText.first || !uri->hostText.afterLast || (uri->hostText.afterLast - uri->hostText.first) <= 0)
+	if (!uri)
 		return MULK_RET_URL_ERR;
 
 	/* yet present */
 	if (is_host_equal_domains(uri, default_domains))
 		return MULK_RET_OK;
+
+	if ((host = get_host(uri)) == NULL)
+		return MULK_RET_URL_ERR;
 
 	dom_num = count_domains(default_domains);
 
@@ -263,7 +267,7 @@ mulk_type_return_t add_url_to_default_domains(UriUriA *uri)
 		m_free(default_domains);
 	}
 
-	new_default_domains[dom_num] = string_nnew(uri->hostText.first, uri->hostText.afterLast - uri->hostText.first);
+	new_default_domains[dom_num] = host;
 
 	default_domains = new_default_domains;
 

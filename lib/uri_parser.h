@@ -44,14 +44,16 @@ char *uri2filename(UriUriA *uri);
 void uri_free(UriUriA *uri);
 UriUriA *create_absolute_uri(const char *base_url, const char *url);
 
+char *get_host(UriUriA *uri);
+
 int is_uri_protocol(UriUriA *uri, const char *protocol);
 int is_uri_http(UriUriA *uri);
 int is_uri_ftp(UriUriA *uri);
 
-int are_hosts_equal(UriUriA *uri1, UriUriA *uri2);
+int are_hosts_equal(UriUriA *first, UriUriA *second);
 
-int is_host_equal_domain(UriUriA *uri, const char *domain);
-int is_host_in_domain(UriUriA *uri, const char *domain);
+int is_host_equal_domain(const char *host, const char *domain);
+int is_host_in_domain(const char *host, const char *domain);
 int is_host_equal_domains(UriUriA *uri, char **domains);
 int is_host_in_domains(UriUriA *uri, char **domains);
 

@@ -164,12 +164,61 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	return abs_dest;
 }
 
-int are_hosts_equal(UriUriA *uri1, UriUriA *uri2)
+int are_hosts_equal(UriUriA *first, UriUriA *second)
 {
-	return (uri1->hostText.first && uri2->hostText.first
-		&& (uri1->hostText.afterLast - uri1->hostText.first) > 1
-		&& (uri1->hostText.afterLast - uri1->hostText.first) == (uri2->hostText.afterLast - uri2->hostText.first)
-		&& !strncmp(uri1->hostText.first, uri2->hostText.first, uri1->hostText.afterLast - uri1->hostText.first));
+	if (first->hostData.ip4)
+		return (second->hostData.ip4)
+			&& !memcmp(first->hostData.ip4->data, second->hostData.ip4->data, 4);
+
+	if (first->hostData.ip6) 
+		return (second->hostData.ip6)
+			&& !memcmp(first->hostData.ip6->data, second->hostData.ip6->data, 16);
+
+	if (first->hostData.ipFuture.first)
+		return (second->hostData.ipFuture.first)
+			&& (first->hostData.ipFuture.afterLast - first->hostData.ipFuture.first) 
+				== (second->hostData.ipFuture.afterLast - second->hostData.ipFuture.first)
+			&& !strncmp(first->hostData.ipFuture.first, second->hostData.ipFuture.first,
+				first->hostData.ipFuture.afterLast - first->hostData.ipFuture.first);
+
+	if (first->hostText.first)
+		return (second->hostText.first)
+			&& (first->hostText.afterLast - first->hostText.first) 
+				== (second->hostText.afterLast - second->hostText.first)
+			&& !strncmp(first->hostText.first, second->hostText.first,
+				first->hostText.afterLast - first->hostText.first);
+
+	return !second->hostText.first;
+}
+
+char *get_host(UriUriA *uri)
+{
+	char *ret_str = NULL;
+	int i, len = 0;
+
+	if (uri->hostData.ip4)
+		return *string_printf(&ret_str, "%d.%d.%d.%d", uri->hostData.ip4->data[0],
+			uri->hostData.ip4->data[1], uri->hostData.ip4->data[2], uri->hostData.ip4->data[3]);
+	
+	if (uri->hostData.ip6) {
+		ret_str = string_alloc(40);
+
+		for (i = 0; i < 16; i++) {
+			len += sprintf(ret_str + len, "%2.2x", uri->hostData.ip6->data[i]);
+			if (i % 2 == 1 && i < 15)
+				ret_str[len++] = ':';
+		}
+		return ret_str;
+	}
+
+	if (uri->hostData.ipFuture.first) 
+		return string_nnew(uri->hostData.ipFuture.first,
+			uri->hostData.ipFuture.afterLast - uri->hostData.ipFuture.first);
+
+	if (uri->hostText.first) 
+		return string_nnew(uri->hostText.first, uri->hostText.afterLast - uri->hostText.first);
+
+	return NULL;
 }
 
 int is_uri_protocol(UriUriA *uri, const char *protocol)
@@ -194,59 +243,72 @@ int is_uri_ftp(UriUriA *uri)
 	return is_uri_protocol(uri, FTP_PROTOCOL);
 }
 
-int is_host_equal_domain(UriUriA *uri, const char *domain)
+int is_host_equal_domain(const char *host, const char *domain)
 {
-	if (!domain || !*domain || !uri || !uri->hostText.first || !uri->hostText.afterLast)
+	if (!domain || !*domain || !host || !*host)
 		return 0;
 
-	if (strlen(domain) != ((size_t) (uri->hostText.afterLast - uri->hostText.first)))
-		return 0;
-
-	return !string_ncasecmp(uri->hostText.first, domain, uri->hostText.afterLast - uri->hostText.first);
+	return !string_casecmp(host, domain);
 }
 
-int is_host_in_domain(UriUriA *uri, const char *domain)
+int is_host_in_domain(const char *host, const char *domain)
 {
-	int offset, len_dom;
+	int offset, len_dom, len_host;
 
-	if (!domain || !*domain || !uri || !uri->hostText.first || !uri->hostText.afterLast)
+	if (!domain || !*domain || !host || !*host)
 		return 0;
 
+	len_host = strlen(host);
 	len_dom = strlen(domain);
-	if ((offset = ((uri->hostText.afterLast - uri->hostText.first) - len_dom)) < 0)
-		return 0;
+
+	if ((offset = (len_host - len_dom)) < 0)
+		return  0;
 
 	/* to be sure to compare domains not substrings of them */
-	if (*domain != DOMAIN_SEPARATOR && offset > 0 && *(uri->hostText.first + offset - 1) != DOMAIN_SEPARATOR)
+	if (*domain != DOMAIN_SEPARATOR && offset > 0 && *(host + offset - 1) != DOMAIN_SEPARATOR)
 		return 0;
 
-	return !string_ncasecmp(uri->hostText.first + offset, domain, len_dom);
+	return !string_casecmp(host + offset, domain);
 }
 
 int is_host_equal_domains(UriUriA *uri, char **domains)
 {
-	int i;
+	int i, ret = 0;
+	char *host;
 
 	if (!domains || !uri)
 		return 0;
 
-	for (i = 0; domains[i]; i++)
-		if (is_host_equal_domain(uri, domains[i]))
-			return 1;
+	if ((host = get_host(uri)) == NULL)
+		return 0;
 
-	return 0;
+	for (i = 0; domains[i]; i++)
+		if (is_host_equal_domain(host, domains[i])) {
+			ret = 1;
+			break;
+		}
+
+	string_free(&host);
+	return ret;
 }
 
 int is_host_in_domains(UriUriA *uri, char **domains)
 {
-	int i;
+	int i, ret = 0;
+	char *host;
 
 	if (!domains || !uri)
 		return 0;
 
-	for (i = 0; domains[i]; i++)
-		if (is_host_in_domain(uri, domains[i]))
-			return 1;
+	if ((host = get_host(uri)) == NULL)
+		return 0;
 
-	return 0;
+	for (i = 0; domains[i]; i++)
+		if (is_host_in_domain(host, domains[i])) {
+			ret = 1;
+			break;
+		}
+
+	string_free(&host);
+	return ret;
 }

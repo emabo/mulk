@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0, beta)
 
 
+2011/07/10 Emanuele <pocoyo@users.sourceforge.net>
+	* bug fixed, correct behaviour in accepted domains if the the host is represented as an IP
+
 2011/07/07 Emanuele <pocoyo@users.sourceforge.net>
 	* don't verify peer and host when connecting over SSL
 	* a new check on metalink files has been added. If the chunk length doesn't match, generate an error
