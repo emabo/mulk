@@ -3,15 +3,14 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
 
 
 version 0.6.0 - XXXX/XX/XX
--large file support has been added
+ *New features
+-large file support (LFS) has been added
 -new option to read, from an external text file, a list of metalink urls to download
 -new option to set HTTP proxy and port to use
 -new option to avoid downloading of html dependencies (images, CSS, etc.)
 -new option to save the report files progressively. It's possible to specify the number of lines (downloads) to be saved each time.
 -depth option with value 0 now means infinite recursion
 -new parameters have been added to report files (error code, http code, local filename and mime-type filename)
--bug fix, some URL strings were not released in case of error
--bug fix when creating a directory in Windows using an absolute path
 -new functions to rationalise the process of inserting options
 -static and dynamic libraries creation has been added to configure
 -static and dynamic libraries creation has been added to MSVC's solution
@@ -22,26 +21,29 @@ version 0.6.0 - XXXX/XX/XX
 -Mulk license has been changed to LGPL, in order to lead to wider use of libmulk 
 -m_malloc.c has been totally rewritten for license compatibility
 -a short notice about license has been added. It is visible with version option
--bug fixed in configure, where tidy.h and openssl/sha.h were requested even if they were disabled
--bug fixed, before the total number of downloaded files was wrong if an error occurred
--bug fixed, during Metalink download when the filesize was missing and the URLs were wrong, Mulk tried anyway to control the checksum
--bug fixed, during Metalink download FTP protocol was used erroneously to find the missing filesize
--bug fixed, when downloading Metalink file size, under some circumstances not all the possible URLs were tried
--bug fixed, when downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
--bug fixed, whole checksum of a file sometimes was miscomputed due to unsynchronised file
--bug fixed, http://www.example.com and http://www.example.com/ have to be considered the same url
--bug fixed, correct behaviour in accepted domains if the the host is represented as an IP
--a "(null)" string was printed to reports when a not HTTP protocol was used
--the option directories are now evaluated only once at startup
 -the options can be evaluated by callbacks
--fix to avoid recursive calls in option file
+-the option directories are now evaluated only once at startup
 -dependency between new metalink urls and related options has been removed. The options are evaluated when download process is running
--several fixes made in order to assure that the library's functions can called more than once for each instance
 -specific Mulk return codes have been added to the library functions
--translations has been updated
--gettext.h has been updated 
 -unique DEBUG compilation flag has been created 
 -MSVC solution has been revisited and rationalised
+
+ *Bug fixes
+-some URL strings were not released in case of error
+-when creating a directory in Windows using an absolute path, there was a wrong behaviour
+-in configure, where tidy.h and openssl/sha.h were requested even if they were disabled
+-the total number of downloaded files was wrong if an error occurred
+-Metalink download, when the filesize was missing and the URLs were wrong, Mulk tried anyway to control the checksum
+-Metalink download, FTP protocol was used erroneously to find the missing filesize
+-downloading Metalink file size, under some circumstances not all the possible URLs were tried
+-downloading Metalink file size, with a 200 HTTP code the size was considered valid also if not sent correctly
+-whole checksum of a file sometimes was miscomputed due to unsynchronised file
+-http://www.example.com and http://www.example.com/ have to be considered the same url
+-correct behaviour in accepted domains if the the host is represented as an IP
+-a "(null)" string was printed to reports when a not HTTP protocol was used
+-avoid recursive calls in option file
+-several fixes made in order to assure that the library's functions can called more than once for each instance
+
 
 version 0.5.1 - 2010/02/01
 -i18n gettext internationalisation has been added
