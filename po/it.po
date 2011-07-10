@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mulk 0.6.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/projects/mulk\n"
-"POT-Creation-Date: 2011-07-10 00:50+0200\n"
+"POT-Creation-Date: 2011-07-10 18:48+0200\n"
 "PO-Revision-Date: 2009-11-18 00:52+0100\n"
 "Last-Translator: Emanuele Bovisio <pocoyo@users.sourceforge.net>\n"
 "Language-Team: Italian\n"
@@ -190,22 +190,27 @@ msgstr "Immagine GIF %s: %s, larghezza = %d, altezza = %d\n"
 msgid "Image JPG %s: %s, width = %d, height = %d\n"
 msgstr "Immagine JPG %s: %s, larghezza = %d, altezza = %d\n"
 
-#: lib/metalink_list.c:59
+#: lib/metalink_list.c:56
+#, c-format
+msgid "ERROR: resource \"%s\" uses a not supported protocol (\"%s\")\n"
+msgstr "ERRORE: la risorsa \"%s\" utilizza un protocollo non supportato (\"%s\")\n"
+
+#: lib/metalink_list.c:66
 #, c-format
 msgid "ERROR: resource \"%s\" has an inconsistent protocol (\"%s\")\n"
 msgstr "ERRORE: la risorsa \"%s\" ha un protocollo inconsistente (\"%s\")\n"
 
-#: lib/metalink_list.c:343
+#: lib/metalink_list.c:350
 #, c-format
 msgid "ERROR: fail parsing Metalink file, error code=%d\n"
 msgstr "ERRORE: codice di errore %d nella lettura del file Metalink\n"
 
-#: lib/metalink_list.c:350
+#: lib/metalink_list.c:357
 #, c-format
 msgid "name = %s\n"
 msgstr "nome = %s\n"
 
-#: lib/metalink_list.c:356
+#: lib/metalink_list.c:363
 #, c-format
 msgid "resource = %s\n"
 msgstr "risorsa = %s\n"
@@ -582,36 +587,36 @@ msgstr "altezza massima delle immagini"
 msgid "wrong maximum image height"
 msgstr "altezza massima delle immagini errata"
 
-#: lib/option_obj.c:302
+#: lib/option_obj.c:306
 #, c-format
 msgid "Add domain to list: %s\n"
 msgstr "Aggiunto dominio alla lista: %s\n"
 
-#: lib/option_obj.c:378
+#: lib/option_obj.c:382
 #, c-format
 msgid "ERROR: Metalink location length is wrong: %s\n"
 msgstr "ERRORE: la lunghezza della locazione del Metalink è errata: %s\n"
 
-#: lib/option_obj.c:387
+#: lib/option_obj.c:391
 #, c-format
 msgid "Add Metalink location to list: %s\n"
 msgstr "Aggiunta della locazione del Metalink alla lista: %s\n"
 
-#: lib/option_obj.c:533
+#: lib/option_obj.c:537
 msgid "WARNING: removing temporary directory\n"
 msgstr "ATTENZIONE: rimozione directory temporanea\n"
 
-#: lib/option_obj.c:553
+#: lib/option_obj.c:557
 #, c-format
 msgid "long option inserted %d, %s\n"
 msgstr "opzione lunga inserita %d, %s\n"
 
-#: lib/option_obj.c:580
+#: lib/option_obj.c:584
 #, c-format
 msgid "short option string %s\n"
 msgstr "stringa delle opzioni corte %s\n"
 
-#: lib/option_obj.c:589
+#: lib/option_obj.c:593
 #, c-format
 msgid ""
 "Mulk %s, a non-interactive multi-connection network downloader with image "
@@ -620,7 +625,7 @@ msgstr ""
 "Mulk %s, programma non interattivo per scaricare file dalla rete con filtro "
 "sulle immagini e supporto per Metalink.\n"
 
-#: lib/option_obj.c:592
+#: lib/option_obj.c:596
 #, c-format
 msgid ""
 "Mulk %s, a non-interactive multi-connection network downloader with image "
@@ -629,17 +634,17 @@ msgstr ""
 "Mulk %s, programma non interattivo per scaricare file dalla rete con filtro "
 "sulle immagini.\n"
 
-#: lib/option_obj.c:595
+#: lib/option_obj.c:599
 #, c-format
 msgid "Usage: Mulk [OPTION]... [URL]...\n"
 msgstr "Uso: Mulk [OPZIONE]... [URL]...\n"
 
-#: lib/option_obj.c:614
+#: lib/option_obj.c:618
 #, c-format
 msgid "Mulk version %s\n"
 msgstr "Mulk versione %s\n"
 
-#: lib/option_obj.c:615
+#: lib/option_obj.c:619
 #, c-format
 msgid ""
 "\n"
@@ -648,27 +653,27 @@ msgstr ""
 "\n"
 "Mulk  Copyright (C) 2008, 2009, 2010, 2011  Emanuele Bovisio\n"
 
-#: lib/option_obj.c:616
+#: lib/option_obj.c:620
 #, c-format
 msgid "This program comes with ABSOLUTELY NO WARRANTY.\n"
 msgstr "This program comes with ABSOLUTELY NO WARRANTY.\n"
 
-#: lib/option_obj.c:617
+#: lib/option_obj.c:621
 #, c-format
 msgid "This is free software, and you are welcome to redistribute it\n"
 msgstr "This is free software, and you are welcome to redistribute it\n"
 
-#: lib/option_obj.c:618
+#: lib/option_obj.c:622
 #, c-format
 msgid "under certain conditions.\n"
 msgstr "under certain conditions.\n"
 
-#: lib/option_obj.c:619
+#: lib/option_obj.c:623
 #, c-format
 msgid "See the GNU General Public License version 3 or later\n"
 msgstr "See the GNU General Public License version 3 or later\n"
 
-#: lib/option_obj.c:620
+#: lib/option_obj.c:624
 #, c-format
 msgid ""
 "for more details.\n"
@@ -677,7 +682,7 @@ msgstr ""
 "for more details.\n"
 "\n"
 
-#: lib/option_obj.c:633 lib/option_obj.c:653 lib/option_obj.c:691
+#: lib/option_obj.c:637 lib/option_obj.c:657 lib/option_obj.c:695
 #, c-format
 msgid ""
 "\n"
@@ -688,12 +693,12 @@ msgstr ""
 "ERRORE: opzione non riconosciuta\n"
 "\n"
 
-#: lib/option_obj.c:697
+#: lib/option_obj.c:701
 #, c-format
 msgid "option recognised %d, %s=%s\n"
 msgstr "opzione riconosciuta %d, %s=%s\n"
 
-#: lib/option_obj.c:705 lib/option_obj.c:717
+#: lib/option_obj.c:709 lib/option_obj.c:721
 #, c-format
 msgid ""
 "\n"
@@ -704,7 +709,7 @@ msgstr ""
 "ERRORE: questa opzione (%s) deve essere seguita da un valore\n"
 "\n"
 
-#: lib/option_obj.c:710
+#: lib/option_obj.c:714
 #, c-format
 msgid ""
 "\n"
@@ -715,7 +720,7 @@ msgstr ""
 "ERRORE: %s\n"
 "\n"
 
-#: lib/option_obj.c:730
+#: lib/option_obj.c:734
 #, c-format
 msgid ""
 "\n"
@@ -726,12 +731,12 @@ msgstr ""
 "ERRORE: tipo dell'opzione non valido, %d\n"
 "\n"
 
-#: lib/option_obj.c:771
+#: lib/option_obj.c:775
 #, c-format
 msgid "Add url to download coming from command line: %s\n"
 msgstr "Aggiunta della url da scaricare presa dalla linea di comando: %s\n"
 
-#: lib/option_obj.c:777
+#: lib/option_obj.c:781
 #, c-format
 msgid ""
 "\n"
@@ -742,7 +747,7 @@ msgstr ""
 "ERRORE: url non presente\n"
 "\n"
 
-#: lib/option_obj.c:783
+#: lib/option_obj.c:787
 #, c-format
 msgid "Try `mulk --help' for more information.\n"
 msgstr "Prova `mulk --help' per avere maggiori informazioni.\n"

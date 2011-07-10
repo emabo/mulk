@@ -51,6 +51,13 @@ static void push_metalink_resource(metalink_file_list_t *file, metalink_resource
 	if (!file || !resource)
 		return;
 
+	if (string_casecmp(resource->type, HTTP_PROTOCOL) && string_casecmp(resource->type, HTTPS_PROTOCOL)
+		&& string_casecmp(resource->type, FTP_PROTOCOL)) {
+		MULK_ERROR((_("ERROR: resource \"%s\" uses a not supported protocol (\"%s\")\n"), resource->url ? resource->url : "",
+			resource->type ? resource->type : ""));
+		return;
+	}
+
 	res_url = string_new(resource->url);
 	string_trim(res_url);
 	uri = create_absolute_uri(NULL, res_url);
