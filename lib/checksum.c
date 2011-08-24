@@ -35,7 +35,9 @@
 
 #define FILE_BLOCK 4096
 
+#ifdef HAVE_OPENSSL_MD2
 #define CS_MD2_STR "md2"
+#endif
 #define CS_MD4_STR "md4"
 #define CS_MD5_STR "md5"
 #define CS_SHA1_STR "sha1"
@@ -46,7 +48,9 @@
 
 
 static val_str_t checksum_strings[] = {
+#ifdef HAVE_OPENSSL_MD2
 	{CS_MD2, CS_MD2_STR},
+#endif
 	{CS_MD4, CS_MD4_STR},
 	{CS_MD5, CS_MD5_STR},
 	{CS_SHA1, CS_SHA1_STR},
@@ -63,9 +67,11 @@ void init_context(checksum_t *cs)
 		return;
 
 	switch (cs->cs_type) {
+#ifdef HAVE_OPENSSL_MD2
 		case CS_MD2:
 			MD2_Init(&(cs->context.md2));
 			break;
+#endif
 		case CS_MD4:
 			MD4_Init(&(cs->context.md4));
 			break;
@@ -98,9 +104,11 @@ void update_context(checksum_t *cs, const unsigned char *input, size_t length)
 		return;
 
 	switch (cs->cs_type) {
+#ifdef HAVE_OPENSSL_MD2
 		case CS_MD2:
 			MD2_Update(&(cs->context.md2), input, length);
 			break;
+#endif
 		case CS_MD4:
 			MD4_Update(&(cs->context.md4), input, length);
 			break;
@@ -133,9 +141,11 @@ void final_context(checksum_t *cs)
 		return;
 
 	switch (cs->cs_type) {
+#ifdef HAVE_OPENSSL_MD2
 		case CS_MD2:
 			MD2_Final(cs->digest.md2, &(cs->context.md2));
 			break;
+#endif
 		case CS_MD4:
 			MD4_Final(cs->digest.md4, &(cs->context.md4));
 			break;
@@ -183,9 +193,11 @@ char *str_digest(checksum_t *cs)
 		return NULL;
 
 	switch (cs->cs_type) {
+#ifdef HAVE_OPENSSL_MD2
 		case CS_MD2:
 			str = str_hex_digest(cs->digest.md2, MD2_DIGEST_LENGTH);
 			break;
+#endif
 		case CS_MD4:
 			str = str_hex_digest(cs->digest.md4, MD4_DIGEST_LENGTH);
 			break;

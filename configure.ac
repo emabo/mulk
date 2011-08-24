@@ -242,6 +242,7 @@ fi
 AC_CHECK_HEADER([uriparser/Uri.h],, AC_MSG_ERROR([Cannot compile without liburiparser. Try at http://uriparser.sourceforge.net/]))
 if test "x$enable_checksum" = "xyes"; then
   AC_CHECK_HEADER([openssl/sha.h],, AC_MSG_ERROR([Cannot compile without libcrypto. Disable checksum verification support (--disable-checksum) or try at http://www.openssl.org/])) 
+  AC_CHECK_HEADER([openssl/md2.h], [AC_DEFINE([HAVE_OPENSSL_MD2], [1], [Define to 1 if you have the <openssl/md2.h> header file.])])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

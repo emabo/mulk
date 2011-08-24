@@ -34,7 +34,9 @@
 #define _CHECKSUM_H_
 
 #include "defines.h"
+#ifdef HAVE_OPENSSL_MD2
 #include <openssl/md2.h>
+#endif
 #include <openssl/md4.h>
 #include <openssl/md5.h>
 #include <openssl/sha.h>
@@ -49,7 +51,9 @@ typedef enum checksum_verify_type_t {
 
 typedef enum checksum_type_t {
 	CS_NONE = 0,
+#ifdef HAVE_OPENSSL_MD2
 	CS_MD2 = 1,
+#endif
 	CS_MD4 = 2,
 	CS_MD5 = 3,
 	CS_SHA1 = 4,
@@ -60,7 +64,9 @@ typedef enum checksum_type_t {
 } checksum_type_t;
 
 typedef union context_t {
+#ifdef HAVE_OPENSSL_MD2
 	MD2_CTX md2;
+#endif
 	MD4_CTX md4;
 	MD5_CTX md5;
 	SHA_CTX sha1;
@@ -71,7 +77,9 @@ typedef union context_t {
 } context_t;
 
 typedef union digest_t {
+#ifdef HAVE_OPENSSL_MD2
 	unsigned char md2[MD2_DIGEST_LENGTH];
+#endif
 	unsigned char md4[MD4_DIGEST_LENGTH];
 	unsigned char md5[MD5_DIGEST_LENGTH];
 	unsigned char sha1[SHA_DIGEST_LENGTH];

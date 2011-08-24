@@ -93,6 +93,9 @@
 /* Define to 1 if you have the `mkdir' function. */
 #undef HAVE_MKDIR
 
+/* Define to 1 if you have the <openssl/md2.h> header file. */
+#undef HAVE_OPENSSL_MD2
+
 /* Define to 1 if your system has a GNU libc compatible `realloc' function,
    and to 0 otherwise. */
 #undef HAVE_REALLOC
