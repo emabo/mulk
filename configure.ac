@@ -270,10 +270,9 @@ AC_FUNC_FSEEKO
 # It should compile also with -Werror
 if test "X$GCC" = "Xyes"; then
   CFLAGS="${CFLAGS} -Wshadow -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls"
-  #CFLAGS="${CFLAGS} -Wshadow -Wall -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls"
-  #CFLAGS="${CFLAGS} -Wall -Werror -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -pedantic"
-  #CFLAGS="${CFLAGS} -Wall -Werror -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls"
-  #CFLAGS="${CFLAGS} -Wall -Werror -Wshadow -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -ansi -pedantic"
+  if test "x$enable_debug" = "xyes"; then
+    CFLAGS="${CFLAGS} -Werror"
+  fi
 fi
 
 AC_CONFIG_FILES([Makefile include/Makefile include/mulk/Makefile lib/Makefile src/Makefile man/Makefile po/Makefile.in win32/Makefile win32/libmulk/Makefile win32/mulk/Makefile])
