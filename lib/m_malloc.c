@@ -34,10 +34,6 @@
 
 #ifdef MULKDEBUG
 
-#ifdef HAVE_STDINT_H
-#include <stdint.h>  /* for uint32_t */
-#endif
-
 #define HASH_TABLE_SIZE 131072 /* 2^17, use always power of 2 */
 #define HASH_CHUNK_SIZE 2048 
 #define INC_INDEX(i) i = ((i == HASH_TABLE_SIZE-1) ? 0 : i+1)
