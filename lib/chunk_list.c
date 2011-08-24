@@ -280,6 +280,7 @@ static checksum_verify_type_t verify_chunk_checksum_metalink_file(metalink_file_
 mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfilename)
 {
 	int num_chunk;
+	checksum_verify_type_t res;
 
 	if (!metalink_file->resume_filename && !resume_file_used && option_values.metalink_resume_file) {
 		resume_file_used = 1;
@@ -295,10 +296,12 @@ mulk_type_return_t init_chunks(metalink_file_list_t *metalink_file, char **newfi
 	if (create_truncated_file(metalink_file->resume_filename, metalink_file->size))
 		return MULK_RET_FILE_ERR;
 
+	res = verify_chunk_checksum_metalink_file(metalink_file, metalink_file->resume_filename, &num_chunk);
+
 	MULK_NOTE((_("Resuming file: %s, verified %d/%d chunks.\n"), metalink_file->file->name,
 		num_chunk, metalink_file->chunk_number));
 
-	if (verify_chunk_checksum_metalink_file(metalink_file, metalink_file->resume_filename, &num_chunk) == CS_VERIFY_OK) {
+	if (res == CS_VERIFY_OK) {
 		if (verify_metalink_file(metalink_file->file, metalink_file->resume_filename) == CS_VERIFY_OK) {
 			string_printf(newfilename, "%s%s", option_values.file_output_directory, metalink_file->file->name);
 
