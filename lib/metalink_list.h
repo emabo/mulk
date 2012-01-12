@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Copyright (C) 2008, 2009, 2010, 2011 - Emanuele Bovisio
+ * Copyright (C) 2008, 2009, 2010, 2011, 2012 - Emanuele Bovisio
  *
  * This file is part of Mulk.
  *
