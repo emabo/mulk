@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0)
 
 
+2012/01/12 Emanuele <pocoyo@users.sourceforge.net>
+	* Copyright updated for new year 2012
+
 2011/08/24 Emanuele <pocoyo@users.sourceforge.net>
 	* fix to have correct parameters printed out when resuming metalink file download
 	* fix to avoid compiling MD2 chechsum when not present in openssl library
