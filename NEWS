@@ -2,6 +2,11 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
   with image filtering and Metalink support (version 0.6.0)
 
 
+Next Version 
+ *New features
+-new options to print full lists of valid countries and continents for Metalink files
+
+
 version 0.6.0 - 2011/07/10
  *New features
 -large file support (LFS) has been added

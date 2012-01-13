@@ -294,3 +294,25 @@ country_code_t countries[] = {
 	{"AF", "ZW", "ZWE", "716", "Zimbabwe, Republic of"},
 	{ NULL, NULL, NULL, NULL, NULL }
 };
+
+void printf_locations()
+{
+	country_code_t *country;
+
+	printf(_("List of valid countries:\n"));
+	printf(_("Country Continent Name\n"));
+	for (country = countries; country->continent_code; country++)
+		printf("%s      %s        %s\n", country->two_letter_code, country->continent_code,
+			country->country_name);
+}
+
+void printf_continents()
+{
+	continent_code_t *continent;
+
+	printf(_("List of valid continents:\n"));
+	printf(_("Continent Name\n"));
+	for (continent = continents; continent->continent_code; continent++)
+		printf("%s        %s\n", continent->continent_code, continent->continent_name);
+}
+

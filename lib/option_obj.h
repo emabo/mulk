@@ -61,7 +61,9 @@ typedef struct option_value_t {
 	char *metalink_filename;
 	char *metalink_list_filename;
 	char *metalink_location;
+	int metalink_print_locations;
 	char *metalink_continent;
+	int metalink_print_continents;
 	char *metalink_os;
 	char *metalink_language;
 #ifdef ENABLE_CHECKSUM
