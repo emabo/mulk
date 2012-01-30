@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0)
 
 
+2012/01/13 Emanuele <pocoyo@users.sourceforge.net>
+	* new options to print full lists of valid countries and continents for Metalink files
+
 2012/01/12 Emanuele <pocoyo@users.sourceforge.net>
 	* Copyright updated for new year 2012
 

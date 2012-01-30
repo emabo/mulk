@@ -56,4 +56,8 @@ typedef struct country_code_t {
 extern continent_code_t continents[];
 extern country_code_t countries[];
 
+
+void printf_locations(void);
+void printf_continents(void);
+
 #endif /* _COUNTRY_CODES_H_ */
