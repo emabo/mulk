@@ -224,6 +224,8 @@ if test "x$enable_nls" = "xyes"; then
   AC_DEFINE([ENABLE_NLS], [1], [Define to 1 if NLS is enabled.])
 fi
 AM_CONDITIONAL([ENABLE_NLS], [test "x$enable_nls" = "xyes"])
+AM_CONDITIONAL([ENABLE_STATIC], [test "x$enable_static" = "xyes"])
+AM_CONDITIONAL([ENABLE_SHARED], [test "x$enable_shared" = "xyes"])
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -289,6 +291,8 @@ AC_MSG_NOTICE([Configured to build mulk:
   CFLAGS:          ${CFLAGS}
   LDFLAGS:         ${LDFLAGS}
   LIBS:            ${LIBS}
+  static library   ${enable_static}
+  shared library   ${enable_shared}
   Debug:           ${enable_debug}
   Recursion:       ${enable_recursion}
   Metalink:        ${enable_metalink}
