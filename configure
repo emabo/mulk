@@ -619,6 +619,10 @@ LTLIBOBJS
 LIBOBJS
 HAVE_VISIBILITY
 CFLAG_VISIBILITY
+ENABLE_SHARED_FALSE
+ENABLE_SHARED_TRUE
+ENABLE_STATIC_FALSE
+ENABLE_STATIC_TRUE
 ENABLE_NLS_FALSE
 ENABLE_NLS_TRUE
 DEBUG_FALSE
@@ -9723,7 +9727,7 @@ fi
   libsuff=
   case "$host_cpu" in
   x86_64*|s390x*|powerpc64*)
-    echo '#line 9726 "configure"' > conftest.$ac_ext
+    echo '#line 9730 "configure"' > conftest.$ac_ext
     if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -14825,6 +14829,22 @@ else
   ENABLE_NLS_FALSE=
 fi
 
+ if test "x$enable_static" = "xyes"; then
+  ENABLE_STATIC_TRUE=
+  ENABLE_STATIC_FALSE='#'
+else
+  ENABLE_STATIC_TRUE='#'
+  ENABLE_STATIC_FALSE=
+fi
+
+ if test "x$enable_shared" = "xyes"; then
+  ENABLE_SHARED_TRUE=
+  ENABLE_SHARED_FALSE='#'
+else
+  ENABLE_SHARED_TRUE='#'
+  ENABLE_SHARED_FALSE=
+fi
+
 
 # Checks for header files.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
@@ -16007,6 +16027,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_NLS_TRUE}" && test -z "${ENABLE_NLS_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_NLS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_STATIC_TRUE}" && test -z "${ENABLE_STATIC_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_STATIC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_SHARED_TRUE}" && test -z "${ENABLE_SHARED_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_SHARED\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -18399,6 +18427,8 @@ fi
   CFLAGS:          ${CFLAGS}
   LDFLAGS:         ${LDFLAGS}
   LIBS:            ${LIBS}
+  static library   ${enable_static}
+  shared library   ${enable_shared}
   Debug:           ${enable_debug}
   Recursion:       ${enable_recursion}
   Metalink:        ${enable_metalink}
@@ -18415,6 +18445,8 @@ $as_echo "$as_me: Configured to build mulk:
   CFLAGS:          ${CFLAGS}
   LDFLAGS:         ${LDFLAGS}
   LIBS:            ${LIBS}
+  static library   ${enable_static}
+  shared library   ${enable_shared}
   Debug:           ${enable_debug}
   Recursion:       ${enable_recursion}
   Metalink:        ${enable_metalink}

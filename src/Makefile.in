@@ -36,6 +36,8 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = mulk$(EXEEXT)
 @ENABLE_NLS_TRUE@am__append_1 = -DLOCALEDIR=\"$(localedir)\" 
+@ENABLE_STATIC_TRUE@am__append_2 = -DMULK_STATIC_LIB
+@ENABLE_STATIC_TRUE@am__append_3 = -static
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -58,7 +60,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_mulk_OBJECTS = mulk-main.$(OBJEXT)
 mulk_OBJECTS = $(am_mulk_OBJECTS)
-mulk_DEPENDENCIES =
+mulk_DEPENDENCIES = $(top_builddir)/lib/libmulk.la
 mulk_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(mulk_CFLAGS) $(CFLAGS) $(mulk_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -216,12 +218,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include
 mulk_SOURCES = main.c
-# link against static lib
-mulk_CFLAGS = -DMULK_STATIC_LIB $(am__append_1)
-mulk_LDADD = -lmulk
-
-# link against static lib
-mulk_LDFLAGS = -L$(top_builddir)/lib -static
+mulk_CFLAGS = $(am__append_1) $(am__append_2)
+mulk_LDFLAGS = $(am__append_3)
+mulk_LDADD = $(top_builddir)/lib/libmulk.la 
 all: all-am
 
 .SUFFIXES:
