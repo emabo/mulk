@@ -139,6 +139,8 @@ option_t options[] = {
 		&option_values.password,                  OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"proxy",                    0, gettext_noop("<host[:port]> use HTTP proxy on given host and port"),
 		&option_values.proxy,                     OPTION_STRING, 0, 0, NULL, NULL, NULL},
+	{"exec-filter",              0, gettext_noop("execute an external program to filter or modify URLs to download"),
+		&option_values.exec_filter,               OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #ifdef ENABLE_RECURSION
 	{"depth",                  'd', gettext_noop("maximum recursion depth (0 for infinite)"),
 		&option_values.depth,                     OPTION_INT, 0, INT_MAX, gettext_noop("wrong depth values"),

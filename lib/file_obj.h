@@ -71,4 +71,6 @@ mulk_type_return_t save_file_to_outputdir(char *oldfilename, char* newfilename, 
 
 int create_truncated_file(const char *filename, off_t size);
 
+int execute_filter(const char *command, char **url, int level);
+
 #endif /* not _FILE_OBJ_H_ */

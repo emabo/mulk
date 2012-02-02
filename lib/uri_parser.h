@@ -43,6 +43,7 @@ char *uri2string(UriUriA *uri);
 char *uri2filename(UriUriA *uri);
 void uri_free(UriUriA *uri);
 UriUriA *create_absolute_uri(const char *base_url, const char *url);
+int	filter_uri(UriUriA **uri, int level);
 
 char *get_host(UriUriA *uri);
 

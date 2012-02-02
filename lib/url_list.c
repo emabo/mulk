@@ -83,6 +83,11 @@ static void push_uri(UriUriA *uri, int level)
 	if (!uri)
 		return;
 
+	if (filter_uri(&uri, level)) {
+		uri_free(uri);
+		return;
+	}
+
 	elem = create_new_element();
 	elem->level = level;
 	elem->uri = uri;
@@ -113,8 +118,10 @@ mulk_type_return_t mulk_add_new_url(const char *url)
 		return MULK_RET_URL_ERR;
 
 #ifdef ENABLE_RECURSION
-	if ((ret = add_url_to_default_domains(new_uri)) != MULK_RET_OK)
+	if ((ret = add_url_to_default_domains(new_uri)) != MULK_RET_OK) {
+		uri_free(new_uri);
 		return ret;
+	}
 #endif
 	push_unique_uri(new_uri, 1);
 

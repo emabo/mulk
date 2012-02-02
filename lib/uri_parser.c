@@ -30,6 +30,7 @@
  * files in the program, then also delete it here.
  *---------------------------------------------------------------------------*/
 
+#include "file_obj.h"
 #include "uri_parser.h"
 #include "string_obj.h"
 
@@ -162,6 +163,36 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	}
 
 	return abs_dest;
+}
+
+int	filter_uri(UriUriA **uri, int level)
+{
+	char *url;
+
+	if (!option_values.exec_filter)
+		return 0;
+
+	if (!uri)
+		return -1;
+
+	if ((url = uri2string(*uri)) == NULL)
+		return -1;
+
+	uri_free(*uri);
+	*uri = NULL;
+
+	if (execute_filter(option_values.exec_filter, &url, level)) {
+		string_free(&url);
+		return -1;
+	}
+
+	*uri = create_absolute_uri(NULL, url);
+	string_free(&url);
+
+	if (!*uri)
+		return -1;
+
+	return 0;
 }
 
 int are_hosts_equal(UriUriA *first, UriUriA *second)

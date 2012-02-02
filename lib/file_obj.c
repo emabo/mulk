@@ -281,6 +281,39 @@ int create_truncated_file(const char *filename, off_t size)
 	return result;
 }
 
+int execute_filter(const char *command, char **url, int level)
+{
+	FILE *fp;
+	char buffer[BUFFER_SIZE];
+	char *command_line = NULL;
+	char *new_url = NULL;
+
+	if (!url || !*url || !**url || !command || !*command)
+		return -1;
+
+	string_printf(&command_line, "%s \"%s\" %d", command, *url, level);
+
+	if ((fp = _popen(command_line, "rt")) == NULL) {
+		MULK_ERROR((_("ERROR: executing external filter program %s\n"), command));
+		return -1;
+	}
+
+	new_url = string_alloc(0);
+	while (!feof(fp)) {
+		if (fgets(buffer, BUFFER_SIZE, fp) != NULL)
+			string_cat(&new_url, buffer);
+	}
+	string_trim(new_url);
+
+	string_free(url);
+	*url = new_url;
+
+	_pclose(fp);
+	string_free(&command_line);
+
+	return 0;
+}
+
 #else /* not _WIN32 */
 
 int make_dir_pathname(const char *pathname)
@@ -331,6 +364,38 @@ int is_file_exist(const char *filename)
 int create_truncated_file(const char *filename, off_t size)
 {
 	return truncate(filename, size);
+}
+
+int execute_filter(const char *command, char **url, int level)
+{
+	FILE *fp;
+	char buffer[BUFFER_SIZE];
+	char *command_line = NULL;
+	char *new_url = NULL;
+
+	if (!url || !*url || !**url || !command || !*command)
+		return -1;
+
+	string_printf(&command_line, "%s \"%s\" %d", command, *url, level);
+
+	if ((fp = popen(command_line, "r")) == NULL) {
+		MULK_ERROR((_("ERROR: executing external filter program %s\n"), command));
+		return -1;
+	}
+
+	new_url = string_alloc(0);
+	while (fgets(buffer, BUFFER_SIZE, fp) != NULL) {
+		string_cat(&new_url, buffer);
+	}
+	string_trim(new_url);
+
+	string_free(url);
+	*url = new_url;
+
+	pclose(fp);
+	string_free(&command_line);
+
+	return 0;
 }
 
 #endif /* not _WIN32 */

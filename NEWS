@@ -5,6 +5,14 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
 Next Version 
  *New features
 -new options to print full lists of valid countries and continents for Metalink files
+-new option to execute an external program to filter URLs to download
+
+ *Bug fixes
+-changes in libmulk didn't cause a mulk recompilation and shared library was compiled with a wrong define
+-correct parameters printed out when resuming metalink file download
+-avoid compiling MD2 checksum when not present in openssl library
+-enable warnings as error on compilation when debug flag is true
+-compile on 64bit machine
 
 
 version 0.6.0 - 2011/07/10
