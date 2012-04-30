@@ -109,7 +109,7 @@ MULK_API mulk_type_return_t mulk_set_long_option(const char *name, const char *v
 MULK_API mulk_type_return_t mulk_set_options(int argc, char **argv);
 MULK_API mulk_type_return_t mulk_add_new_url(const char *url);
 /* defined only if --enable-metalink is specified when compiling library, 
- * otherwise this fucntion returns option error */
+ * otherwise this function returns option error */
 MULK_API mulk_type_return_t mulk_add_new_metalink_file(const char *metalink_filename);
 
 /* print info */

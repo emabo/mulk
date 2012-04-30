@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0)
 
 
+2012/04/30 Emanuele <pocoyo@users.sourceforge.net>
+	* urls without protocol are supposed to be HTTP
+
 2012/02/02 Emanuele <pocoyo@users.sourceforge.net>
 	* new option to execute an external program to filter URLs to download
 

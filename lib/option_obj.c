@@ -788,10 +788,13 @@ mulk_type_return_t mulk_set_options(int argc, char **argv)
 			goto Exit;
 	}
 
-	while (optind < argc) {
-		MULK_NOTE((_("Add url to download coming from command line: %s\n"), argv[optind]));
-		if ((ret = mulk_add_new_url(argv[optind++])) != MULK_RET_OK)
+	for (; optind < argc; optind++) {
+		if ((ret = mulk_add_new_url(argv[optind])) == MULK_RET_OK)
+			MULK_NOTE((_("Add url to download coming from command line: %s\n"), argv[optind]));
+		else {
+			fprintf(stderr, _("\nERROR: wrong url: %s\n\n"), argv[optind]);
 			goto Exit;
+		}
 	}
 
 	if (is_url_list_empty()) {

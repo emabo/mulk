@@ -140,10 +140,17 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	}
 
 	/* http://www.example.com and http://www.example.com/ have to generate the same object */
-	if (!base_url && (!abs_dest->pathHead || !abs_dest->pathHead->text.first)
-		&& !abs_dest->query.first) {
-		newurl = string_new(url);
-		string_cat(&newurl, "/");
+	/* url without protocol are considered HTTP by default */
+	if (!base_url && (((!abs_dest->pathHead || !abs_dest->pathHead->text.first)
+		&& !abs_dest->query.first) || !abs_dest->scheme.first)) {
+		if (!abs_dest->scheme.first) {
+			newurl = string_new(HTTP_PROTOCOL SCHEME_SEPAR_STR);
+			string_cat(&newurl, url);
+		}
+		else {
+			newurl = string_new(url);
+			string_cat(&newurl, "/");
+		}
 
 		uriFreeUriMembersA(abs_dest);
 

@@ -63,6 +63,8 @@
 #define HTTPS_PROTOCOL "https"
 /* ftp protocol */
 #define FTP_PROTOCOL "ftp"
+/* scheme separator */
+#define SCHEME_SEPAR_STR "://"
 
 /* define DEBUG compilation flags */
 #if (defined(DEBUG) || defined(_DEBUG)) && !defined(NDEBUG)
