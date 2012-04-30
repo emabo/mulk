@@ -108,6 +108,9 @@ typedef UINT32 intmax_t;
 #define GET_SEPAR(out_dir) \
 	((!*(out_dir) || (out_dir)[strlen(out_dir)-1] == *DIR_SEPAR_STR) ? "" : DIR_SEPAR_STR)
 
+#define is_printf(log_level) \
+	(option_values.verbosity || (!option_values.quiet && (log_level) < MINFO))
+
 #define MULK_ERROR(args) \
 REMOVE_4127_WARNING \
 do {if (is_printf(MERR)) printf args;} while (0)
@@ -131,7 +134,5 @@ do {printf("%s,%d: ", __FILE__, __LINE__); printf args;} while (0)
 #else
 #define MULK_DEBUG(args)
 #endif
-
-int is_printf(int log_level);
 
 #endif /* not _DEFINES_H_ */

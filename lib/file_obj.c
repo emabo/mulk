@@ -245,12 +245,12 @@ int make_dir_pathname(const char *pathname)
 
 		if (_stat(path, &stat_buf) < 0) {
 			if (_mkdir(path) < 0) {
-				string_free(&path);
+				string_free(path);
 				return -1;
 			}
 		}
 		else if (!(stat_buf.st_mode & _S_IFDIR)) {
-			string_free(&path);
+			string_free(path);
 			return -1;
 		}
 
@@ -258,7 +258,7 @@ int make_dir_pathname(const char *pathname)
 		slash_ptr = strchr(slash_ptr + 1, *DIR_SEPAR_STR);
 	}
 
-	string_free(&path);
+	string_free(path);
 	return 0;
 }
 
@@ -305,11 +305,11 @@ int execute_filter(const char *command, char **url, int level)
 	}
 	string_trim(new_url);
 
-	string_free(url);
+	string_free(*url);
 	*url = new_url;
 
 	_pclose(fp);
-	string_free(&command_line);
+	string_free(command_line);
 
 	return 0;
 }
@@ -337,12 +337,12 @@ int make_dir_pathname(const char *pathname)
 
 		if (stat(path, &stat_buf) < 0) {
 			if (mkdir(path, arg_mode) < 0) {
-				string_free(&path);
+				string_free(path);
 				return -1;
 			}
 		}
 		else if (!S_ISDIR(stat_buf.st_mode)) {
-			string_free(&path);
+			string_free(path);
 			return -1;
 		}
 
@@ -350,7 +350,7 @@ int make_dir_pathname(const char *pathname)
 		slash_ptr = strchr(slash_ptr + 1, *DIR_SEPAR_STR);
 	}
 
-	string_free(&path);
+	string_free(path);
 	return 0;
 }
 
@@ -389,11 +389,11 @@ int execute_filter(const char *command, char **url, int level)
 	}
 	string_trim(new_url);
 
-	string_free(url);
+	string_free(*url);
 	*url = new_url;
 
 	pclose(fp);
-	string_free(&command_line);
+	string_free(command_line);
 
 	return 0;
 }

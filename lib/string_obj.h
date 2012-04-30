@@ -36,6 +36,9 @@
 #include "defines.h"
 #include <string.h>
 
+#define string_free(str) \
+do {if (str) {m_free(str); str = NULL;}} while(0)
+
 typedef struct val_str_t {
 	int val;
 	char *str;
@@ -46,8 +49,6 @@ char *string_new(const char *str);
 char *string_nnew(const char *str, int length);
 
 char **string_cat(char **str, const char *add_str);
-
-void string_free(char **str);
 
 int string_casecmp(const char *str1, const char *str2);
 int string_ncasecmp(const char *str1, const char *str2, int len);

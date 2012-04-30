@@ -46,11 +46,6 @@ static void *exit_context = NULL;
 static mulk_write_download_info_cb write_download_info = NULL;
 static void *info_context = NULL;
 
-int is_printf(int log_level)
-{
-	return (option_values.verbosity || (!option_values.quiet && (log_level) < MINFO));
-}
-
 void mulk_set_check_exit_cb(mulk_check_exit_cb cb, void *context)
 {
 	check_exit = cb;
@@ -206,7 +201,7 @@ mulk_type_return_t mulk_run(void)
 
 					curl_multi_remove_handle(curl_obj, e);
 					curl_easy_cleanup(e);
-					string_free(&orig_url);
+					string_free(orig_url);
 				}
 				else {
 					int is_file_completed;

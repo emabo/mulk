@@ -3,6 +3,7 @@ downloader with image filtering and Metalink support (version 0.6.0)
 
 
 2012/04/30 Emanuele <pocoyo@users.sourceforge.net>
+	* a couple of functions have been converted to macros, i.e. is_printf and string_free
 	* urls without protocol are supposed to be HTTP
 
 2012/02/02 Emanuele <pocoyo@users.sourceforge.net>

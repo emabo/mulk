@@ -66,7 +66,7 @@ static void push_metalink_resource(metalink_file_list_t *file, metalink_resource
 		MULK_ERROR((_("ERROR: resource \"%s\" has an inconsistent protocol (\"%s\")\n"), resource->url ? resource->url : "",
 			resource->type ? resource->type : ""));
 		uri_free(uri);
-		string_free(&res_url);
+		string_free(res_url);
 		return;
 	}
 
@@ -82,7 +82,7 @@ static void push_metalink_resource(metalink_file_list_t *file, metalink_resource
 	if (!file->usable_res_top)
 		file->usable_res_top = elem;
 
-	string_free(&res_url);
+	string_free(res_url);
 }
 
 void remove_metalink_resource(metalink_file_list_t *file, metalink_resource_list_t *resource)
@@ -267,7 +267,7 @@ void free_metalink_file(metalink_file_list_t *file)
 
 	free_chunks(file);
 	free_resources(file);
-	string_free(&file->resume_filename);
+	string_free(file->resume_filename);
 
 	m_free(file);
 }
@@ -282,7 +282,7 @@ void reset_metalink_file(metalink_file_list_t *file, const char *resume_filename
 
 	file->chunk_number = 0;
 	file->header = 0;
-	string_free(&file->resume_filename);
+	string_free(file->resume_filename);
 	file->resume_filename = string_new(resume_filename);
 }
 

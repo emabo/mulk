@@ -88,18 +88,10 @@ char **string_cat(char **str, const char *add_str)
 		strcpy(new_str, *str);
 	strcpy(new_str + len, add_str);
 
-	string_free(str);
+	string_free(*str);
 	*str = new_str;
 
 	return str;
-}
-
-void string_free(char **str)
-{
-	if (str && *str) {
-		m_free(*str);
-		*str = NULL;
-	}
 }
 
 int string_casecmp(const char *str1, const char *str2)
@@ -199,8 +191,7 @@ char **string_printf(char **str, const char *fmt, ...)
 	if (!str)
 		return NULL;
 
-	if (*str)
-		string_free(str);
+	string_free(*str);
 
 	va_start(ap, fmt);
 	va_copy(ap2, ap);

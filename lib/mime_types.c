@@ -87,17 +87,17 @@ mulk_type_return_t extract_mime_type(const char *mime_type, char **type, char **
 
 	buf = string_new(mime_type);
 	if ((token = strtok(buf, TYPE_DELIM)) == NULL) {
-		string_free(&buf);
+		string_free(buf);
 		return MULK_RET_ERR;
 	}
 
 	token_mime = string_new(token);
 	string_lower(token_mime);
 
-	string_free(&buf);
+	string_free(buf);
 
 	if ((subtoken = strtok(token_mime, SUBTYPE_DELIM)) == NULL) {
-		string_free(&token_mime);
+		string_free(token_mime);
 		return MULK_RET_ERR;
 	}
 
@@ -105,15 +105,15 @@ mulk_type_return_t extract_mime_type(const char *mime_type, char **type, char **
 		*type = string_new(subtoken);
 
 	if ((subtoken = strtok(NULL, SUBTYPE_DELIM)) == NULL) {
-		string_free(&token_mime);
-		string_free(type);
+		string_free(token_mime);
+		string_free(*type);
 		return MULK_RET_ERR;
 	}
 
 	if (subtype)
 		*subtype = string_new(subtoken);
 
-	string_free(&token_mime);
+	string_free(token_mime);
 
 	return MULK_RET_OK;
 }

@@ -200,7 +200,7 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 		char *uri_str = uri2string(uri);
 		MULK_INFO((_("Open link #%d, url: %s, tmp file: %s\n"), i, uri_str ? uri_str : "",
 			buffer->filename ? buffer->filename : ""));
-		string_free(&uri_str);
+		string_free(uri_str);
 	}
 
 	return i;
@@ -275,13 +275,13 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 				string_cat(&newfilename, "index.");
 				if (extract_mime_type(buffer->url->mimetype, NULL, &subtype) == MULK_RET_OK) {
 					string_cat(&newfilename, subtype);
-					string_free(&subtype);
+					string_free(subtype);
 				} else
 					string_cat(&newfilename, "bin");
 			}
 		}
 
-		string_free(&furi_str);
+		string_free(furi_str);
 		uri_free(uri);
 	}
 
@@ -292,8 +292,8 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		if (extract_mime_type(buffer->url->mimetype, &type, &subtype) == MULK_RET_OK) {
 			string_printf(&newmimefilename, "%s%s%s%s_%05d.%s", option_values.mime_output_directory,
 				type, DIR_SEPAR_STR, subtype, buffer->url->id, subtype);
-			string_free(&type);
-			string_free(&subtype);
+			string_free(type);
+			string_free(subtype);
 		}
 	}
 
@@ -312,8 +312,8 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	else
 		remove(buffer->filename);
 
-	string_free(&newmimefilename);
-	string_free(&newfilename);
+	string_free(newmimefilename);
+	string_free(newfilename);
 
 	return ret;
 }
@@ -342,7 +342,7 @@ void set_buffer_mime_type(CURL *id, const char *mimetype)
 
 	buffer = buffer_array + i;
 
-	string_free(&buffer->url->mimetype);
+	string_free(buffer->url->mimetype);
 	
 	if (mimetype) {
 		buffer->url->mimetype = string_new(mimetype);
@@ -494,7 +494,7 @@ Exit:
 	buffer->id = NULL;
 	buffer->url = NULL;
 	buffer->uri = NULL;
-	string_free(&buffer->filename);
+	string_free(buffer->filename);
 
 	return ret;
 }
@@ -512,7 +512,7 @@ void print_buffers(void)
 			MULK_INFO(("%d: %s, %s, %s", i, buffer->id ? _("PRESENT") : _("EMPTY"), 
 				buffer->used_res ? uri_str : _("NULL"),
 				buffer->chunk ? _("CHUNK") : _("NO CHUNK")));
-			string_free(&uri_str);
+			string_free(uri_str);
 #else /* not ENABLE_METALINK */
 			MULK_INFO(("%d: %s", i, buffer->id ? _("PRESENT") : _("EMPTY")));
 #endif /* not ENABLE_METALINK */
@@ -542,7 +542,7 @@ void free_buffer_array(CURLM *curl_obj)
 		ret = curl_easy_getinfo(buffer->id, CURLINFO_PRIVATE, &orig_url);
 		curl_multi_remove_handle(curl_obj, buffer->id);
 		if (ret == CURLE_OK)
-			string_free(&orig_url);
+			string_free(orig_url);
 		curl_easy_cleanup(buffer->id);
 
 #ifdef ENABLE_METALINK
@@ -554,7 +554,7 @@ void free_buffer_array(CURLM *curl_obj)
 					option_values.temp_directory, buffer->url->id);
 				rename(buffer->filename, resume_filename);
 				reset_metalink_file(buffer->url->metalink_uri, resume_filename);
-				string_free(&resume_filename);
+				string_free(resume_filename);
 			}
 		}
 		else 
@@ -563,7 +563,7 @@ void free_buffer_array(CURLM *curl_obj)
 			if (is_file_exist(buffer->filename))
 				remove(buffer->filename);
 		}
-		string_free(&buffer->filename);
+		string_free(buffer->filename);
 		reset_url(buffer->url);
 	}
 

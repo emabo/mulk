@@ -200,7 +200,7 @@ url_list_t *search_next_url(UriUriA **uri)
 							continue;
 						}
 #endif /* ENABLE_CHECKSUM */
-						string_free(&newfilename);
+						string_free(newfilename);
 					}
 
 					*uri = find_next_url(elem->metalink_uri, chunk, resource, header);
@@ -259,9 +259,9 @@ UriUriA *pop_url(void)
 #ifdef ENABLE_METALINK
 	free_metalink_file(elem->metalink_uri);
 #endif
-	string_free(&elem->mimetype);
-	string_free(&elem->filename);
-	string_free(&elem->mimefilename);
+	string_free(elem->mimetype);
+	string_free(elem->filename);
+	string_free(elem->mimefilename);
 	m_free(elem);
 
 	return ret_uri;
@@ -328,7 +328,7 @@ void report_urls(void)
 		if (update_pointer)
 			report_ptr = elem;
 
-		string_free(&uri_str);
+		string_free(uri_str);
 	}
 
 	if (textfile)
@@ -385,9 +385,9 @@ void reset_url(url_list_t *url)
 	url->err_code = ERR_CODE_NOT_ASSIGNED;
 	url->assigned = url->reported = url->tmp_file_created = 0;
 	url->http_code = 0;
-	string_free(&url->mimetype);
-	string_free(&url->filename);
-	string_free(&url->mimefilename);
+	string_free(url->mimetype);
+	string_free(url->filename);
+	string_free(url->mimefilename);
 }
 
 void reset_url_list(void)

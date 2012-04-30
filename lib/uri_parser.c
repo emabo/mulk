@@ -51,7 +51,7 @@ char *uri2string(UriUriA *uri)
 
 	length++;
 	if (uriToStringA(uri_str, uri, length, NULL) != URI_SUCCESS) {
-		string_free(&uri_str);
+		string_free(uri_str);
 		return NULL;
 	}
 
@@ -157,16 +157,16 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 		state.uri = abs_dest;
 		if (uriParseUriA(&state, newurl) != URI_SUCCESS) {
 			uri_free(abs_dest);
-			string_free(&newurl);
+			string_free(newurl);
 			return NULL;
 		}
 
 		if (uriNormalizeSyntaxA(abs_dest) != URI_SUCCESS) {
 			uri_free(abs_dest);
-			string_free(&newurl);
+			string_free(newurl);
 			return NULL;
 		}
-		string_free(&newurl);
+		string_free(newurl);
 	}
 
 	return abs_dest;
@@ -189,12 +189,12 @@ int	filter_uri(UriUriA **uri, int level)
 	*uri = NULL;
 
 	if (execute_filter(option_values.exec_filter, &url, level)) {
-		string_free(&url);
+		string_free(url);
 		return -1;
 	}
 
 	*uri = create_absolute_uri(NULL, url);
-	string_free(&url);
+	string_free(url);
 
 	if (!*uri)
 		return -1;
@@ -326,7 +326,7 @@ int is_host_equal_domains(UriUriA *uri, char **domains)
 			break;
 		}
 
-	string_free(&host);
+	string_free(host);
 	return ret;
 }
 
@@ -347,6 +347,6 @@ int is_host_in_domains(UriUriA *uri, char **domains)
 			break;
 		}
 
-	string_free(&host);
+	string_free(host);
 	return ret;
 }

@@ -146,7 +146,7 @@ void print_chunks(metalink_file_list_t *file)
 			(intmax_t) elem->start+elem->length-1, (intmax_t) elem->length, uri_str);
 
 		if (elem->used_res)
-			string_free(&uri_str);
+			string_free(uri_str);
 	} 
 }
 

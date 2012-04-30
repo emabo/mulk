@@ -144,7 +144,7 @@ mulk_type_return_t init_url(CURLM *cm)
 
 			curl_easy_setopt(eh, CURLOPT_RANGE, range);
 
-			string_free(&range);
+			string_free(range);
 		}
 #endif /* ENABLE_METALINK */
 	}
@@ -168,7 +168,7 @@ mulk_type_return_t init_url(CURLM *cm)
 		   	option_values.password ? option_values.password : "");
 		curl_easy_setopt(eh, CURLOPT_USERPWD, usr_pwd);
 
-		string_free(&usr_pwd);
+		string_free(usr_pwd);
 	}
 
 	if (option_values.proxy)

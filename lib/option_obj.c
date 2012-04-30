@@ -299,7 +299,7 @@ static mulk_type_return_t parse_domains(const char *dom_option, char ***domains)
 		dom_num++;
 		s = NULL;
 	}
-	string_free(&buf);
+	string_free(buf);
 
 	*domains = m_calloc(dom_num + 1, sizeof(char*));
 
@@ -313,7 +313,7 @@ static mulk_type_return_t parse_domains(const char *dom_option, char ***domains)
 		s = NULL;
 	}
 
-	string_free(&buf);
+	string_free(buf);
 	return MULK_RET_OK;
 }
 
@@ -350,7 +350,7 @@ static void free_domain(char ***domains)
 		return;
 
 	for (i = 0; (*domains)[i]; i++)
-		string_free(&(*domains)[i]);
+		string_free((*domains)[i]);
 
 	if (*domains) {
 		m_free(*domains);
@@ -374,7 +374,7 @@ static mulk_type_return_t save_locations(const char *loc_option, char **location
 	char *buf = NULL;
 	char *s, *res, *ptr, *start;
 
-	string_free(locations);
+	string_free(*locations);
 
 	if (!locations || !loc_option || !*loc_option)
 		return MULK_RET_OK;
@@ -387,8 +387,8 @@ static mulk_type_return_t save_locations(const char *loc_option, char **location
 		if (strlen(res) != LOC_LENGTH) {
 			MULK_ERROR((_("ERROR: Metalink location length is wrong: %s\n"), res));
 			*locations = NULL;
-			string_free(&ptr);
-			string_free(&buf);
+			string_free(ptr);
+			string_free(buf);
 			return MULK_RET_OPTION_VALUE_ERR;
 		}
 
@@ -399,7 +399,7 @@ static mulk_type_return_t save_locations(const char *loc_option, char **location
 	}
 
 	*locations = start;
-	string_free(&buf);
+	string_free(buf);
 	return MULK_RET_OK;
 }
 
@@ -475,8 +475,8 @@ static mulk_type_return_t set_option_metalink_resume_file(void)
 
 static void free_locations(void)
 {
-	string_free(&location_countries);
-	string_free(&location_continents);
+	string_free(location_countries);
+	string_free(location_continents);
 }
 #endif /* ENABLE_METALINK */
 
@@ -736,8 +736,7 @@ mulk_type_return_t mulk_set_option(int ind, const char *value)
 				fprintf(stderr, _("\nERROR: this option (%s) needs to be followed by a value\n\n"), name ? name : "");
 				return MULK_RET_OPTION_VALUE_ERR;
 			}
-			if (*((char**) options[ind].value))
-				string_free((char**) options[ind].value);
+			string_free(*((char**) options[ind].value));
 
 			*((char**) options[ind].value) = string_new(value);
 			break;
@@ -806,7 +805,7 @@ Exit:
 	if (ret < MULK_RET_OK)
 		fprintf(stderr, _("Try `mulk --help' for more information.\n"));
 
-	string_free(&short_options);
+	string_free(short_options);
 	m_free(long_options);
 
 	return ret;
@@ -840,7 +839,7 @@ void free_options(void)
 
 	for (i = 0; i < NUM_OPTIONS; i++)
 		if (options[i].type == OPTION_STRING)
-			string_free((char **) options[i].value);
+			string_free(*((char **) options[i].value));
 
 #ifdef ENABLE_RECURSION
 	free_domains();
@@ -863,7 +862,7 @@ void mulk_reset_options(void)
 					*((int*) options[i].value) = 0;
 				break;
 			case OPTION_STRING:
-				string_free((char **) options[i].value);
+				string_free(*((char **) options[i].value));
 				break;
 			default:
 				break;
