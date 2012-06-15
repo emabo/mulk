@@ -24,6 +24,7 @@ Features:
 -option to follow FTP links in HTML documents.
 -options to specify username and password for the connections.
 -option to specify a proxy for the connections.
+-options to manage HTTP cookies.
 -option to execute an external program to filter URLs to download.
 -save web pages copying the site tree locally.
 -filtering of GIF, PNG and JPEG images by width and height.

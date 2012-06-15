@@ -174,6 +174,13 @@ mulk_type_return_t init_url(CURLM *cm)
 	if (option_values.proxy)
 		curl_easy_setopt(eh, CURLOPT_PROXY, option_values.proxy);
 
+	if (option_values.cookie)
+		curl_easy_setopt(eh, CURLOPT_COOKIE, option_values.cookie);
+	if (option_values.load_cookies)
+		curl_easy_setopt(eh, CURLOPT_COOKIEFILE, option_values.load_cookies);
+	if (option_values.save_cookies)
+		curl_easy_setopt(eh, CURLOPT_COOKIEJAR, option_values.save_cookies);
+
 	if (curl_multi_add_handle(cm, eh) != CURLM_OK)
 		return MULK_RET_ERR;
 
