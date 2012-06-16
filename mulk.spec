@@ -1,13 +1,18 @@
+%define name mulk
+%define ver 0.6.0
+%define ver2 0.0.0
+%define rel 1
+
 Summary: Non-interactive multi-connection network downloader with image filtering and Metalink support.
-Name: mulk
-Version: 0.6.0
-Release: 1
+Name: %{name}
+Version: %{ver}
+Release: %{rel}
 License: GPL
 Group: Utilities/Console
-Source0: %{name}-%{version}.tar.gz
+Source: %{name}-%{ver}.tar.gz
 URL: http://sourceforge.net/projects/mulk/
 Prefix: %{_prefix}
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot: %{_tmppath}/%{name}-%{ver}-%{rel}-buildroot
 
 %description
 Multi-connection command line tool for downloading Internet sites with image
@@ -15,6 +20,13 @@ filtering and Metalink support. Similar to wget and cURL, but it manages up to 5
 simultaneous and parallel links. Main features are: HTML code parsing, recursive 
 fetching, Metalink retrieving, segmented download and image filtering by width and height.
 It is based on libcurl, liburiparser, libtidy, libmetalink and libcrypto.
+
+%package devel
+Summary: The includes and libraries to develop with libmulk
+Group: Development/Libraries
+
+%description devel
+libmulk is the library containing all mulk features.
 
 %prep
 %setup -q
@@ -34,10 +46,20 @@ rm -rf ${RPM_BUILD_ROOT}
 %files -f %{name}.lang
 %defattr(-,root,root)
 %attr(0755,root,root) %{_bindir}/mulk
-%attr(0644,root,root) %{_mandir}/man1/mulk.1.bz2
+%attr(0644,root,root) %{_mandir}/man1/mulk.1*
+%{_libdir}/libmulk.so*
 %doc COPYING COPYING.LESSER LICENSE.OpenSSL AUTHORS README NEWS THANKS ChangeLog
 
+%files devel
+%defattr(-,root,root)
+%attr(0644,root,root) %{_includedir}/mulk/* 
+%{_libdir}/libmulk.a
+%{_libdir}/libmulk.la
+
 %changelog
+* Sat Jun 16 2012 Emanuele Bovisio <pocoyo@users.sourceforge.net>
+- library added to RPM.
+
 * Fri Mar 26 2010 Emanuele Bovisio <pocoyo@users.sourceforge.net>
 - License has been changed to LGPL for the library.
 
