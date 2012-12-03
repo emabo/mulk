@@ -47,6 +47,9 @@ typedef struct option_value_t {
 	char *user;
 	char *password;
 	char *proxy;
+	char *cookie;
+	char *load_cookies;
+	char *save_cookies;
 	char *exec_filter;
 #ifdef ENABLE_RECURSION
 	int depth;

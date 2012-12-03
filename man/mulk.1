@@ -68,6 +68,12 @@ Username to use for the connection.
 Password to use for the connection.
 .IP "    --proxy"
 <host[:port]> use HTTP proxy on given host and port.
+.IP "    --cookie"
+Cookie string for HTTP session. The string should be in the format "parameter1=value1; parameter2=value2".
+.IP "    --load-cookies"
+Load cookies from file for HTTP session. File should be in Netscape/Mozilla cookie file format.
+.IP "    --save-cookies"
+Save cookies to file after HTTP session. All cookies previously read from file, loaded from command line and sent by the remote server are written to the file.
 .IP "    --exec-filter"
 Execute an external program to modify or drop URLs to download.
 .br

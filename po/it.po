@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mulk 0.6.0\n"
 "Report-Msgid-Bugs-To: http://sourceforge.net/projects/mulk\n"
-"POT-Creation-Date: 2011-07-10 18:48+0200\n"
+"POT-Creation-Date: 2012-06-15 23:52+0200\n"
 "PO-Revision-Date: 2009-11-18 00:52+0100\n"
 "Last-Translator: Emanuele Bovisio <pocoyo@users.sourceforge.net>\n"
 "Language-Team: Italian\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: lib/buffer_array.c:201
@@ -41,8 +41,8 @@ msgstr "Scaricati %d/%d chunk, %<PRIdMAX>/%<PRIdMAX> byte\n"
 msgid ""
 "RESULT: Metalink downloaded successfully, Filename:\"%s\" Size:%<PRIdMAX>\n"
 msgstr ""
-"RISULTATO: Metalink scaricato con successo, Nome del file:\"%s\" Dimensione:%"
-"<PRIdMAX>\n"
+"RISULTATO: Metalink scaricato con successo, Nome del file:\"%s\" Dimensione:"
+"%<PRIdMAX>\n"
 
 #: lib/buffer_array.c:460
 #, c-format
@@ -73,22 +73,22 @@ msgstr "CHUNK"
 msgid "NO CHUNK"
 msgstr "NESSUN CHUNK"
 
-#: lib/checksum.c:326 lib/chunk_list.c:340
+#: lib/checksum.c:338 lib/chunk_list.c:343
 msgid "No compatible checksum to verify.\n"
 msgstr "Nessuna checksum compatibile da verificare.\n"
 
-#: lib/checksum.c:330
+#: lib/checksum.c:342
 #, c-format
 msgid "Verifying %s checksum on %s. This may take a while...\n"
 msgstr ""
 "Verifica della checksum %s su %s. L'operazione potrebbe richiedere un po' di "
 "tempo...\n"
 
-#: lib/checksum.c:335
+#: lib/checksum.c:347
 msgid "Checksum correct.\n"
 msgstr "Checksum corretta.\n"
 
-#: lib/checksum.c:337
+#: lib/checksum.c:349
 msgid "Checksum wrong.\n"
 msgstr "Checksum errata.\n"
 
@@ -105,39 +105,59 @@ msgstr "Checksum del chunk errata.\n"
 msgid "Checking chunk no. %d\n"
 msgstr "Verifica del chunk no. %d\n"
 
-#: lib/chunk_list.c:298
+#: lib/chunk_list.c:301
 #, c-format
 msgid "Resuming file: %s, verified %d/%d chunks.\n"
 msgstr "Ripristino del file: %s, verificati %d/%d chunk.\n"
 
-#: lib/chunk_list.c:338
+#: lib/chunk_list.c:341
 #, c-format
 msgid "Found chunk checksum of %s type.\n"
 msgstr "Trovata checksum del chunk di tipo %s.\n"
 
-#: lib/chunk_list.c:343
+#: lib/chunk_list.c:346
 msgid "ERROR: wrong length in chunk checksum.\n"
 msgstr "ERRORE: lunghezza errata nella checksum del chunk.\n"
 
-#: lib/chunk_list.c:371
+#: lib/chunk_list.c:374
 #, c-format
 msgid "filesize: %<PRIdMAX>\n"
 msgstr "dimensione del file: %<PRIdMAX>\n"
 
-#: lib/chunk_list.c:372
+#: lib/chunk_list.c:375
 #, c-format
 msgid "number of chunks: %d\n"
 msgstr "numero di chunk: %d\n"
 
-#: lib/chunk_list.c:373
+#: lib/chunk_list.c:376
 #, c-format
 msgid "chunk size: %<PRIdMAX>\n"
 msgstr "dimensione del chunk: %<PRIdMAX>\n"
 
-#: lib/chunk_list.c:374
+#: lib/chunk_list.c:377
 #, c-format
 msgid "last chunk size: %<PRIdMAX>\n"
 msgstr "dimensione dell'ultimo chunk: %<PRIdMAX>\n"
+
+#: lib/country_codes.c:302
+#, c-format
+msgid "List of valid countries:\n"
+msgstr "Elenco dei paesi ammessi\n"
+
+#: lib/country_codes.c:303
+#, c-format
+msgid "Country Continent  Name\n"
+msgstr "Paese   Continente Nome\n"
+
+#: lib/country_codes.c:313
+#, c-format
+msgid "List of valid continents:\n"
+msgstr "Elenco dei continenti ammessi:\n"
+
+#: lib/country_codes.c:314
+#, c-format
+msgid "Continent  Name\n"
+msgstr "Continente Nome\n"
 
 #: lib/file_obj.c:109
 #, c-format
@@ -180,6 +200,11 @@ msgstr "ERRORE: errore no. %d nella creazione della directory\n"
 msgid "ERROR: saving file error no. %d\n"
 msgstr "ERRORE: errore no. %d nel salvataggio del file\n"
 
+#: lib/file_obj.c:297 lib/file_obj.c:382
+#, c-format
+msgid "ERROR: executing external filter program %s\n"
+msgstr "ERRORE: esecuzione programma di filtraggio esterno %s\n"
+
 #: lib/gif_obj.c:86
 #, c-format
 msgid "Image GIF %s: %s, width = %d, height = %d\n"
@@ -193,7 +218,8 @@ msgstr "Immagine JPG %s: %s, larghezza = %d, altezza = %d\n"
 #: lib/metalink_list.c:56
 #, c-format
 msgid "ERROR: resource \"%s\" uses a not supported protocol (\"%s\")\n"
-msgstr "ERRORE: la risorsa \"%s\" utilizza un protocollo non supportato (\"%s\")\n"
+msgstr ""
+"ERRORE: la risorsa \"%s\" utilizza un protocollo non supportato (\"%s\")\n"
 
 #: lib/metalink_list.c:66
 #, c-format
@@ -215,12 +241,12 @@ msgstr "nome = %s\n"
 msgid "resource = %s\n"
 msgstr "risorsa = %s\n"
 
-#: lib/m_malloc.c:106
+#: lib/m_malloc.c:102
 #, c-format
 msgid "ERROR: increase HASH_TABLE_SIZE to a larger value and recompile\n"
 msgstr "ERRORE: incrementa HASH_TABLE_SIZE ad un valore maggiore e ricompila\n"
 
-#: lib/m_malloc.c:151
+#: lib/m_malloc.c:147
 #, c-format
 msgid ""
 "\n"
@@ -229,12 +255,12 @@ msgstr ""
 "\n"
 "Allocati:  %d\n"
 
-#: lib/m_malloc.c:152
+#: lib/m_malloc.c:148
 #, c-format
 msgid "Free:    %d\n"
 msgstr "Liberati:    %d\n"
 
-#: lib/m_malloc.c:153
+#: lib/m_malloc.c:149
 #, c-format
 msgid ""
 "Memory Leaks: %d\n"
@@ -243,79 +269,79 @@ msgstr ""
 "Perdite di Memoria: %d\n"
 "\n"
 
-#: lib/m_malloc.c:157
+#: lib/m_malloc.c:153
 #, c-format
 msgid "ptr=0x%lx, %s:%d, %ld bytes\n"
 msgstr "ptr=0x%lx, %s:%d, %ld bytes\n"
 
-#: lib/m_malloc.c:167
+#: lib/m_malloc.c:163
 #, c-format
 msgid "chunck %%%d, number %d\n"
 msgstr "chunck %%%d, numero %d\n"
 
-#: lib/m_malloc.c:180
+#: lib/m_malloc.c:176
 #, c-format
 msgid "ERROR: pointer to add already present at %s:%d\n"
 msgstr "ERRORE: puntatore da aggiungere già presente in %s:%d\n"
 
-#: lib/m_malloc.c:190
+#: lib/m_malloc.c:186
 #, c-format
 msgid "ERROR: free NULL pointer at %s:%d\n"
 msgstr "ERRORE: free di puntatore NULLO in %s:%d\n"
 
-#: lib/m_malloc.c:195
+#: lib/m_malloc.c:191
 #, c-format
 msgid "ERROR: bad free (0x%lx) at %s:%d\n"
 msgstr "ERRORE: free errato (0x%lx) in %s:%d\n"
 
-#: lib/m_malloc.c:209
+#: lib/m_malloc.c:205
 #, c-format
 msgid "ERROR: %s,%d: memory allocation failed (%ld bytes)\n"
 msgstr "ERRORE: %s,%d: allocazione di memoria fallita (%ld byte)\n"
 
-#: lib/mulk.c:81
+#: lib/mulk.c:76
 #, c-format
 msgid "libcURL version %s\n"
 msgstr "libcURL versione %s\n"
 
-#: lib/mulk.c:114
+#: lib/mulk.c:109
 msgid "No usable URLs for downloading\n"
 msgstr "Non ci sono URL utilizzabili per lo scaricamento\n"
 
-#: lib/mulk.c:125
+#: lib/mulk.c:120
 msgid "ERROR: fdset\n"
 msgstr "ERRORE: fdset\n"
 
-#: lib/mulk.c:136
+#: lib/mulk.c:131
 msgid "ERROR: timeout\n"
 msgstr "ERRORE: timeout\n"
 
-#: lib/mulk.c:155
+#: lib/mulk.c:150
 #, c-format
 msgid "ERROR: num_fd:%d, time_to_wait %li, error message %s (%d)\n"
 msgstr "ERRORE: num_fd:%d, time_to_wait %li, messaggio di errore %s (%d)\n"
 
-#: lib/mulk.c:189
+#: lib/mulk.c:184
 #, c-format
 msgid "RESULT: %d (%s), "
 msgstr "RISULTATO: %d (%s), "
 
-#: lib/mulk.c:193
+#: lib/mulk.c:188
 #, c-format
 msgid "HTTP Code:\"%ld\" Mime-Type:\"%s\" "
 msgstr "Codice HTTP:\"%ld\" Mime-Type:\"%s\" "
 
-#: lib/mulk.c:198
+#: lib/mulk.c:193
 #, c-format
 msgid "Url:\"%s\" Size:%<PRIdMAX>\n"
 msgstr "Url:\"%s\" Dimensione:%<PRIdMAX>\n"
 
-#: lib/mulk.c:217
+#: lib/mulk.c:212
 #, c-format
 msgid "ERROR: message=%d\n"
 msgstr "ERRORE: messaggio=%d\n"
 
-#: lib/mulk.c:240
+#: lib/mulk.c:235
 #, c-format
 msgid ""
 "\n"
@@ -324,7 +350,7 @@ msgstr ""
 "\n"
 "Tempo totale di scaricamento = %ld secondi"
 
-#: lib/mulk.c:241
+#: lib/mulk.c:236
 #, c-format
 msgid ""
 "\n"
@@ -333,7 +359,7 @@ msgstr ""
 "\n"
 "File totali scaricati = %ld"
 
-#: lib/mulk.c:242
+#: lib/mulk.c:237
 #, c-format
 msgid ""
 "\n"
@@ -342,7 +368,7 @@ msgstr ""
 "\n"
 "Dimensione totale scaricata = %.2f KB\n"
 
-#: lib/mulk.c:244
+#: lib/mulk.c:239
 #, c-format
 msgid ""
 "\n"
@@ -408,154 +434,178 @@ msgid "<host[:port]> use HTTP proxy on given host and port"
 msgstr ""
 "<host[:port]> utilizza il proxy HTTP presente sull'host e la porta dati"
 
-#: lib/option_obj.c:143
+#: lib/option_obj.c:142
+msgid "cookie string for HTTP session"
+msgstr "sequenza di cookie per sessione HTTP"
+
+#: lib/option_obj.c:144
+msgid "load cookies from file for HTTP session"
+msgstr "carica cookies dal file per sessione HTTP"
+
+#: lib/option_obj.c:146
+msgid "save cookies to file after HTTP session"
+msgstr "salva cookies nel file dopo sessione HTTP"
+
+#: lib/option_obj.c:148
+msgid "execute an external program to filter or modify URLs to download"
+msgstr "esegue un programma esterno per filtrare o modificare URL da scaricare"
+
+#: lib/option_obj.c:151
 msgid "maximum recursion depth (0 for infinite)"
 msgstr "profondità massima di ricorsione (0 per infinito)"
 
-#: lib/option_obj.c:144
+#: lib/option_obj.c:152
 msgid "wrong depth values"
 msgstr "valori di profondità errati"
 
-#: lib/option_obj.c:145
+#: lib/option_obj.c:153
 msgid "Recursive download options"
 msgstr "Opzioni di scaricamento ricorsivo"
 
-#: lib/option_obj.c:146
+#: lib/option_obj.c:154
 msgid "don't get all images, links, etc. needed to display HTML page"
 msgstr ""
 "non scaricare tutte le immagini, i collegamenti, ecc. necessari a "
 "visualizzare la pagina HTML"
 
-#: lib/option_obj.c:148
+#: lib/option_obj.c:156
 msgid "go to foreign hosts"
 msgstr "visita anche altri host"
 
-#: lib/option_obj.c:150
+#: lib/option_obj.c:158
 msgid "comma-separated list of accepted domains"
 msgstr "lista dei domini accettati separati da virgole"
 
-#: lib/option_obj.c:152
+#: lib/option_obj.c:160
 msgid "comma-separated list of rejected domains"
 msgstr "lista dei domini rifiutati separati da virgole"
 
-#: lib/option_obj.c:154
+#: lib/option_obj.c:162
 msgid "follow FTP links from HTML documents"
 msgstr "segui i collegamenti FTP dai documenti HTML"
 
-#: lib/option_obj.c:157
+#: lib/option_obj.c:165
 msgid "text file with list of options"
 msgstr "file di testo contenente lista di opzioni"
 
-#: lib/option_obj.c:159
+#: lib/option_obj.c:167
 msgid "Input options"
 msgstr "Opzioni di ingresso"
 
-#: lib/option_obj.c:160
+#: lib/option_obj.c:168
 msgid "text file with list of URLs to download"
 msgstr "file di testo contenente lista di URL da scaricare"
 
-#: lib/option_obj.c:163
+#: lib/option_obj.c:171
 msgid "Metalink filename"
 msgstr "nome del file Metalink"
 
-#: lib/option_obj.c:165
+#: lib/option_obj.c:173
 msgid "Metalink options"
 msgstr "Opzioni Metalink"
 
-#: lib/option_obj.c:166
+#: lib/option_obj.c:174
 msgid "text file with list of Metalink files to download"
 msgstr "file di testo contenente lista di file Metalink da scaricare"
 
-#: lib/option_obj.c:168
-msgid "comma-separated list of accepted locations"
-msgstr "lista di locazioni accettate separate da virgole"
+#: lib/option_obj.c:176
+msgid "comma-separated list of accepted countries"
+msgstr "lista di continenti accettati separati da virgole"
 
-#: lib/option_obj.c:170
+#: lib/option_obj.c:178
+msgid "print full list of valid countries"
+msgstr "stampa elenco completo di paesi ammessi"
+
+#: lib/option_obj.c:180
 msgid "comma-separated list of accepted continents"
 msgstr "lista di continenti accettati separati da virgole"
 
-#: lib/option_obj.c:172
+#: lib/option_obj.c:182
+msgid "print full list of valid continents"
+msgstr "stampa elenco completo di continenti ammessi"
+
+#: lib/option_obj.c:184
 msgid "operating system to be considered in Metalink files"
 msgstr "sistema operativo da considerare nei file Metalink"
 
-#: lib/option_obj.c:174
+#: lib/option_obj.c:186
 msgid "language to be considered in Metalink files"
 msgstr "lingua da considerare nei file Metalink"
 
-#: lib/option_obj.c:177
+#: lib/option_obj.c:189
 msgid "filename to resume"
 msgstr "nome del file per il recupero dello scaricamento"
 
-#: lib/option_obj.c:180
+#: lib/option_obj.c:192
 msgid "follow Metalink files from HTML documents"
 msgstr "segui i file Metalink nei documenti HTML"
 
-#: lib/option_obj.c:183
+#: lib/option_obj.c:195
 msgid "report filename"
 msgstr "nome del file di rapporto"
 
-#: lib/option_obj.c:185
+#: lib/option_obj.c:197
 msgid "Reporting options"
 msgstr "Opzioni dei rapporti"
 
-#: lib/option_obj.c:186
+#: lib/option_obj.c:198
 msgid "report CSV filename"
 msgstr "nome del file CSV di rapporto"
 
-#: lib/option_obj.c:188
+#: lib/option_obj.c:200
 msgid "write report to file every n lines"
 msgstr "scrivi il rapporto ogni n linee"
 
-#: lib/option_obj.c:190
+#: lib/option_obj.c:202
 msgid "wrong maximum number of lines for writing report"
 msgstr "errato il massimo numero di linee per scrivere il rapporto"
 
-#: lib/option_obj.c:191
+#: lib/option_obj.c:203
 msgid "don't save whole site tree to disk (enabled by default)"
 msgstr "non salva l'intero albero del sito su disco (abilitato di default)"
 
-#: lib/option_obj.c:193
+#: lib/option_obj.c:205
 msgid "Saving options"
 msgstr "Opzioni di salvataggio"
 
-#: lib/option_obj.c:194
+#: lib/option_obj.c:206
 msgid "save GIF images to mime output directory"
 msgstr "salva le immagini GIF nella directory di output dei mime"
 
-#: lib/option_obj.c:196
+#: lib/option_obj.c:208
 msgid "save PNG images to mime output directory"
 msgstr "salva le immagini PNG nella directory di output dei mime"
 
-#: lib/option_obj.c:198
+#: lib/option_obj.c:210
 msgid "save JPEG images to mime output directory"
 msgstr "salva le immagini JPEG nella directory di output dei mime"
 
-#: lib/option_obj.c:200
+#: lib/option_obj.c:212
 msgid "save URLs with specific mime-type to mime output directory"
 msgstr ""
 "salva le URL con uno specifico mime-type nella directory di output dei mime"
 
-#: lib/option_obj.c:202
+#: lib/option_obj.c:214
 msgid "mime output directory"
 msgstr "directory di output dei mime"
 
-#: lib/option_obj.c:204
+#: lib/option_obj.c:216
 msgid "file output directory"
 msgstr "directory di output dei file"
 
-#: lib/option_obj.c:206
+#: lib/option_obj.c:218
 msgid "temporary directory"
 msgstr "directory temporanea"
 
-#: lib/option_obj.c:208
+#: lib/option_obj.c:220
 msgid "minimum image width"
 msgstr "larghezza minima delle immagini"
 
-#: lib/option_obj.c:210
+#: lib/option_obj.c:222
 msgid "wrong minimum image width"
 msgstr "larghezza minima delle immagini errata"
 
-#: lib/option_obj.c:211
+#: lib/option_obj.c:223
 msgid ""
 "Image options (active only with --save-gif-image, --save-png-image or --save-"
 "jpeg-image)"
@@ -563,60 +613,60 @@ msgstr ""
 "Opzioni delle immagini (attive solo con --save-gif-image, --save-png-image "
 "or --save-jpeg-image)"
 
-#: lib/option_obj.c:212
+#: lib/option_obj.c:224
 msgid "maximum image width"
 msgstr "larghezza massima delle immagini"
 
-#: lib/option_obj.c:214
+#: lib/option_obj.c:226
 msgid "wrong maximum image width"
 msgstr "larghezza massima delle immagini errata"
 
-#: lib/option_obj.c:215
+#: lib/option_obj.c:227
 msgid "minimum image height"
 msgstr "altezza minima delle immagini"
 
-#: lib/option_obj.c:217
+#: lib/option_obj.c:229
 msgid "wrong minimum image height"
 msgstr "altezza minima delle immagini errata"
 
-#: lib/option_obj.c:218
+#: lib/option_obj.c:230
 msgid "maximum image height"
 msgstr "altezza massima delle immagini"
 
-#: lib/option_obj.c:220
+#: lib/option_obj.c:232
 msgid "wrong maximum image height"
 msgstr "altezza massima delle immagini errata"
 
-#: lib/option_obj.c:306
+#: lib/option_obj.c:318
 #, c-format
 msgid "Add domain to list: %s\n"
 msgstr "Aggiunto dominio alla lista: %s\n"
 
-#: lib/option_obj.c:382
+#: lib/option_obj.c:394
 #, c-format
 msgid "ERROR: Metalink location length is wrong: %s\n"
 msgstr "ERRORE: la lunghezza della locazione del Metalink è errata: %s\n"
 
-#: lib/option_obj.c:391
+#: lib/option_obj.c:403
 #, c-format
 msgid "Add Metalink location to list: %s\n"
 msgstr "Aggiunta della locazione del Metalink alla lista: %s\n"
 
-#: lib/option_obj.c:537
+#: lib/option_obj.c:549
 msgid "WARNING: removing temporary directory\n"
 msgstr "ATTENZIONE: rimozione directory temporanea\n"
 
-#: lib/option_obj.c:557
+#: lib/option_obj.c:569
 #, c-format
 msgid "long option inserted %d, %s\n"
 msgstr "opzione lunga inserita %d, %s\n"
 
-#: lib/option_obj.c:584
+#: lib/option_obj.c:596
 #, c-format
 msgid "short option string %s\n"
 msgstr "stringa delle opzioni corte %s\n"
 
-#: lib/option_obj.c:593
+#: lib/option_obj.c:614
 #, c-format
 msgid ""
 "Mulk %s, a non-interactive multi-connection network downloader with image "
@@ -625,7 +675,7 @@ msgstr ""
 "Mulk %s, programma non interattivo per scaricare file dalla rete con filtro "
 "sulle immagini e supporto per Metalink.\n"
 
-#: lib/option_obj.c:596
+#: lib/option_obj.c:617
 #, c-format
 msgid ""
 "Mulk %s, a non-interactive multi-connection network downloader with image "
@@ -634,17 +684,17 @@ msgstr ""
 "Mulk %s, programma non interattivo per scaricare file dalla rete con filtro "
 "sulle immagini.\n"
 
-#: lib/option_obj.c:599
+#: lib/option_obj.c:620
 #, c-format
 msgid "Usage: Mulk [OPTION]... [URL]...\n"
 msgstr "Uso: Mulk [OPZIONE]... [URL]...\n"
 
-#: lib/option_obj.c:618
+#: lib/option_obj.c:639
 #, c-format
 msgid "Mulk version %s\n"
 msgstr "Mulk versione %s\n"
 
-#: lib/option_obj.c:619
+#: lib/option_obj.c:640
 #, c-format
 msgid ""
 "\n"
@@ -653,27 +703,27 @@ msgstr ""
 "\n"
 "Mulk  Copyright (C) 2008, 2009, 2010, 2011, 2012  Emanuele Bovisio\n"
 
-#: lib/option_obj.c:620
+#: lib/option_obj.c:641
 #, c-format
 msgid "This program comes with ABSOLUTELY NO WARRANTY.\n"
 msgstr "This program comes with ABSOLUTELY NO WARRANTY.\n"
 
-#: lib/option_obj.c:621
+#: lib/option_obj.c:642
 #, c-format
 msgid "This is free software, and you are welcome to redistribute it\n"
 msgstr "This is free software, and you are welcome to redistribute it\n"
 
-#: lib/option_obj.c:622
+#: lib/option_obj.c:643
 #, c-format
 msgid "under certain conditions.\n"
 msgstr "under certain conditions.\n"
 
-#: lib/option_obj.c:623
+#: lib/option_obj.c:644
 #, c-format
 msgid "See the GNU General Public License version 3 or later\n"
 msgstr "See the GNU General Public License version 3 or later\n"
 
-#: lib/option_obj.c:624
+#: lib/option_obj.c:645
 #, c-format
 msgid ""
 "for more details.\n"
@@ -682,7 +732,7 @@ msgstr ""
 "for more details.\n"
 "\n"
 
-#: lib/option_obj.c:637 lib/option_obj.c:657 lib/option_obj.c:695
+#: lib/option_obj.c:658 lib/option_obj.c:678 lib/option_obj.c:716
 #, c-format
 msgid ""
 "\n"
@@ -693,12 +743,12 @@ msgstr ""
 "ERRORE: opzione non riconosciuta\n"
 "\n"
 
-#: lib/option_obj.c:701
+#: lib/option_obj.c:722
 #, c-format
 msgid "option recognised %d, %s=%s\n"
 msgstr "opzione riconosciuta %d, %s=%s\n"
 
-#: lib/option_obj.c:709 lib/option_obj.c:721
+#: lib/option_obj.c:730 lib/option_obj.c:742
 #, c-format
 msgid ""
 "\n"
@@ -709,7 +759,7 @@ msgstr ""
 "ERRORE: questa opzione (%s) deve essere seguita da un valore\n"
 "\n"
 
-#: lib/option_obj.c:714
+#: lib/option_obj.c:735
 #, c-format
 msgid ""
 "\n"
@@ -720,7 +770,7 @@ msgstr ""
 "ERRORE: %s\n"
 "\n"
 
-#: lib/option_obj.c:734
+#: lib/option_obj.c:756
 #, c-format
 msgid ""
 "\n"
@@ -731,12 +781,23 @@ msgstr ""
 "ERRORE: tipo dell'opzione non valido, %d\n"
 "\n"
 
-#: lib/option_obj.c:775
+#: lib/option_obj.c:798
 #, c-format
 msgid "Add url to download coming from command line: %s\n"
 msgstr "Aggiunta della url da scaricare presa dalla linea di comando: %s\n"
 
-#: lib/option_obj.c:781
+#: lib/option_obj.c:800
+#, c-format
+msgid ""
+"\n"
+"ERROR: wrong url: %s\n"
+"\n"
+msgstr ""
+"\n"
+"ERRORE: url errata: %s\n"
+"\n"
+
+#: lib/option_obj.c:806
 #, c-format
 msgid ""
 "\n"
@@ -747,7 +808,7 @@ msgstr ""
 "ERRORE: url non presente\n"
 "\n"
 
-#: lib/option_obj.c:787
+#: lib/option_obj.c:812
 #, c-format
 msgid "Try `mulk --help' for more information.\n"
 msgstr "Prova `mulk --help' per avere maggiori informazioni.\n"
@@ -757,15 +818,18 @@ msgstr "Prova `mulk --help' per avere maggiori informazioni.\n"
 msgid "Image PNG %s: %s, width = %d, height = %d\n"
 msgstr "Immagine PNG %s: %s, larghezza = %d, altezza = %d\n"
 
-#: lib/string_obj.c:208
+#: lib/string_obj.c:199
 #, c-format
 msgid "ERROR: printf format\n"
 msgstr "ERRORE: formato printf\n"
 
-#: lib/string_obj.c:213
+#: lib/string_obj.c:204
 #, c-format
 msgid "ERROR: vnsprintf failed\n"
 msgstr "ERRORE: vnsprintf fallita\n"
+
+#~ msgid "comma-separated list of accepted locations"
+#~ msgstr "lista di locazioni accettate separate da virgole"
 
 #~ msgid "Saving image: %s\n"
 #~ msgstr "Salvataggio dell'immagine: %s\n"

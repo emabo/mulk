@@ -139,6 +139,12 @@ option_t options[] = {
 		&option_values.password,                  OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"proxy",                    0, gettext_noop("<host[:port]> use HTTP proxy on given host and port"),
 		&option_values.proxy,                     OPTION_STRING, 0, 0, NULL, NULL, NULL},
+	{"cookie",                 'b', gettext_noop("cookie string for HTTP session"),
+		&option_values.cookie,                    OPTION_STRING, 0, 0, NULL, NULL, NULL},
+	{"load-cookies",             0, gettext_noop("load cookies from file for HTTP session"),
+		&option_values.load_cookies,              OPTION_STRING, 0, 0, NULL, NULL, NULL},
+	{"save-cookies",             0, gettext_noop("save cookies to file after HTTP session"),
+		&option_values.save_cookies,              OPTION_STRING, 0, 0, NULL, NULL, NULL},
 	{"exec-filter",              0, gettext_noop("execute an external program to filter or modify URLs to download"),
 		&option_values.exec_filter,               OPTION_STRING, 0, 0, NULL, NULL, NULL},
 #ifdef ENABLE_RECURSION

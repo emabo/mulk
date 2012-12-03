@@ -51,6 +51,12 @@
 #include <curl/multi.h>
 #include <uriparser/Uri.h>
 #include <mulk/mulk.h>
+
+/* define DEBUG compilation flags */
+#if (defined(DEBUG) || defined(_DEBUG)) && !defined(NDEBUG)
+#define MULKDEBUG 1
+#endif
+
 #include "m_malloc.h"
 #include "uri_parser.h"
 #include "option_obj.h"
@@ -65,11 +71,6 @@
 #define FTP_PROTOCOL "ftp"
 /* scheme separator */
 #define SCHEME_SEPAR_STR "://"
-
-/* define DEBUG compilation flags */
-#if (defined(DEBUG) || defined(_DEBUG)) && !defined(NDEBUG)
-#define MULKDEBUG 1
-#endif
 
 /* log levels */
 #define MERR 0
