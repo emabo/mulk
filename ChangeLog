@@ -2,6 +2,10 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0)
 
 
+2012/06/15 Emanuele <pocoyo@users.sourceforge.net>
+	* new options to manage HTTP cookies (load-cookies, save-cookies and cookie)
+	* small fix to enable correctly memory alloc/free debug 
+
 2012/04/30 Emanuele <pocoyo@users.sourceforge.net>
 	* a couple of functions have been converted to macros, i.e. is_printf and string_free
 	* urls without protocol are supposed to be HTTP
