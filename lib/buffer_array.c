@@ -206,7 +206,7 @@ int open_buffer(CURL *id, url_list_t *url, UriUriA *uri)
 	return i;
 }
 
-static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_url, long err_code, long resp_code)
+static mulk_type_return_t filter_buffer(int i, int valid_res, long err_code, long resp_code)
 {
 	char *newfilename = NULL;
 	char *newmimefilename = NULL;
@@ -238,7 +238,7 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 
 #ifdef ENABLE_RECURSION
 	if (is_html_file(buffer->url->mimetype)) 
-		parse_urls(buffer->filename, base_url, buffer->url->level);
+		parse_urls(buffer->filename, buffer->url);
 #endif
 
 #ifdef ENABLE_METALINK
@@ -256,34 +256,14 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 		else
 #endif /* ENABLE_CHECKSUM */
 		{
-			string_printf(&newfilename, "%s%s", option_values.file_output_directory,
-				metalink->file->name);
+			newfilename = string_new(buffer->url->filename);
 			buffer->url->err_code = METALINK_RES_OK;
 		}
 	}
 	else 
 #endif /* ENABLE_METALINK */
-	if (!option_values.disable_save_tree) {
-		UriUriA *uri = create_absolute_uri(NULL, base_url);
-		char *furi_str = uri2filename(uri);
-
-		if (furi_str) {
-			string_printf(&newfilename, "%s%s", option_values.file_output_directory, furi_str);
-
-			/* add index.<mime-type> if the filename represents a directory name */
-			if (newfilename[strlen(newfilename)-1] == *DIR_SEPAR_STR) {
-				string_cat(&newfilename, "index.");
-				if (extract_mime_type(buffer->url->mimetype, NULL, &subtype) == MULK_RET_OK) {
-					string_cat(&newfilename, subtype);
-					string_free(subtype);
-				} else
-					string_cat(&newfilename, "bin");
-			}
-		}
-
-		string_free(furi_str);
-		uri_free(uri);
-	}
+	if (!option_values.disable_save_tree)
+		newfilename = string_new(buffer->url->filename);
 
 	if ((is_gif_image(buffer->url->mimetype) && is_valid_gif_image(buffer->filename))
 		|| (is_png_image(buffer->url->mimetype) && is_valid_png_image(buffer->filename)) 
@@ -298,7 +278,6 @@ static mulk_type_return_t filter_buffer(int i, int valid_res, const char *base_u
 	}
 
 	/* save file */
-	buffer->url->filename = string_new(newfilename);
 	buffer->url->mimefilename = string_new(newmimefilename);
 
 	if (newfilename && newmimefilename) {
@@ -376,7 +355,7 @@ static int is_valid_response(UriUriA *uri, CURLcode err_code, long resp_code)
 	return 1;
 }
 
-mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_code, long resp_code, int *file_completed)
+mulk_type_return_t close_buffer(CURL *id, CURLcode err_code, long resp_code, int *file_completed)
 {
 #ifdef ENABLE_METALINK
 	double length_double;
@@ -481,7 +460,7 @@ mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_cod
 			fclose(buffer->file_pt);
 		buffer->file_pt = NULL;
 
-		if ((ret = filter_buffer(i, valid_res, base_url, err_code, resp_code)) == MULK_RET_OK && file_completed)
+		if ((ret = filter_buffer(i, valid_res, err_code, resp_code)) == MULK_RET_OK && file_completed)
 			*file_completed = 1;
 	}
 	

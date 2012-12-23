@@ -73,7 +73,7 @@ int count_number_of_hostname(UriUriA *uri);
 
 int is_uri_compatible(UriUriA *uri, int maxconns);
 
-mulk_type_return_t close_buffer(CURL *id, const char *base_url, CURLcode err_code, long resp_code, int *file_completed);
+mulk_type_return_t close_buffer(CURL *id, CURLcode err_code, long resp_code, int *file_completed);
 
 void print_buffers(void);
 

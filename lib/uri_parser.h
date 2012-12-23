@@ -42,7 +42,7 @@
 char *uri2string(UriUriA *uri);
 char *uri2filename(UriUriA *uri);
 void uri_free(UriUriA *uri);
-UriUriA *create_absolute_uri(const char *base_url, const char *url);
+UriUriA *create_absolute_uri(const UriUriA *base_uri, const char *url);
 int	filter_uri(UriUriA **uri, int level);
 
 char *get_host(UriUriA *uri);
@@ -55,7 +55,11 @@ int are_hosts_equal(UriUriA *first, UriUriA *second);
 
 int is_host_equal_domain(const char *host, const char *domain);
 int is_host_in_domain(const char *host, const char *domain);
-int is_host_equal_domains(UriUriA *uri, char **domains);
-int is_host_in_domains(UriUriA *uri, char **domains);
+int is_host_equal_domains(const char *host, char **domains);
+int is_host_in_domains(const char *host, char **domains);
+
+UriUriA *filename2absolute_uri(const char *abs_filename);
+char *uri2absolute_filename(UriUriA* abs_uri);
+char *extract_relative_url(const char *src_filename, const char *base_filename);
 
 #endif /* not _URI_PARSER_H_ */

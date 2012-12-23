@@ -2,6 +2,9 @@ ChangeLog about Mulk: open source non-interactive multi-connection network
 downloader with image filtering and Metalink support (version 0.6.0)
 
 
+2012/12/23 Emanuele <pocoyo@users.sourceforge.net>
+	* new option to make links relative when downloading HTML pages in order to use them locally.
+
 2012/06/15 Emanuele <pocoyo@users.sourceforge.net>
 	* new options to manage HTTP cookies (load-cookies, save-cookies and cookie)
 	* small fix to enable correctly memory alloc/free debug 

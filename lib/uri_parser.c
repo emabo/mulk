@@ -60,19 +60,29 @@ char *uri2string(UriUriA *uri)
 
 char *uri2filename(UriUriA *uri)
 {
-	char *uri_str = uri2string(uri);
+	char *furi_str = uri2string(uri);
+	char *newfilename = NULL;
 
-	if (!uri_str)
+	if (!furi_str)
 		return NULL;
 
-	string_replace_with_char(uri_str, "//", *DIR_SEPAR_STR);
-	string_replace_with_char(uri_str, "/", *DIR_SEPAR_STR);
-	
+	string_replace_with_char(furi_str, "//", *DIR_SEPAR_STR);
+	string_replace_with_char(furi_str, "/", *DIR_SEPAR_STR);
+
 #ifdef _WIN32
-	string_replace_with_char(uri_str, ":", '_');
+	string_replace_with_char(furi_str, ":", '_');
 #endif
 
-	return uri_str;
+	if (furi_str) {
+		string_printf(&newfilename, "%s%s", option_values.file_output_directory, furi_str);
+
+		if (newfilename[strlen(newfilename)-1] == *DIR_SEPAR_STR)
+			string_cat(&newfilename, "index.html");
+	}
+
+	string_free(furi_str);
+
+	return newfilename;
 }
 
 static UriUriA *uri_alloc_1(void)
@@ -84,14 +94,14 @@ void uri_free(UriUriA *uri)
 {
 	if (uri) {
 		uriFreeUriMembersA(uri);
-		m_free(uri); 
+		m_free(uri);
 	}
 }
 
-UriUriA *create_absolute_uri(const char *base_url, const char *url)
+UriUriA *create_absolute_uri(const UriUriA *base_uri, const char *url)
 {
 	UriParserStateA state;
-	UriUriA *abs_dest, abs_base, rel_source;
+	UriUriA *abs_dest, rel_source;
 	char *newurl;
 
 	if (!url || !*url)
@@ -100,30 +110,20 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	if ((abs_dest = uri_alloc_1()) == NULL)
 		return NULL;
 
-	if (base_url) {
+	if (base_uri) {
 		state.uri = &rel_source;
 		if (uriParseUriA(&state, url) != URI_SUCCESS) {
-			m_free(abs_dest); 
+			uri_free(abs_dest); 
 			uriFreeUriMembersA(&rel_source);
 			return NULL;
 		}
 
-		state.uri = &abs_base;
-		if (uriParseUriA(&state, base_url) != URI_SUCCESS) {
-			m_free(abs_dest); 
-			uriFreeUriMembersA(&abs_base);
-			uriFreeUriMembersA(&rel_source);
-			return NULL;
-		}
-
-		if (uriAddBaseUriA(abs_dest, &rel_source, &abs_base) != URI_SUCCESS) {
+		if (uriAddBaseUriA(abs_dest, &rel_source, base_uri) != URI_SUCCESS) {
 			uri_free(abs_dest);
-			uriFreeUriMembersA(&abs_base);
 			uriFreeUriMembersA(&rel_source);
 			return NULL;
 		}
 
-		uriFreeUriMembersA(&abs_base);
 		uriFreeUriMembersA(&rel_source);
 	}
 	else {
@@ -140,17 +140,10 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	}
 
 	/* http://www.example.com and http://www.example.com/ have to generate the same object */
-	/* url without protocol are considered HTTP by default */
-	if (!base_url && (((!abs_dest->pathHead || !abs_dest->pathHead->text.first)
-		&& !abs_dest->query.first) || !abs_dest->scheme.first)) {
-		if (!abs_dest->scheme.first) {
-			newurl = string_new(HTTP_PROTOCOL SCHEME_SEPAR_STR);
-			string_cat(&newurl, url);
-		}
-		else {
-			newurl = string_new(url);
-			string_cat(&newurl, "/");
-		}
+	if (!base_uri && (!abs_dest->pathHead || !abs_dest->pathHead->text.first)
+		&& !abs_dest->query.first) {
+		newurl = string_new(url);
+		string_cat(&newurl, "/");
 
 		uriFreeUriMembersA(abs_dest);
 
@@ -170,6 +163,80 @@ UriUriA *create_absolute_uri(const char *base_url, const char *url)
 	}
 
 	return abs_dest;
+}
+
+UriUriA *filename2absolute_uri(const char *abs_filename)
+{
+	UriUriA *abs_uri, *file_uri = NULL;
+	int length = 8 + 3 * strlen(abs_filename);
+	char *abs_str_uri = string_alloc(length);
+
+#ifdef _WIN32
+	if (uriWindowsFilenameToUriStringA(abs_filename, abs_str_uri) != URI_SUCCESS)
+#else
+	if (uriUnixFilenameToUriStringA(abs_filename, abs_str_uri) != URI_SUCCESS)
+#endif
+	{
+		string_free(abs_str_uri);
+		return NULL;
+	}
+
+	file_uri = create_absolute_uri(NULL, "file:///");
+	abs_uri = create_absolute_uri(file_uri, abs_str_uri);
+
+	string_free(abs_str_uri);
+	uri_free(file_uri);
+
+	return abs_uri;
+}
+
+char *uri2absolute_filename(UriUriA* abs_uri)
+{
+	char *abs_filename = uri2string(abs_uri), *dst_filename = NULL;
+	int length = strlen(abs_filename);
+
+	dst_filename = string_alloc(length);
+
+#ifdef _WIN32
+	if (uriUriStringToWindowsFilenameA(abs_filename, dst_filename) != URI_SUCCESS)
+#else
+	if (uriUriStringToUnixFilenameA(abs_filename, dst_filename) != URI_SUCCESS)
+#endif
+		string_free(dst_filename);
+
+	string_free(abs_filename);
+
+	return dst_filename;
+}
+
+char *extract_relative_url(const char *src_filename, const char *base_filename)
+{
+	UriUriA *abs_src_uri, *abs_base_uri, dst;
+	char *dst_filename = NULL;
+
+	if (!src_filename || !base_filename)
+		return NULL;
+
+	abs_src_uri = filename2absolute_uri(src_filename);
+	abs_base_uri = filename2absolute_uri(base_filename);
+
+	if (!abs_src_uri || !abs_base_uri) {
+		uri_free(abs_src_uri);
+		uri_free(abs_base_uri);
+		return NULL;
+	}
+
+	if (uriRemoveBaseUriA(&dst, abs_src_uri, abs_base_uri, URI_FALSE) != URI_SUCCESS)
+		goto exit;
+
+	dst_filename = uri2string(&dst);
+
+exit:
+	uri_free(abs_src_uri);
+	uri_free(abs_base_uri);
+	uriFreeUriMembersA(&dst);
+
+	return dst_filename;
 }
 
 int	filter_uri(UriUriA **uri, int level)
@@ -309,15 +376,11 @@ int is_host_in_domain(const char *host, const char *domain)
 	return !string_casecmp(host + offset, domain);
 }
 
-int is_host_equal_domains(UriUriA *uri, char **domains)
+int is_host_equal_domains(const char *host, char **domains)
 {
 	int i, ret = 0;
-	char *host;
 
-	if (!domains || !uri)
-		return 0;
-
-	if ((host = get_host(uri)) == NULL)
+	if (!domains || !host)
 		return 0;
 
 	for (i = 0; domains[i]; i++)
@@ -326,19 +389,14 @@ int is_host_equal_domains(UriUriA *uri, char **domains)
 			break;
 		}
 
-	string_free(host);
 	return ret;
 }
 
-int is_host_in_domains(UriUriA *uri, char **domains)
+int is_host_in_domains(const char *host, char **domains)
 {
 	int i, ret = 0;
-	char *host;
 
-	if (!domains || !uri)
-		return 0;
-
-	if ((host = get_host(uri)) == NULL)
+	if (!domains || !host)
 		return 0;
 
 	for (i = 0; domains[i]; i++)
@@ -347,6 +405,6 @@ int is_host_in_domains(UriUriA *uri, char **domains)
 			break;
 		}
 
-	string_free(host);
 	return ret;
 }
+

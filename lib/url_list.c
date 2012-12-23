@@ -76,79 +76,103 @@ static url_list_t *create_new_element(void)
 	return elem;
 }
 
-static void push_uri(UriUriA *uri, int level)
+static url_list_t *push_uri(UriUriA *uri, int level)
 {
 	url_list_t *elem;
 
 	if (!uri)
-		return;
+		return NULL;
 
-	if (filter_uri(&uri, level)) {
-		uri_free(uri);
-		return;
-	}
+	if (filter_uri(&uri, level))
+		return NULL;
 
 	elem = create_new_element();
 	elem->level = level;
 	elem->uri = uri;
+	elem->filename = uri2filename(uri);
+
+	return elem;
 }
 
-static void push_unique_uri(UriUriA *uri, int level)
+static url_list_t *push_unique_uri(UriUriA *uri, int level)
 {
 	url_list_t *elem;
 	
 	if (!uri)
-		return;
+		return NULL;
 
 	for (elem = top; elem; elem = elem->next)
 		if (elem->uri && uriEqualsUriA(elem->uri, uri)) {
 			uri_free(uri);
-			return;
+			return elem;
 		}
 
-	push_uri(uri, level);
+	return push_uri(uri, level);
 }
 
 mulk_type_return_t mulk_add_new_url(const char *url)
 {
 	UriUriA *new_uri = NULL;
-	mulk_type_return_t ret = MULK_RET_OK;
+#ifdef ENABLE_RECURSION
+	char *host = NULL;
+#endif
 	
 	if ((new_uri = create_absolute_uri(NULL, url)) == NULL)
-		return MULK_RET_URL_ERR;
+		goto Rejected;
 
 #ifdef ENABLE_RECURSION
-	if ((ret = add_url_to_default_domains(new_uri)) != MULK_RET_OK) {
-		uri_free(new_uri);
-		return ret;
-	}
+	if ((host = get_host(new_uri)) == NULL)
+		goto Rejected; 
 #endif
-	push_unique_uri(new_uri, 1);
 
-	return ret;
+	if (!push_unique_uri(new_uri, 1))
+		goto Rejected;
+
+#ifdef ENABLE_RECURSION
+	add_url_to_default_domains(host);
+
+	string_free(host);
+#endif
+
+	return MULK_RET_OK;
+
+Rejected:
+#ifdef ENABLE_RECURSION
+	string_free(host);
+#endif
+	uri_free(new_uri);
+
+	return MULK_RET_URL_ERR;
 }
 
 #ifdef ENABLE_RECURSION
-void add_new_url_and_check(const char *base_url, const char *url, int level)
+int add_new_url_and_check(const url_list_t *base_elem, const char *url, char **relative_url)
 {
 	UriUriA *uri = NULL;
+	url_list_t *elem;
 
-	if ((uri = create_absolute_uri(base_url, url)) == NULL)
-		return;
+	if ((uri = create_absolute_uri(base_elem->uri, url)) == NULL)
+		goto Rejected; 
 
 	/* check protocol */
-	if (!is_uri_http(uri) && (!option_values.follow_ftp || !is_uri_ftp(uri))) {
-		uri_free(uri);
-		return;
-	}
+	if (!is_uri_http(uri) && (!option_values.follow_ftp || !is_uri_ftp(uri)))
+		goto Rejected; 
 
 	/* check domains */
-	if (!is_host_compatible_with_domains(uri)) {
-		uri_free(uri);
-		return;
-	}
+	if (!is_host_compatible_with_domains(uri))
+		goto Rejected; 
 
-	push_unique_uri(uri, level);
+	if (!(elem = push_unique_uri(uri, base_elem->level + 1)))
+		goto Rejected; 
+
+	if (relative_url)
+		*relative_url = extract_relative_url(elem->filename, base_elem->filename);
+
+	return 0;
+
+Rejected:
+	uri_free(uri);
+	return -1;
 }
 #endif /* ENABLE_RECURSION */
 
@@ -358,6 +382,7 @@ void push_metalink_uri(metalink_file_list_t *metalink_uri, int level)
 	elem = create_new_element();
 	elem->level = level;
 	elem->metalink_uri = metalink_uri;
+	string_printf(&elem->filename, "%s%s", option_values.file_output_directory, metalink_uri->file->name);
 }
 
 void set_url_file_length(url_list_t *url, off_t size)

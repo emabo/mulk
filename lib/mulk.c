@@ -163,7 +163,7 @@ mulk_type_return_t mulk_run(void)
 			}
 			if (e) {
 				if (curl_msg->msg == CURLMSG_DONE) {
-					char *url = NULL, *mime_type = NULL, *orig_url = NULL;
+					char *mime_type = NULL, *orig_url = NULL;
 					long resp_code = -1;
 					double download_size = 0;
 					int is_http, is_file_completed = 0;
@@ -172,8 +172,6 @@ mulk_type_return_t mulk_run(void)
 
 					if (curl_easy_getinfo(e, CURLINFO_PRIVATE, &orig_url) != CURLE_OK)
 						orig_url = NULL;
-					if (curl_easy_getinfo(e, CURLINFO_EFFECTIVE_URL, &url) != CURLE_OK)
-						url = NULL;
 					if (curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &resp_code) != CURLE_OK)
 						resp_code = 0;
 					if (curl_easy_getinfo(e, CURLINFO_SIZE_DOWNLOAD, &download_size) != CURLE_OK)
@@ -190,13 +188,13 @@ mulk_type_return_t mulk_run(void)
 					}
 					else
 						mime_type = NULL;
-					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), url ? url : "", (intmax_t) download_size));
+					MULK_NOTE((_("Url:\"%s\" Size:%" PRIdMAX "\n"), orig_url ? orig_url : "", (intmax_t) download_size));
 
 					if (write_download_info)
 						write_download_info(info_context, err_code, err_str, is_http, resp_code, mime_type,
-							url, (long long int) download_size);
+							orig_url, (long long int) download_size);
 
-					if (close_buffer(e, url, err_code, resp_code, &is_file_completed) == MULK_RET_OK)
+					if (close_buffer(e, err_code, resp_code, &is_file_completed) == MULK_RET_OK)
 						file_tot += is_file_completed;
 
 					curl_multi_remove_handle(curl_obj, e);
@@ -206,7 +204,7 @@ mulk_type_return_t mulk_run(void)
 				else {
 					int is_file_completed;
 
-					if (close_buffer(e, NULL, CURLE_FAILED_INIT, 0, &is_file_completed) == MULK_RET_OK)
+					if (close_buffer(e, CURLE_FAILED_INIT, 0, &is_file_completed) == MULK_RET_OK)
 						file_tot += is_file_completed;
 
 					MULK_ERROR((_("ERROR: message=%d\n"), curl_msg->msg));

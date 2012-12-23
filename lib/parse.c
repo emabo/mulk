@@ -35,8 +35,10 @@
 #ifdef ENABLE_RECURSION
 #if defined(HAVE_TIDY_H) || defined(_WIN32)
 #include <tidy.h>
+#include <buffio.h>
 #elif defined(HAVE_TIDY_TIDY_H)
 #include <tidy/tidy.h>
+#include <tidy/buffio.h>
 #else
 #error "Don't know where to look for libtidy headers"
 #endif
@@ -193,52 +195,181 @@ static Bool TIDY_CALL filter_cb(TidyDoc tdoc, TidyReportLevel lvl, uint line, ui
 	return no;
 }
 
-static void parse_html(TidyNode tnod, int level, const char *base_url)
+static void parse_html(TidyDoc tdoc, TidyNode tnod, const url_list_t *elem, int indent, FILE *outfile)
 {
 	TidyNode child;
 	TidyAttr attr;
-	char *url;
-	int get_html_link = (!option_values.depth || level < option_values.depth);
-	int get_int_html_link = (!option_values.depth || level < option_values.depth+1);
-	int get_ext_depends = ((!option_values.depth || level < option_values.depth+1) && !option_values.no_html_dependencies);
+	TidyAttrId attr_id = TidyAttr_UNKNOWN;
+	TidyNodeType node_type;
+	TidyTagId node_id;
+	ctmbstr name;
+	char *url, *relative_url = NULL;
+	int found = 0;
+	int get_html_link = (!option_values.depth || elem->level < option_values.depth);
+	int get_int_html_link = (!option_values.depth || elem->level < option_values.depth+1);
+	int get_ext_depends = ((!option_values.depth || elem->level < option_values.depth+1)
+		&& !option_values.no_html_dependencies);
 
 	for (child = tidyGetChild(tnod); child; child = tidyGetNext(child)) {
-		url = NULL;
+		node_type = tidyNodeGetType(child);
 
-		if (get_html_link && (tidyNodeIsA(child) || tidyNodeIsAREA(child) || tidyNodeIsMAP(child))) {
-			attr = tidyAttrGetHREF(child);
-			url = (char *) tidyAttrValue(attr);
-		}
-		else if (get_int_html_link && (tidyNodeIsFRAME(child) || tidyNodeIsIFRAME(child))) {
-			attr = tidyAttrGetSRC(child);
-			url = (char *) tidyAttrValue(attr);
-		}
-		else if (get_ext_depends) {
-			if (tidyNodeIsLINK(child)) {
-				attr = tidyAttrGetHREF(child);
-				url = (char *) tidyAttrValue(attr);
-			}
-			else if (tidyNodeIsIMG(child) || tidyNodeIsSCRIPT(child)) {
-				attr = tidyAttrGetSRC(child);
-				url = (char *) tidyAttrValue(attr);
-			}
-		}
+		switch (node_type) {
+			case TidyNode_Start:
+			case TidyNode_StartEnd:
+				node_id = tidyNodeGetId(child);
+				if (get_html_link && (node_id == TidyTag_A || node_id == TidyTag_AREA || node_id == TidyTag_MAP)) {
+					found = 1;
+					attr_id = TidyAttr_HREF;
+				}
+				else if (get_int_html_link && (node_id == TidyTag_FRAME || node_id == TidyTag_IFRAME)) {
+					found = 1;
+					attr_id = TidyAttr_SRC; 
+				}
+				else if (get_ext_depends) {
+					if (node_id == TidyTag_LINK) {
+						found = 1;
+						attr_id = TidyAttr_HREF;
+					}
+					else if (node_id == TidyTag_IMG || node_id == TidyTag_SCRIPT) {
+						found = 1;
+						attr_id = TidyAttr_SRC; 
+					}
+					else {
+						found = 0;
+						attr_id = TidyAttr_UNKNOWN;
+					}
+				}
+				else {
+					found = 0;
+					attr_id = TidyAttr_UNKNOWN;
+				}
 
-		if (url && *url)
-			add_new_url_and_check(base_url, url, level + 1);
+				if (found && (attr = tidyAttrGetById(child, attr_id)) != NULL) {
+					url = (char *) tidyAttrValue(attr);
 
-		parse_html(child, level, base_url);
+					string_free(relative_url);
+					if (url && *url)
+						add_new_url_and_check(elem, url, outfile ? &relative_url : NULL);
+				}
+
+				if (outfile && (name = tidyNodeGetName(child)) != NULL) {
+					fprintf(outfile, "%*.*s%s", indent, indent, "<", name);
+					for (attr = tidyAttrFirst(child); attr; attr = tidyAttrNext(attr)) {
+						fprintf(outfile, " %s", tidyAttrName(attr));
+						if (relative_url && (tidyAttrGetId(attr) == attr_id))
+							fprintf(outfile, "=\"%s\"", relative_url);
+						else if (tidyAttrValue(attr))
+							fprintf(outfile, "=\"%s\"", tidyAttrValue(attr) ? tidyAttrValue(attr) : "");
+						else
+							fprintf(outfile, "=\"\"");
+					}
+					string_free(relative_url);
+
+					if (node_type == TidyNode_StartEnd)
+						fprintf(outfile, "/>\n");
+					else {
+						fprintf(outfile, ">\n");
+						parse_html(tdoc, child, elem, indent + 1, outfile);
+						fprintf(outfile, "%*.*s%s>\n", indent + 1, indent + 1, "</", name);
+					}
+				}
+				else {
+					string_free(relative_url);
+					parse_html(tdoc, child, elem, indent + 1, outfile);
+				}
+				break;
+			case TidyNode_End:
+				if (outfile) {
+					if ((name = tidyNodeGetName(child)) != NULL)
+						fprintf(outfile, "%*.*s/%s>\n", indent, indent, "<", name);
+				}
+				break;
+			case TidyNode_Text:
+				if (outfile) {
+					TidyBuffer buf;
+					TidyTagId parent_node_id = tidyNodeGetId(tnod);
+
+					tidyBufInit(&buf);
+					if (parent_node_id == TidyTag_SCRIPT || parent_node_id == TidyTag_STYLE)
+						tidyNodeGetValue(tdoc, child, &buf);
+					else
+						tidyNodeGetText(tdoc, child, &buf);
+					if (buf.bp)
+						fprintf(outfile, "%s", (char *)buf.bp);
+					tidyBufFree(&buf);
+				}
+				break;
+			case TidyNode_Comment:
+				if (outfile) {
+					TidyBuffer buf;
+
+					tidyBufInit(&buf);
+					tidyNodeGetValue(tdoc, child, &buf);
+					if (buf.bp)
+						fprintf(outfile, "<!--%s-->\n", (char *)buf.bp);
+					tidyBufFree(&buf);
+				}
+				break;
+			case TidyNode_CDATA:
+				if (outfile) {
+					TidyBuffer buf;
+
+					tidyBufInit(&buf);
+					tidyNodeGetValue(tdoc, child, &buf);
+					if (buf.bp)
+						fprintf(outfile, "<![CDATA[%s]]>\n", (char *)buf.bp);
+					tidyBufFree(&buf);
+				}
+				break;
+			case TidyNode_DocType:
+				if (outfile) {
+					int pub = 0;
+
+					fprintf(outfile, "<!DOCTYPE %s", tidyNodeGetName(child));
+					for (attr = tidyAttrFirst(child); attr; attr = tidyAttrNext(attr)) {
+						if (!pub) {
+							fprintf(outfile, " %s", tidyAttrName(attr));
+							if (!string_casecmp(tidyAttrName(attr), "PUBLIC"))
+								pub = 1;
+						}
+						if (tidyAttrValue(attr))
+							fprintf(outfile, " \"%s\"", tidyAttrValue(attr));
+					}
+					fprintf(outfile, ">\n");
+				}
+				break;
+			default:
+				if (outfile) {
+					TidyBuffer buf;
+
+					tidyBufInit(&buf);
+					tidyNodeGetValue(tdoc, child, &buf);
+					if (buf.bp)
+						fprintf(outfile, "%s", (char *)buf.bp);
+					tidyBufFree(&buf);
+				}
+				break;
+		}
 	}
 }
 
-void parse_urls(const char *filename, const char *url, int level)
+void parse_urls(const char *filename, const url_list_t *elem)
 {
 	TidyDoc tdoc;
 	int err;
+	FILE *outfile = NULL;
 
 	tdoc = tidyCreate();
 	tidyOptSetBool(tdoc, TidyForceOutput, yes);
+	tidyOptSetBool(tdoc, TidyMark, no);
+	tidyOptSetBool(tdoc, TidyHideEndTags, yes);
+	tidyOptSetBool(tdoc, TidyDropEmptyParas, no);
+	tidyOptSetBool(tdoc, TidyJoinStyles, no);
+	tidyOptSetBool(tdoc, TidyPreserveEntities, yes);
+	tidyOptSetInt(tdoc, TidyMergeDivs, no);
+	tidyOptSetInt(tdoc, TidyMergeSpans, no);
 	tidyOptSetInt(tdoc, TidyWrapLen, 4096);
+	tidyOptSetValue(tdoc, TidyCharEncoding, "utf8");
 	tidySetReportFilter(tdoc, filter_cb);
 
 	err = tidyParseFile(tdoc, filename);
@@ -246,8 +377,15 @@ void parse_urls(const char *filename, const char *url, int level)
 	if (err >= 0) 
 		err = tidyCleanAndRepair(tdoc);
 
-	if (err >= 0)
-		parse_html(tidyGetRoot(tdoc), level, url);
+	if (err >= 0) {
+		outfile = option_values.save_relative_links && !option_values.disable_save_tree
+			? fopen(filename, "w") : NULL;
+
+		parse_html(tdoc, tidyGetRoot(tdoc), elem, 1, outfile);
+
+		if (outfile)
+			fclose(outfile);
+	}
 
 	tidyRelease(tdoc);
 }

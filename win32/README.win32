@@ -15,6 +15,7 @@ Features:
 -recursive download of HTML pages until a specified depth.
 -options to go to foreign hosts, accept and reject specific domains.
 -multiple URLs in command line.
+-option to make links relative when downloading HTML pages in order to use them locally.
 -options to follow FTP links in HTML documents.
 -options to specify username and password for the connections.
 -option to specify a proxy for the connections.

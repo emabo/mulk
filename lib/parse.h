@@ -34,11 +34,12 @@
 #define _PARSE_H_
 
 #include "defines.h"
+#include "url_list.h"
 
 mulk_type_return_t init_url(CURLM *cm);
 
 #ifdef ENABLE_RECURSION
-void parse_urls(const char *filename, const char *url, int level);
+void parse_urls(const char *filename, const url_list_t *elem);
 #endif
 
 #endif /* not _PARSE_H_ */

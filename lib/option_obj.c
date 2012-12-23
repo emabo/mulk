@@ -153,6 +153,8 @@ option_t options[] = {
 		gettext_noop("Recursive download options"), NULL},
 	{"no-html-dependencies",     0, gettext_noop("don't get all images, links, etc. needed to display HTML page"),
 		&option_values.no_html_dependencies,      OPTION_BOOL, 0, 0, NULL, NULL, NULL},
+	{"save-relative-links",    'k', gettext_noop("make links relative in downloaded HTML pages"),
+		&option_values.save_relative_links,       OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"span-hosts",             'H', gettext_noop("go to foreign hosts"),
 		&option_values.span_hosts,                OPTION_BOOL, 0, 0, NULL, NULL, NULL},
 	{"domains",                'D', gettext_noop("comma-separated list of accepted domains"),
@@ -252,21 +254,17 @@ static int count_domains(char **domains)
 	return i;
 }
 
-mulk_type_return_t add_url_to_default_domains(UriUriA *uri)
+void add_url_to_default_domains(const char *host)
 {
 	int i, dom_num;
 	char **new_default_domains = NULL;
-	char *host;
 
-	if (!uri)
-		return MULK_RET_URL_ERR;
+	if (!host)
+		return;
 
 	/* yet present */
-	if (is_host_equal_domains(uri, default_domains))
-		return MULK_RET_OK;
-
-	if ((host = get_host(uri)) == NULL)
-		return MULK_RET_URL_ERR;
+	if (is_host_equal_domains(host, default_domains))
+		return;
 
 	dom_num = count_domains(default_domains);
 
@@ -279,11 +277,9 @@ mulk_type_return_t add_url_to_default_domains(UriUriA *uri)
 		m_free(default_domains);
 	}
 
-	new_default_domains[dom_num] = host;
+	new_default_domains[dom_num] = string_new(host);
 
 	default_domains = new_default_domains;
-
-	return MULK_RET_OK;
 }
 
 static mulk_type_return_t parse_domains(const char *dom_option, char ***domains)
@@ -325,17 +321,32 @@ static mulk_type_return_t parse_domains(const char *dom_option, char ***domains)
 
 int is_host_compatible_with_domains(UriUriA *uri)
 {
+	char *host;
+	int res;
+
 	if (!uri)
 		return 0;
 
-	if (is_host_equal_domains(uri, default_domains))
-		return 1;
+	if ((host = get_host(uri)) == NULL)
+		return 0; 
 
-	if (!option_values.span_hosts)
-		return 0;
+	if (is_host_equal_domains(host, default_domains)) {
+		res = 1;
+		goto Exit;
+	}
 
-	return (is_domain_empty(accepted_domains) || is_host_in_domains(uri, accepted_domains))
-		&& !is_host_in_domains(uri, rejected_domains);
+	if (!option_values.span_hosts) {
+		res = 0;
+		goto Exit;
+	}
+
+	res = ((is_domain_empty(accepted_domains) || is_host_in_domains(host, accepted_domains))
+		&& !is_host_in_domains(host, rejected_domains));
+
+Exit:
+	string_free(host);
+
+	return res;
 }
 
 static mulk_type_return_t set_option_domains(void)

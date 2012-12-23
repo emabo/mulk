@@ -54,6 +54,7 @@ typedef struct option_value_t {
 #ifdef ENABLE_RECURSION
 	int depth;
 	int no_html_dependencies;
+	int save_relative_links;
 	int span_hosts;
 	char *domains;
 	char *exclude_domains;
@@ -98,7 +99,7 @@ extern int resume_file_used;
 #endif
 
 #ifdef ENABLE_RECURSION
-mulk_type_return_t add_url_to_default_domains(UriUriA *uri);
+void add_url_to_default_domains(const char *host);
 int is_host_compatible_with_domains(UriUriA *uri);
 #endif
 int is_location_in_list(const char *loc);

@@ -4,6 +4,7 @@ NEWS about Mulk: open source non-interactive multi-connection network downloader
 
 Next Version 
  *New features
+-new option to make links relative when downloading HTML pages in order to use them locally
 -new options to manage HTTP cookies (load-cookies, save-cookies and cookie)
 -new options to print full lists of valid countries and continents for Metalink files
 -new option to execute an external program to filter URLs to download

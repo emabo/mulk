@@ -70,7 +70,7 @@ int is_url_list_empty(void);
 UriUriA *create_absolute_url(const char *base_url, const char *url);
 
 #ifdef ENABLE_RECURSION
-void add_new_url_and_check(const char *base_url, const char *url, int level);
+int add_new_url_and_check(const url_list_t *base_elem, const char *url, char **relative_url);
 #endif /* ENABLE_RECURSION */
 
 #ifdef ENABLE_METALINK
