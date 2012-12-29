@@ -13,6 +13,7 @@ Features:
 -multiple URLs in command line.
 -Metalink retrieving with segmented download.
 -Metalink support for FTP, HTTP(S).
+-Metalink 3.0 and 4.0 (RFC 5854) supported.
 -multiple Metalink URLs in command line.
 -checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
 -chunk checksum verification for Metalink downloads (support for md2, md4, md5, sha1, sha224, sha256, sha384, sha512).
