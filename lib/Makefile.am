@@ -31,7 +31,7 @@ libmulk_la_CFLAGS=$(CFLAG_VISIBILITY) -DBUILDING_MULK_LIB
 if ENABLE_NLS
 libmulk_la_CFLAGS+=-DLOCALEDIR=\"$(localedir)\"
 endif
-libmulk_la_LDFLAGS=-no-undefined -version-info 0:0:0
+libmulk_la_LDFLAGS=-no-undefined -version-info $(SHARED_VERSION_INFO)
 
 noinst_HEADERS= \
   m_malloc.h gettext.h buffer_array.h defines.h file_obj.h gif_obj.h \

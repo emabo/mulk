@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib libmulk.lib"
-				Version="0.6.0"
+				Version="0.7.0"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\LIB-Debug"
 				GenerateDebugInformation="true"
@@ -141,7 +141,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib libmulk.lib"
-				Version="0.6.0"
+				Version="0.7.0"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\LIB-Release"
 				GenerateDebugInformation="false"
@@ -217,7 +217,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libmulk.lib"
-				Version="0.6.0"
+				Version="0.7.0"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\DLL-Debug"
 				GenerateDebugInformation="true"
@@ -296,7 +296,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libmulk.lib"
-				Version="0.6.0"
+				Version="0.7.0"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\DLL-Release"
 				SubSystem="1"

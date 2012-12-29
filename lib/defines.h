@@ -88,7 +88,7 @@ typedef UINT32 intmax_t;
 
 #define PRIdMAX "d"
 
-#define VERSION "0.6.0"
+#define VERSION "0.7.0"
 #define DIR_SEPAR_STR "\\"
 
 #define mulk_fseek fseek

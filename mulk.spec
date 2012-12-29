@@ -1,6 +1,6 @@
 %define name mulk
-%define ver 0.6.0
-%define ver2 0.0.0
+%define ver 0.7.0
+%define ver2 0.1.0
 %define rel 1
 
 Summary: Non-interactive multi-connection network downloader with image filtering and Metalink support.

@@ -31,14 +31,15 @@
 #-----------------------------------------------------------------------------
 
 AC_PREREQ(2.61)
-AC_INIT([mulk], [0.6.0], [http://sourceforge.net/projects/mulk])
+AC_INIT([mulk], [0.7.0], [http://sourceforge.net/projects/mulk])
 LT_PREREQ([2.2.6])
 LT_INIT
-AM_INIT_AUTOMAKE([mulk], [0.6.0])
+AM_INIT_AUTOMAKE([mulk], [0.7.0])
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+SHARED_VERSION_INFO="0:1:0"
 
 # Initialize maintainer mode
 AM_MAINTAINER_MODE
@@ -278,12 +279,14 @@ if test "X$GCC" = "Xyes"; then
   fi
 fi
 
+AC_SUBST(SHARED_VERSION_INFO)
 AC_CONFIG_FILES([Makefile include/Makefile include/mulk/Makefile lib/Makefile src/Makefile man/Makefile po/Makefile.in win32/Makefile win32/libmulk/Makefile win32/mulk/Makefile])
 AC_OUTPUT
 
 AC_MSG_NOTICE([Configured to build mulk:
 
   mulk version:    ${VERSION}
+  libmulk version: ${SHARED_VERSION_INFO}
   libcurl version: ${my_cv_curl_vers}
   Build:           ${build}
   Install prefix:  ${prefix}

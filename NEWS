@@ -1,8 +1,8 @@
 NEWS about Mulk: open source non-interactive multi-connection network downloader
-  with image filtering and Metalink support (version 0.6.0)
+  with image filtering and Metalink support (version 0.7.0)
 
 
-Next Version 
+version 0.7.0 - 2012/12/28
  *New features
 -new option to make links relative when downloading HTML pages in order to use them locally
 -new options to manage HTTP cookies (load-cookies, save-cookies and cookie)
