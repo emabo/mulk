@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------
- * Copyright (C) 2008, 2009, 2010, 2011, 2012 - Emanuele Bovisio
+ * Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013 - Emanuele Bovisio
  *
  * This file is part of Mulk.
  *
@@ -648,7 +648,7 @@ void mulk_printf_usage(void)
 void mulk_printf_version(void)
 {
 	printf(_("Mulk version %s\n"), mulk_version_number);
-	printf(_("\nMulk  Copyright (C) 2008, 2009, 2010, 2011, 2012  Emanuele Bovisio\n"));
+	printf(_("\nMulk  Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013  Emanuele Bovisio\n"));
 	printf(_("This program comes with ABSOLUTELY NO WARRANTY.\n"));
 	printf(_("This is free software, and you are welcome to redistribute it\n"));
 	printf(_("under certain conditions.\n"));
