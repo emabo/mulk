@@ -155,6 +155,7 @@ mulk_type_return_t init_url(CURLM *cm)
 	curl_easy_setopt(eh, CURLOPT_USERAGENT, option_values.user_agent ? option_values.user_agent : "Mulk/" VERSION);
 	curl_easy_setopt(eh, CURLOPT_URL, str_url);
 	curl_easy_setopt(eh, CURLOPT_PRIVATE, str_url);
+	curl_easy_setopt(eh, CURLOPT_ENCODING, "");
 	curl_easy_setopt(eh, CURLOPT_VERBOSE, 0L);
 	curl_easy_setopt(eh, CURLOPT_NOPROGRESS, 1L);
 	curl_easy_setopt(eh, CURLOPT_CONNECTTIMEOUT, 30L);

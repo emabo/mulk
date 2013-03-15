@@ -1,3 +1,6 @@
 
 * Ant Bryan
   Fedora packaging and interesting suggestions about Metalink
+
+* Stanislaw Pusep
+  Enable transparent encoding handling by libcurl
