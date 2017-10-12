@@ -1,0 +1,14 @@
+*.o
+*.lo
+*.la
+src/mulk
+config.h
+config.log
+config.status
+Makefile
+.deps
+.libs
+libtool
+po/Makefile.in
+po/POTFILES
+stamp-h1
