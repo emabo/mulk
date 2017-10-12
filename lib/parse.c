@@ -35,10 +35,10 @@
 #ifdef ENABLE_RECURSION
 #if defined(HAVE_TIDY_H) || defined(_WIN32)
 #include <tidy.h>
-#include <buffio.h>
+#include <tidybuffio.h>
 #elif defined(HAVE_TIDY_TIDY_H)
 #include <tidy/tidy.h>
-#include <tidy/buffio.h>
+#include <tidy/tidybuffio.h>
 #else
 #error "Don't know where to look for libtidy headers"
 #endif
