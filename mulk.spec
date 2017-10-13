@@ -10,7 +10,7 @@ Release: %{rel}
 License: GPL
 Group: Utilities/Console
 Source: %{name}-%{ver}.tar.gz
-URL: http://sourceforge.net/projects/mulk/
+URL: https://github.com/emabo/mulk/
 Prefix: %{_prefix}
 BuildRoot: %{_tmppath}/%{name}-%{ver}-%{rel}-buildroot
 

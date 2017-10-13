@@ -31,10 +31,10 @@
 #-----------------------------------------------------------------------------
 
 AC_PREREQ(2.61)
-AC_INIT([mulk], [0.7.0], [http://sourceforge.net/projects/mulk])
+AC_INIT([mulk], [0.7.0], [https://github.com/emabo/mulk/])
 LT_PREREQ([2.2.6])
 LT_INIT
-AM_INIT_AUTOMAKE([mulk], [0.7.0])
+AM_INIT_AUTOMAKE
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER([config.h])
@@ -234,19 +234,14 @@ AC_HEADER_TIME
 AC_CHECK_HEADERS([unistd.h malloc.h ctype.h errno.h stdarg.h getopt.h stdint.h libintl.h])
 AC_CHECK_HEADERS([curl/curl.h curl/multi.h],, AC_MSG_ERROR([Cannot compile without libcurl. Try at http://curl.haxx.se/]))
 if test "x$enable_recursion" = "xyes"; then
-  AC_CHECK_HEADER([tidy.h buffio.h],
+  AC_CHECK_HEADER([tidy.h],
     [AC_DEFINE([HAVE_TIDY_H], [1], [Define to 1 if you have the <tidy.h> header file.])],
-    [AC_CHECK_HEADER([tidy/tidy.h tidy/buffio.h],
-      [AC_DEFINE([HAVE_TIDY_TIDY_H], [1], [Define to 1 if you have the <tidy/tidy.h> header file.])],
-      AC_CHECK_HEADER([tidy.h tidybuffio.h],
-        [AC_DEFINE([HAVE_TIDYBUFFIO_H], [1], [Define to 1 if you have the <tidybuffio.h> header file.])],
-        [AC_CHECK_HEADER([tidy/tidy.h tidy/tidybuffio.h],
-           [AC_DEFINE([HAVE_TIDY_TIDYBUFFIO_H], [1], [Define to 1 if you have the <tidy/tidybuffio.h> header file.])],
-           [AC_MSG_ERROR([Cannot compile without libtidy. Try at http://tidy.sourceforge.net/])])
-        ]
-      )
+    [AC_CHECK_HEADERS([tidy/tidy.h],
+       [AC_DEFINE([HAVE_TIDY_TIDY_H], [1], [Define to 1 if you have the <tidy/tidy.h> header file.])],
+       [AC_MSG_ERROR([Cannot compile without libtidy. Try at http://tidy.sourceforge.net/])])
     ]
   )
+  AC_CHECK_HEADERS_ONCE([buffio.h tidy/buffio.h tidybuffio.h tidy/tidybuffio.h])
 fi
 AC_CHECK_HEADER([uriparser/Uri.h],, AC_MSG_ERROR([Cannot compile without liburiparser. Try at http://uriparser.sourceforge.net/]))
 if test "x$enable_checksum" = "xyes"; then

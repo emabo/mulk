@@ -5,7 +5,7 @@ if ENABLE_CHECKSUM
 endif
 endif
 
-INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include
+AM_CFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
 lib_LTLIBRARIES=libmulk.la
 libmulk_la_SOURCES= \

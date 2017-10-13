@@ -12,3 +12,5 @@ libtool
 po/Makefile.in
 po/POTFILES
 stamp-h1
+autom4te.cache
+*~

@@ -1,6 +1,6 @@
 bin_PROGRAMS = mulk
 
-INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include
+AM_CFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
 mulk_SOURCES = main.c
 mulk_CFLAGS = 
