@@ -14,3 +14,6 @@ po/POTFILES
 stamp-h1
 autom4te.cache
 *~
+*.swp
+cscope*
+tags
