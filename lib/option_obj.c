@@ -115,7 +115,7 @@ static mulk_type_return_t set_option_metalink_resume_file(void);
 option_value_t option_values = {0};
 
 option_t options[] = {
-	{"version",                  0, gettext_noop("display version number and exit"),
+	{"version",                'V', gettext_noop("display version number and exit"),
 		NULL,                                     OPTION_VERSION, 0, 0, NULL,
 		gettext_noop("General options"), NULL},
 	{"help",                   'h', gettext_noop("display this help and exit"),
