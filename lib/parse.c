@@ -369,7 +369,6 @@ void parse_urls(const char *filename, const url_list_t *elem)
 	tdoc = tidyCreate();
 	tidyOptSetBool(tdoc, TidyForceOutput, yes);
 	tidyOptSetBool(tdoc, TidyMark, no);
-	tidyOptSetBool(tdoc, TidyHideEndTags, yes);
 	tidyOptSetBool(tdoc, TidyDropEmptyParas, no);
 	tidyOptSetBool(tdoc, TidyJoinStyles, no);
 	tidyOptSetBool(tdoc, TidyPreserveEntities, yes);

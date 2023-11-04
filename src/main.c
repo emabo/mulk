@@ -32,7 +32,7 @@
 
 #include <stdio.h> 
 #include <stdlib.h> 
-#include <mulk/mulk.h>
+#include <include/mulk/mulk.h>
 
 
 int main(int argc, char **argv)

@@ -50,7 +50,7 @@
 #include <curl/curl.h>
 #include <curl/multi.h>
 #include <uriparser/Uri.h>
-#include <mulk/mulk.h>
+#include <include/mulk/mulk.h>
 
 /* define DEBUG compilation flags */
 #if (defined(DEBUG) || defined(_DEBUG)) && !defined(NDEBUG)

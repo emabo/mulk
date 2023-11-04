@@ -51,7 +51,7 @@ To compile with recursion enabled you need also:
 libtidy (for Debian try "apt-get install libtidy-dev" or see http://tidy.sourceforge.net/)
 
 To compile with Metalink enabled you need also:
-libmetalink (for Debian try "apt-get install libexpat1-devel libxml2-dev" or see http://launchpad.net/libmetalink/)
+libmetalink (for Debian try "apt-get install libexpat1-dev libxml2-dev" or see http://launchpad.net/libmetalink/)
 
 To compile with checksum verification for Metalink you need also:
 libcrypto (http://www.openssl.org)
